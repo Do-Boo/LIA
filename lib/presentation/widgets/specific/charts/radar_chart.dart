@@ -1,6 +1,6 @@
 // File: lib/presentation/widgets/specific/charts/radar_chart.dart
 
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -248,17 +248,42 @@ class _RadarChartState extends State<RadarChart>
         ),
       ];
     } else if (widget.data is List) {
-      // 단일 시리즈 데이터 (RadarChartDataPoint 리스트)
-      final dataPoints = (widget.data as List).map((item) {
-        if (item is Map<String, dynamic>) {
-          return RadarChartDataPoint.fromJson(item);
-        } else if (item is RadarChartDataPoint) {
-          return item;
-        }
-        return RadarChartDataPoint(label: '', value: 0);
-      }).toList();
+      // 다중 시리즈 데이터 처리
+      final dataList = widget.data as List;
+      if (dataList.isNotEmpty && dataList.first is Map<String, dynamic>) {
+        // 각 아이템이 시리즈 데이터인지 확인
+        final firstItem = dataList.first as Map<String, dynamic>;
+        if (firstItem.containsKey('name') && firstItem.containsKey('data')) {
+          // 다중 시리즈 형식
+          _chartSeries = dataList.map((item) {
+            final seriesData = item as Map<String, dynamic>;
+            return RadarChartSeries(
+              name: seriesData['name'] ?? '',
+              data: (seriesData['data'] as List? ?? [])
+                  .map((dataPoint) => RadarChartDataPoint.fromJson(dataPoint))
+                  .toList(),
+              color: seriesData['color'] != null
+                  ? Color(seriesData['color'])
+                  : null,
+            );
+          }).toList();
+        } else {
+          // 단일 시리즈 데이터 포인트들
+          final dataPoints = dataList.map((item) {
+            if (item is Map<String, dynamic>) {
+              return RadarChartDataPoint.fromJson(item);
+            } else if (item is RadarChartDataPoint) {
+              return item;
+            }
+            return RadarChartDataPoint(label: '', value: 0);
+          }).toList();
 
-      _chartSeries = [RadarChartSeries(name: '데이터', data: dataPoints)];
+          _chartSeries = [RadarChartSeries(name: '데이터', data: dataPoints)];
+        }
+      } else {
+        // 빈 데이터
+        _chartSeries = [];
+      }
     } else if (widget.data is Map<String, dynamic>) {
       // 단일 시리즈 데이터 (JSON 형식)
       _chartSeries = [RadarChartSeries.fromJson(widget.data)];
@@ -304,7 +329,7 @@ class _RadarChartState extends State<RadarChart>
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 제목 표시
           _buildTitle(displayTitle),
@@ -319,7 +344,6 @@ class _RadarChartState extends State<RadarChart>
 
           // 차트
           SizedBox(
-            width: widget.size,
             height: widget.size,
             child: AnimatedBuilder(
               animation: _animation,
@@ -329,7 +353,7 @@ class _RadarChartState extends State<RadarChart>
                     series: _chartSeries,
                     animation: _animation.value,
                   ),
-                  size: Size(widget.size, widget.size),
+                  size: Size.infinite,
                 );
               },
             ),
@@ -349,7 +373,7 @@ class _RadarChartState extends State<RadarChart>
   /// 제목 위젯 생성
   Widget _buildTitle(String title) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         if (widget.titleIcon != null) ...[
           Icon(widget.titleIcon!, size: 20, color: AppColors.primary),
@@ -406,46 +430,61 @@ class _RadarChartPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2 - 40;
 
-    // 첫 번째 시리즈의 데이터 포인트 수를 기준으로 설정
-    final mainSeries = series.first;
-    if (mainSeries.data.isEmpty) return;
+    // 모든 시리즈에서 최대 축 수를 찾기
+    int maxAxisCount = 0;
+    List<String> allLabels = [];
 
-    final axisCount = mainSeries.data.length;
+    for (final s in series) {
+      if (s.data.length > maxAxisCount) {
+        maxAxisCount = s.data.length;
+        allLabels = s.data.map((d) => d.label).toList();
+      }
+    }
+
+    if (maxAxisCount == 0) return;
+
     final maxValue = 100.0; // 기본 최대값
 
     // 격자 그리기
-    _drawGrid(canvas, center, radius, axisCount);
+    _drawGrid(canvas, center, radius, maxAxisCount);
 
-    // 축 라벨 그리기
-    _drawAxisLabels(canvas, center, radius, mainSeries.data);
+    // 축 라벨 그리기 (첫 번째 시리즈 또는 가장 긴 시리즈의 라벨 사용)
+    _drawAxisLabels(canvas, center, radius, allLabels);
 
     // 데이터 시리즈 그리기
     for (final s in series) {
-      _drawDataSeries(canvas, center, radius, s, maxValue);
+      if (s.data.isNotEmpty) {
+        _drawDataSeries(canvas, center, radius, s, maxValue, maxAxisCount);
+      }
     }
   }
 
   /// 격자 그리기
   void _drawGrid(Canvas canvas, Offset center, double radius, int axisCount) {
     final gridPaint = Paint()
-      ..color = AppColors.surface
+      ..color = AppColors.cardBorder
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
-    // 동심원 그리기
+    final axisPaint = Paint()
+      ..color = AppColors.primary.withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+
+    // 동심원 그리기 (5단계)
     for (int i = 1; i <= 5; i++) {
       final circleRadius = radius * (i / 5);
       canvas.drawCircle(center, circleRadius, gridPaint);
     }
 
-    // 축 선 그리기
+    // 축 선 그리기 (강조된 스타일)
     for (int i = 0; i < axisCount; i++) {
       final angle = (i * 2 * 3.14159) / axisCount - 3.14159 / 2;
       final endPoint = Offset(
-        center.dx + radius * cos(angle),
-        center.dy + radius * sin(angle),
+        center.dx + radius * math.cos(angle),
+        center.dy + radius * math.sin(angle),
       );
-      canvas.drawLine(center, endPoint, gridPaint);
+      canvas.drawLine(center, endPoint, axisPaint);
     }
   }
 
@@ -454,29 +493,53 @@ class _RadarChartPainter extends CustomPainter {
     Canvas canvas,
     Offset center,
     double radius,
-    List<RadarChartDataPoint> data,
+    List<String> labels,
   ) {
-    for (int i = 0; i < data.length; i++) {
-      final angle = (i * 2 * 3.14159) / data.length - 3.14159 / 2;
-      final labelRadius = radius + 20;
+    for (int i = 0; i < labels.length; i++) {
+      final angle = (i * 2 * 3.14159) / labels.length - 3.14159 / 2;
+      final labelRadius = radius + 25;
       final labelPoint = Offset(
-        center.dx + labelRadius * cos(angle),
-        center.dy + labelRadius * sin(angle),
+        center.dx + labelRadius * math.cos(angle),
+        center.dy + labelRadius * math.sin(angle),
       );
 
       final textPainter = TextPainter(
         text: TextSpan(
-          text: data[i].label,
+          text: labels[i],
           style: const TextStyle(
-            color: AppColors.secondaryText,
+            color: AppColors.textPrimary,
             fontSize: 12,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
         textDirection: TextDirection.ltr,
       );
       textPainter.layout();
 
+      // 배경 사각형 그리기
+      final backgroundRect = RRect.fromLTRBR(
+        labelPoint.dx - textPainter.width / 2 - 6,
+        labelPoint.dy - textPainter.height / 2 - 4,
+        labelPoint.dx + textPainter.width / 2 + 6,
+        labelPoint.dy + textPainter.height / 2 + 4,
+        const Radius.circular(6),
+      );
+
+      final backgroundPaint = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.fill;
+
+      canvas.drawRRect(backgroundRect, backgroundPaint);
+
+      // 테두리 그리기
+      final borderPaint = Paint()
+        ..color = AppColors.primary.withValues(alpha: 0.2)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1;
+
+      canvas.drawRRect(backgroundRect, borderPaint);
+
+      // 텍스트 그리기
       final textOffset = Offset(
         labelPoint.dx - textPainter.width / 2,
         labelPoint.dy - textPainter.height / 2,
@@ -493,6 +556,7 @@ class _RadarChartPainter extends CustomPainter {
     double radius,
     RadarChartSeries series,
     double maxValue,
+    int axisCount,
   ) {
     if (series.data.isEmpty) return;
 
@@ -513,16 +577,22 @@ class _RadarChartPainter extends CustomPainter {
     final points = <Offset>[];
 
     // 데이터 포인트를 좌표로 변환
-    for (int i = 0; i < series.data.length; i++) {
-      final angle = (i * 2 * 3.14159) / series.data.length - 3.14159 / 2;
-      final value = series.data[i].value;
+    for (int i = 0; i < axisCount; i++) {
+      final angle = (i * 2 * 3.14159) / axisCount - 3.14159 / 2;
+
+      // 현재 축에 대한 데이터가 있는지 확인
+      double value = 0;
+      if (i < series.data.length) {
+        value = series.data[i].value;
+      }
+
       final normalizedValue = (value / maxValue).clamp(0.0, 1.0);
       final animatedValue = normalizedValue * animation;
 
       final pointRadius = radius * animatedValue;
       final point = Offset(
-        center.dx + pointRadius * cos(angle),
-        center.dy + pointRadius * sin(angle),
+        center.dx + pointRadius * math.cos(angle),
+        center.dy + pointRadius * math.sin(angle),
       );
 
       points.add(point);
@@ -542,8 +612,11 @@ class _RadarChartPainter extends CustomPainter {
     // 테두리 그리기
     canvas.drawPath(path, strokePaint);
 
-    // 데이터 포인트 그리기
-    for (final point in points) {
+    // 데이터 포인트 그리기 (실제 데이터가 있는 포인트만)
+    for (int i = 0; i < math.min(series.data.length, points.length); i++) {
+      final point = points[i];
+
+      // 데이터 포인트 원 그리기
       canvas.drawCircle(point, 4, pointPaint);
       canvas.drawCircle(
         point,
