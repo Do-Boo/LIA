@@ -1,0 +1,310 @@
+# LIA 위젯 실제 사용 시나리오
+
+## 🎬 메시지 생성 플로우
+
+### 1단계: 상황 입력
+**위젯**: `FloatingLabelTextField`
+**서현이 상황**: 썸남에게 보낼 메시지 상황을 입력
+**서현이 대사**: "어떤 상황인지 알려줘"
+
+```dart
+FloatingLabelTextField(
+  label: '어떤 상황인지 알려줘',
+  controller: situationController,
+)
+```
+
+### 2단계: 호감도 확인
+**위젯**: `GaugeChart`
+**서현이 상황**: 현재 썸남과의 호감도를 확인
+**서현이 대사**: "우리 호감도가 75%나 돼? 완전 좋은데!"
+
+```dart
+GaugeChart() // 호감도 75% 표시
+```
+
+### 3단계: 메시지 생성
+**위젯**: `PrimaryButton`
+**서현이 상황**: 정보 입력 완료 후 메시지 생성 시작
+**서현이 대사**: "정보 다 입력했으니까 이제 메시지 ㄱㄱ!"
+
+```dart
+PrimaryButton(
+  onPressed: () async {
+    await generateMessage();
+  },
+  text: '메시지 ㄱㄱ',
+)
+```
+
+### 4단계: 생성 진행률 표시
+**위젯**: `GeneratingProgress`
+**서현이 상황**: AI가 메시지를 생성하는 동안 대기
+**서현이 대사**: "잠깐만, 완전 좋은 메시지 만들어줄게!"
+
+```dart
+GeneratingProgress(
+  currentStep: currentStep,
+  isCompleted: isCompleted,
+  onCancel: () => cancelGeneration(),
+)
+```
+
+## 🎬 대시보드 확인 플로우
+
+### 1단계: 호감도 현황 확인
+**위젯**: `GaugeChart`
+**서현이 상황**: 메인 화면에서 전체 호감도 확인
+**서현이 대사**: "오늘 호감도는 어떻게 됐을까?"
+
+### 2단계: 메시지 타입별 성공률 확인
+**위젯**: `DonutChart`
+**서현이 상황**: 어떤 스타일이 가장 효과적인지 확인
+**서현이 대사**: "센스있는 메시지가 제일 성공률 높네! 이 스타일로 가야지"
+
+### 3단계: 주간 활동 비교
+**위젯**: `BarChart`
+**서현이 상황**: 이번 주와 지난 주 활동량 비교
+**서현이 대사**: "이번 주가 지난 주보다 메시지 많이 보냈네 ㅋㅋ"
+
+## 🎬 설정 변경 플로우
+
+### 1단계: 프로필 정보 수정
+**위젯**: `FloatingLabelTextField`
+**서현이 상황**: 내 정보 업데이트
+**서현이 대사**: "내 정보 좀 바꿔야겠다"
+
+```dart
+Column(
+  children: [
+    FloatingLabelTextField(
+      label: '내 이름이 뭐야?',
+      controller: nameController,
+    ),
+    SizedBox(height: 16),
+    FloatingLabelTextField(
+      label: '내 MBTI는?',
+      controller: mbtiController,
+    ),
+  ],
+)
+```
+
+### 2단계: 관심사 태그 설정
+**위젯**: `TagInputField`
+**서현이 상황**: 내 관심사와 취미 설정
+**서현이 대사**: "내 관심사도 업데이트해야지"
+
+```dart
+TagInputField() // 관심사 태그 입력
+```
+
+### 3단계: 설정 저장
+**위젯**: `PrimaryButton` + `SecondaryButton`
+**서현이 상황**: 변경사항 저장 또는 취소
+**서현이 대사**: "저장할까? 아니면 취소할까?"
+
+```dart
+Row(
+  children: [
+    Expanded(
+      child: SecondaryButton(
+        onPressed: () => Navigator.pop(context),
+        text: '취소',
+      ),
+    ),
+    SizedBox(width: 12),
+    Expanded(
+      flex: 2,
+      child: PrimaryButton(
+        onPressed: () => saveSettings(),
+        text: '저장하기',
+      ),
+    ),
+  ],
+)
+```
+
+## 🎬 로딩 및 피드백 시나리오
+
+### 1단계: 하트 로딩 표시
+**위젯**: `HeartSpinner`
+**서현이 상황**: 앱 초기 로딩 시
+**서현이 대사**: "잠깐만, 로딩 중이야!"
+
+```dart
+HeartSpinner()
+```
+
+### 2단계: 맥박 효과로 상태 표시
+**위젯**: `PulsatingDot`
+**서현이 상황**: 실시간 상태 표시
+**서현이 대사**: "지금 온라인 상태야"
+
+```dart
+Row(
+  children: [
+    PulsatingDot(),
+    SizedBox(width: 8),
+    Text('온라인'),
+  ],
+)
+```
+
+### 3단계: 스켈레톤 UI로 콘텐츠 로딩
+**위젯**: `SkeletonUI`
+**서현이 상황**: 메시지 목록 로딩 중
+**서현이 대사**: "메시지들 불러오는 중..."
+
+```dart
+SkeletonUI()
+```
+
+## 🎨 색상 사용 시나리오
+
+### 성공 상황
+**색상**: `AppColors.green`
+**서현이 상황**: 메시지 전송 성공
+**서현이 대사**: "메시지 보내기 성공!"
+
+```dart
+Container(
+  color: AppColors.green.withOpacity(0.1),
+  child: Text(
+    '메시지 전송 완료!',
+    style: AppTextStyles.success,
+  ),
+)
+```
+
+### 오류 상황
+**색상**: `AppColors.error`
+**서현이 상황**: 네트워크 오류 발생
+**서현이 대사**: "앗, 뭔가 잘못됐어"
+
+```dart
+Container(
+  color: AppColors.error.withOpacity(0.1),
+  child: Text(
+    '네트워크 오류가 발생했어요',
+    style: AppTextStyles.error,
+  ),
+)
+```
+
+### 정보 제공
+**색상**: `AppColors.info`
+**서현이 상황**: 도움말이나 팁 제공
+**서현이 대사**: "이런 팁이 있어!"
+
+```dart
+Container(
+  color: AppColors.info.withOpacity(0.1),
+  child: Text(
+    '💡 팁: 이런 메시지가 더 효과적이에요',
+    style: AppTextStyles.info,
+  ),
+)
+```
+
+## 📱 화면별 위젯 조합
+
+### 메시지 생성 화면
+```dart
+class MessageGenerationScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('메시지 만들기')),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // 상황 입력
+            FloatingLabelTextField(
+              label: '어떤 상황인지 알려줘',
+            ),
+            SizedBox(height: 16),
+            
+            // 호감도 표시
+            GaugeChart(),
+            SizedBox(height: 16),
+            
+            // 관심사 태그
+            TagInputField(),
+            SizedBox(height: 24),
+            
+            // 버튼들
+            Row(
+              children: [
+                Expanded(
+                  child: SecondaryButton(
+                    onPressed: () => Navigator.pop(context),
+                    text: '아니야',
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: PrimaryButton(
+                    onPressed: () => generateMessage(),
+                    text: '메시지 ㄱㄱ',
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+### 대시보드 화면
+```dart
+class DashboardScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text('내 연애 현황', style: AppTextStyles.h2),
+        SizedBox(height: 16),
+        
+        // 호감도 표시
+        GaugeChart(),
+        SizedBox(height: 24),
+        
+        // 메시지 타입별 성공률
+        DonutChart(),
+        SizedBox(height: 24),
+        
+        // 주간 활동 비교
+        BarChart(),
+      ],
+    );
+  }
+}
+```
+
+## 💡 UX 가이드라인
+
+### 버튼 배치 원칙
+1. **주요 액션**: 오른쪽 또는 아래쪽에 PrimaryButton
+2. **보조 액션**: 왼쪽 또는 위쪽에 SecondaryButton
+3. **비율**: 주요 액션이 보조 액션보다 크게 (flex: 2 vs 1)
+
+### 로딩 상태 표시
+1. **짧은 로딩** (1-2초): PulsatingDot
+2. **중간 로딩** (3-5초): HeartSpinner
+3. **긴 로딩** (5초+): GeneratingProgress
+4. **콘텐츠 로딩**: SkeletonUI
+
+### 색상 사용 원칙
+1. **주요 정보**: AppColors.primary
+2. **보조 정보**: AppColors.accent
+3. **성공**: AppColors.green
+4. **오류**: AppColors.error
+5. **정보**: AppColors.info
+6. **중성**: AppColors.lightGray
+ 

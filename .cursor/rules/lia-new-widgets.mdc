@@ -1,0 +1,136 @@
+# LIA 새로운 위젯들 가이드
+
+## 새로 추가된 위젯들 (2025.07.14)
+
+### 1. Toast Notification 위젯
+**파일 위치**: [toast_notification.dart](mdc:lib/presentation/widgets/specific/feedback/toast_notification.dart)
+
+**사용법**:
+```dart
+import 'package:lia/presentation/widgets/specific/feedback/toast_notification.dart';
+
+// 성공 토스트
+ToastNotification.show(
+  context: context,
+  message: "메시지 전송 완료! 💌",
+  type: ToastType.success,
+);
+
+// 오류 토스트
+ToastNotification.show(
+  context: context,
+  message: "앗, 뭔가 잘못됐어! 😅",
+  type: ToastType.error,
+);
+```
+
+**특징**:
+- 4가지 타입: success, error, info, warning
+- 자동 사라짐 (3초 후)
+- 슬라이드 애니메이션 효과
+- 18세 서현 페르소나에 맞는 친근한 메시지
+
+### 2. Custom Date Picker 위젯
+**파일 위치**: [custom_date_picker.dart](mdc:lib/presentation/widgets/specific/forms/custom_date_picker.dart)
+
+**사용법**:
+```dart
+import 'package:lia/presentation/widgets/specific/forms/custom_date_picker.dart';
+
+// 단일 날짜 선택
+CustomDatePicker(
+  label: "언제 만날까? 💕",
+  selectedDate: _selectedDate,
+  onDateSelected: (date) {
+    setState(() => _selectedDate = date);
+  },
+)
+
+// 날짜 범위 선택
+CustomDateRangePicker(
+  label: "여행 기간을 정해볼까?",
+  selectedRange: _selectedDateRange,
+  onRangeSelected: (range) {
+    setState(() => _selectedDateRange = range);
+  },
+)
+```
+
+**특징**:
+- LIA 브랜드 색상 적용
+- 18세 서현 페르소나에 맞는 친근한 도움말
+- 터치 피드백과 애니메이션
+- 날짜별 맞춤 메시지 제공
+
+### 3. Line Chart 위젯
+**파일 위치**: [line_chart.dart](mdc:lib/presentation/widgets/specific/charts/line_chart.dart)
+
+**사용법**:
+```dart
+import 'package:lia/presentation/widgets/specific/charts/line_chart.dart';
+
+LineChart(
+  title: "호감도 변화 추이",
+  data: [
+    LineChartDataPoint(label: "월", value: 65),
+    LineChartDataPoint(label: "화", value: 72),
+    LineChartDataPoint(label: "수", value: 68),
+    LineChartDataPoint(label: "목", value: 78),
+    LineChartDataPoint(label: "금", value: 85),
+  ],
+  height: 160,
+)
+```
+
+**특징**:
+- 부드러운 곡선 그래프
+- 그라데이션 배경 효과
+- 애니메이션 그리기 효과
+- 호감도, 메시지 빈도 등 추이 분석에 활용
+
+## 디자인 가이드에서 확인하기
+
+새로운 위젯들은 [design_guide_screen.dart](mdc:lib/presentation/screens/design_guide_screen.dart)에서 확인할 수 있습니다:
+
+1. **NEW CHARTS** 섹션: LineChart 위젯 데모
+2. **NEW FORM ELEMENTS** 섹션: CustomDatePicker, CustomDateRangePicker 데모
+3. **NEW FEEDBACK** 섹션: ToastNotification 위젯 데모
+
+## 사용 시나리오
+
+### Toast Notification 시나리오
+- 메시지 전송 성공/실패 알림
+- 네트워크 오류 안내
+- 새로운 기능 소개
+- 사용자 액션 피드백
+
+### Date Picker 시나리오
+- 데이트 날짜 선택
+- 여행 기간 계획
+- 일정 관리
+- 이벤트 예약
+
+### Line Chart 시나리오
+- 호감도 변화 추이
+- 메시지 활동 분석
+- 대화 만족도 추적
+- 시간별 데이터 시각화
+
+## 개발 가이드라인
+
+1. **일관성**: 모든 위젯은 LIA 브랜드 색상과 18세 서현 페르소나를 반영
+2. **접근성**: 색상 대비와 터치 영역 크기 고려
+3. **애니메이션**: 부드럽고 자연스러운 전환 효과
+4. **반응형**: 모바일 우선 설계로 다양한 화면 크기 지원
+
+## 추가 예정 위젯들
+
+- Pie Chart (원형 차트)
+- Time Picker (시간 선택기)
+- Multi-Select Dropdown (다중 선택 드롭다운)
+- Breadcrumb Navigation (경로 네비게이션)
+- Pagination (페이지네이션)
+description:
+globs:
+alwaysApply: false
+---

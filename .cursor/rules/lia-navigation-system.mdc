@@ -1,0 +1,347 @@
+# LIA Navigation System Guide
+> 2025.07.14 10:09:45 업데이트 - 투명 배경 + Stack 오버레이 방식 적용
+
+## 🧭 Navigation Architecture
+
+### 하단 네비게이션 바 ([bottom_navigation_bar.dart](mdc:lib/presentation/widgets/specific/navigation/bottom_navigation_bar.dart))
+LIA 앱의 핵심 네비게이션 시스템으로, **홈, 코칭센터, AI 메시지, 히스토리, MY** 5개 메뉴와 **투명 배경 + 그림자 효과**의 모던한 디자인을 적용했습니다.
+
+#### 🎨 최신 디자인 특징 (2025.07.14)
+- ✅ **완전 투명 배경**: `Colors.white.withOpacity(0.55)` 
+- ✅ **블러 효과**: `BackdropFilter` 적용 (`sigmaX: 8, sigmaY: 8`)
+- ✅ **그림자 레이어링**: 핑크 브랜드 그림자 (`AppColors.primary.withOpacity(0.15)`)
+- ✅ **Stack 오버레이**: `bottomNavigationBar` 대신 `Positioned` 사용
+- ✅ **중앙 AI 메시지 버튼**: 플로팅 액션 버튼 스타일
+
+#### 📱 메뉴 구조 (2025.07.14 업데이트)
+1. **홈** (`HugeIcons.strokeRoundedHome01`) - 메인 대시보드
+2. **코칭센터** (`HugeIcons.strokeRoundedBookOpen01`) - AI 메시지 작성 가이드 및 팁
+3. **AI 메시지** (중앙 버튼) - 핵심 메시지 생성 기능
+4. **히스토리** (`HugeIcons.strokeRoundedClock01`) - 메시지 작성 기록
+5. **MY** (`HugeIcons.strokeRoundedUserCircle`) - 프로필 및 설정
+
+## 🚀 Implementation Guide
+
+### 1. Stack 기반 오버레이 방식 (권장)
+```dart
+// ✅ 올바른 구현 - Stack으로 오버레이
+Scaffold(
+  body: Stack(
+    children: [
+      // 메인 콘텐츠
+      SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // ... 콘텐츠
+            const SizedBox(height: 100), // 네비게이션 바 공간 확보
+          ],
+        ),
+      ),
+      
+      // 하단 네비게이션 바 오버레이
+      Positioned(
+        bottom: 0,
+        left: 0,
+        right: 0,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: CustomBottomNavigationBar(
+            currentIndex: 0,
+            onTap: (index) => _handleNavigation(index),
+            onAITap: () => _handleAITap(),
+          ),
+        ),
+      ),
+    ],
+  ),
+)
+```
+
+### 2. 잘못된 구현 방식 (사용 금지)
+```dart
+// ❌ 잘못된 구현 - bottomNavigationBar 속성 사용
+Scaffold(
+  bottomNavigationBar: CustomBottomNavigationBar(...), // 기본 배경 생성됨
+  body: content,
+)
+```
+
+## 🎯 Navigation Structure
+
+### 탭 구성
+```dart
+// 4개 메인 탭 + 중앙 AI 버튼
+final List<NavigationTab> tabs = [
+  NavigationTab(0, Icons.home_filled, '홈'),      // 메인 대시보드
+  NavigationTab(1, Icons.chat_bubble, '채팅'),    // 대화 목록
+  // 중앙 AI 버튼 (index 없음)
+  NavigationTab(2, Icons.favorite, '보관함'),     // 즐겨찾기
+  NavigationTab(3, Icons.person, '프로필'),       // 사용자 설정
+];
+```
+
+### 네비게이션 처리 패턴
+```dart
+void _handleBottomNavigation(int index) {
+  switch (index) {
+    case 0: // 홈
+      Navigator.pushReplacementNamed(context, '/home');
+      break;
+    case 1: // 채팅
+      Navigator.pushReplacementNamed(context, '/chat');
+      break;
+    case 2: // 보관함
+      Navigator.pushReplacementNamed(context, '/favorites');
+      break;
+    case 3: // 프로필
+      Navigator.pushReplacementNamed(context, '/profile');
+      break;
+  }
+}
+
+void _handleAITap() {
+  // AI 메시지 생성 화면으로 이동
+  Navigator.pushNamed(context, '/ai-message');
+}
+```
+
+## 🎨 Visual Design System
+
+### 색상 및 스타일
+```dart
+// 네비게이션 바 배경
+Container(
+  decoration: BoxDecoration(
+    color: Colors.white.withOpacity(0.55), // 반투명 배경
+    borderRadius: BorderRadius.circular(24),
+    boxShadow: [
+      BoxShadow(
+        color: AppColors.primary.withOpacity(0.15), // 핑크 브랜드 그림자
+        blurRadius: 20,
+        offset: const Offset(0, -5),
+      ),
+    ],
+  ),
+)
+
+// 선택된 탭 스타일
+AnimatedContainer(
+  width: isSelected ? 60 : 50, // 선택시 너비 증가
+  decoration: BoxDecoration(
+    color: isSelected 
+        ? AppColors.primary.withOpacity(0.1) 
+        : Colors.transparent,
+    borderRadius: BorderRadius.circular(16),
+  ),
+)
+
+// 중앙 AI 버튼
+Container(
+  height: 56,
+  width: 56,
+  decoration: const BoxDecoration(
+    shape: BoxShape.circle,
+    gradient: AppColors.primaryGradient, // 핑크→퍼플 그라데이션
+    boxShadow: [
+      BoxShadow(
+        color: AppColors.primary,
+        blurRadius: 12,
+        spreadRadius: -1,
+        offset: Offset(0, 3),
+      ),
+    ],
+  ),
+  child: const Icon(
+    Icons.auto_awesome, // AI 아이콘
+    color: Colors.white,
+    size: 26,
+  ),
+)
+```
+
+## 📱 Responsive Behavior
+
+### 화면 크기별 대응
+```dart
+// 모바일 (기본)
+CustomBottomNavigationBar(
+  height: 65,
+  padding: EdgeInsets.all(16.0),
+)
+
+// 태블릿 (가로 모드)
+CustomBottomNavigationBar(
+  height: 70,
+  padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+)
+```
+
+### Safe Area 처리
+```dart
+// 화면 하단 Safe Area 고려
+Positioned(
+  bottom: MediaQuery.of(context).padding.bottom, // Safe Area 여백
+  left: 0,
+  right: 0,
+  child: Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: CustomBottomNavigationBar(...),
+  ),
+)
+```
+
+## 🔧 Implementation Checklist
+
+### 필수 구현 사항
+- [ ] Stack 기반 오버레이 방식 사용
+- [ ] 투명 배경 (`Colors.white.withOpacity(0.55)`) 적용
+- [ ] BackdropFilter 블러 효과 추가
+- [ ] 핑크 브랜드 그림자 효과 적용
+- [ ] 중앙 AI 버튼 플로팅 스타일 구현
+- [ ] 선택된 탭 애니메이션 효과 추가
+- [ ] 메인 콘텐츠 하단 여백 (100px) 확보
+
+### 접근성 고려사항
+```dart
+// 시맨틱 라벨 추가
+Semantics(
+  label: '홈 탭',
+  button: true,
+  selected: currentIndex == 0,
+  child: _buildNavItem(0, Icons.home_filled, '홈'),
+)
+
+// 햅틱 피드백
+onTap: (index) {
+  HapticFeedback.lightImpact(); // 탭 시 진동
+  _handleNavigation(index);
+}
+```
+
+## 🎯 Usage Examples
+
+### ProfileSetupScreen 적용 예시
+```dart
+// [profile_setup_screen.dart](mdc:lib/presentation/screens/profile_setup_screen.dart) 참고
+class ProfileSetupScreen extends StatefulWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // 메인 콘텐츠
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                // ... 프로필 설정 위젯들
+                const SizedBox(height: 100), // 네비게이션 바 공간
+              ],
+            ),
+          ),
+          
+          // 네비게이션 바 오버레이
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: CustomBottomNavigationBar(
+                currentIndex: 3, // 프로필 탭 활성화
+                onTap: _handleBottomNavigation,
+                onAITap: _handleAITap,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+### DesignGuideScreen 시연 예시
+```dart
+// [design_guide_screen.dart](mdc:lib/presentation/screens/design_guide_screen.dart) 참고
+class BottomNavigationCard extends StatefulWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ComponentCard(
+      title: 'BOTTOM NAVIGATION (하단 네비게이션)',
+      child: Container(
+        height: 95, // AI 버튼 공간 확보
+        padding: const EdgeInsets.only(top: 20),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade50,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: CustomBottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) => setState(() => _currentIndex = index),
+          onAITap: () => _showAISnackBar(),
+        ),
+      ),
+    );
+  }
+}
+```
+
+## 🚨 Common Issues & Solutions
+
+### 문제 1: 네비게이션 바 배경이 보임
+```dart
+// ❌ 문제: bottomNavigationBar 사용
+Scaffold(
+  bottomNavigationBar: CustomBottomNavigationBar(...),
+)
+
+// ✅ 해결: Stack + Positioned 사용
+Scaffold(
+  body: Stack(
+    children: [
+      content,
+      Positioned(bottom: 0, child: CustomBottomNavigationBar(...)),
+    ],
+  ),
+)
+```
+
+### 문제 2: 콘텐츠가 네비게이션 바에 가려짐
+```dart
+// ✅ 해결: 하단 여백 추가
+Column(
+  children: [
+    // ... 콘텐츠
+    const SizedBox(height: 100), // 네비게이션 바 높이 + 여백
+  ],
+)
+```
+
+### 문제 3: AI 버튼이 잘림
+```dart
+// ✅ 해결: 컨테이너 높이 조정
+Container(
+  height: 95, // AI 버튼이 위로 튀어나오는 공간 확보
+  child: CustomBottomNavigationBar(...),
+)
+```
+
+## 📚 Related Components
+
+### 연관 위젯들
+- [CustomBottomNavigationBar](mdc:lib/presentation/widgets/specific/navigation/bottom_navigation_bar.dart) - 메인 네비게이션 바
+- [AppColors](mdc:lib/core/app_colors.dart) - 브랜드 색상 시스템
+- [AppTextStyles](mdc:lib/core/app_text_styles.dart) - 타이포그래피 시스템
+
+### 사용 화면들
+- [ProfileSetupScreen](mdc:lib/presentation/screens/profile_setup_screen.dart) - 실제 적용 예시
+- [DesignGuideScreen](mdc:lib/presentation/screens/design_guide_screen.dart) - 시연 및 가이드
+
+---
+
+**💡 Tip**: 네비게이션 바는 앱의 핵심 UX 요소입니다. 18세 서현 페르소나에 맞는 트렌디하고 직관적인 디자인을 유지하면서도, 접근성과 사용성을 고려해서 구현하세요!
+description:
+globs:
+alwaysApply: false
+---

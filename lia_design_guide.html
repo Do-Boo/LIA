@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIA Design System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+        @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
+
+        :root {
+            --background: #FFF8FB;
+            --card-bg: #FFFFFF;
+            --primary: #FF70A6;
+            --accent: #A162F7;
+            --yellow: #FFD670;
+            --blue: #70A6FF;
+            --green: #70FFA6;
+            --success: #28a745;
+            --error: #DC3545;
+            --secondary-text: #555555;
+            --charcoal: #333333;
+            --card-border: #FFDDE8;
+            --code-bg: #2d2d2d;
+            --font-sans: 'Noto Sans KR', sans-serif;
+            --font-display: 'Gaegu', cursive;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--background);
+            margin: 0;
+            color: var(--charcoal);
+            display: flex;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--card-border);
+            padding: 24px;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            font-family: var(--font-display);
+            font-size: 36px;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li a {
+            display: block;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--secondary-text);
+            font-weight: 700;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .sidebar-nav li a:hover {
+            background-color: var(--background);
+            color: var(--primary);
+        }
+        .sidebar-nav li a.active {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 8px rgba(255, 112, 166, 0.3);
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+            width: calc(100% - 260px);
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        .section-header h1 {
+            font-family: var(--font-display);
+            font-size: 48px;
+            color: var(--accent);
+            margin: 0 0 8px 0;
+        }
+        .section-header p {
+            font-size: 18px;
+            color: var(--secondary-text);
+            margin: 0 0 32px 0;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            padding: 24px;
+            box-shadow: 0 4px 12px -4px rgba(255, 112, 166, 0.1);
+        }
+        .card h3 {
+            font-size: 20px;
+            margin: 0 0 16px 0;
+        }
+
+        /* --- Code Snippet --- */
+        pre {
+            background-color: var(--code-bg);
+            color: #f8f8f2;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Consolas', 'Menlo', monospace;
+            font-size: 14px;
+        }
+
+        /* --- Color Palette --- */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+        .color-swatch {
+            text-align: center;
+        }
+        .color-display {
+            width: 100%;
+            height: 100px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+        .color-swatch .name { font-weight: 700; margin-top: 12px; }
+        .color-swatch .hex { font-size: 14px; color: var(--secondary-text); }
+
+        /* --- Typography --- */
+        .type-sample {
+            padding: 16px 0;
+            border-bottom: 1px dashed var(--card-border);
+        }
+        .type-sample:last-child { border-bottom: none; }
+        .type-sample .label { font-size: 14px; color: var(--secondary-text); margin-bottom: 8px; }
+
+        /* --- Buttons --- */
+        .button-demo-grid {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .primary-button, .secondary-button {
+            padding: 14px 28px;
+            border-radius: 16px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .primary-button { background: var(--primary); color: white; }
+        .secondary-button { background: #F1F3F5; color: var(--secondary-text); }
+
+        /* --- Charts --- */
+        .chart-demo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">LIA</div>
+        <nav class="sidebar-nav">
+            <ul id="nav-links">
+                <li><a href="#intro" class="active">소개</a></li>
+                <li><a href="#colors">1. 색상 (Colors)</a></li>
+                <li><a href="#typography">2. 타이포그래피 (Typography)</a></li>
+                <li><a href="#buttons">3. 버튼 (Buttons)</a></li>
+                <li><a href="#forms">4. 폼 요소 (Forms)</a></li>
+                <li><a href="#charts">5. 차트 (Charts)</a></li>
+                <li><a href="#charts">5. 차트 (Charts)</a></li>
+                <li><a href="#feedback">6. 피드백 (Feedback)</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <section id="intro">
+            <div class="section-header">
+                <h1>LIA 디자인 시스템</h1>
+                <p>LIA 프로젝트의 일관된 사용자 경험을 위한 디자인 원칙, 컴포넌트, 가이드라인입니다. 이 문서를 통해 LIA의 디자인 언어를 이해하고, 재사용 가능한 컴포넌트를 활용하여 효율적으로 개발할 수 있습니다.</p>
+            </div>
+            <div class="card">
+                <h3>시작하기</h3>
+                <p>모든 위젯은 `lia_widgets.dart` 파일을 통해 한 번에 import하여 사용할 수 있습니다.</p>
+                <pre><code>import 'package:lia/presentation/widgets/lia_widgets.dart';</code></pre>
+            </div>
+        </section>
+
+        <section id="colors">
+            <div class="section-header">
+                <h1>1. 색상 (Colors)</h1>
+                <p>LIA의 색상 시스템은 사용자의 감성을 자극하고 긍정적인 경험을 제공하기 위해 설계되었습니다. 사랑스러운 핑크와 재치있는 보라색을 중심으로 따뜻하고 친근한 분위기를 연출합니다.</p>
+            </div>
+            <div class="color-grid">
+                <div class="color-swatch">
+                    <div class="color-display" style="background: var(--primary);"></div>
+                    <div class="name">Primary</div>
+                    <div class="hex">#FF70A6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-display" style="background: var(--accent);"></div>
+                    <div class="name">Accent</div>
+                    <div class="hex">#A162F7</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-display" style="background: var(--yellow);"></div>
+                    <div class="name">Yellow</div>
+                    <div class="hex">#FFD670</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-display" style="background: var(--blue);"></div>
+                    <div class="name">Blue</div>
+                    <div class="hex">#70A6FF</div>
+                </div>
+                 <div class="color-swatch">
+                    <div class="color-display" style="background: var(--green);"></div>
+                    <div class="name">Green</div>
+                    <div class="hex">#70FFA6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-display" style="background: var(--charcoal);"></div>
+                    <div class="name">Charcoal</div>
+                    <div class="hex">#333333</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-display" style="background: var(--secondary-text);"></div>
+                    <div class="name">Secondary Text</div>
+                    <div class="hex">#555555</div>
+                </div>
+                 <div class="color-swatch">
+                    <div class="color-display" style="background: var(--card-border);"></div>
+                    <div class="name">Card Border</div>
+                    <div class="hex">#FFDDE8</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="typography">
+            <div class="section-header">
+                <h1>2. 타이포그래피 (Typography)</h1>
+                <p>LIA의 타이포그래피는 브랜드의 개성을 표현하는 `Gaegu` 폰트와 가독성을 보장하는 `Noto Sans KR`을 조합하여 사용합니다. 명확한 위계를 통해 사용자가 정보에 쉽게 집중할 수 있도록 돕습니다.</p>
+            </div>
+            <div class="card">
+                <div class="type-sample">
+                    <div class="label">AppTextStyles.mainTitle (Gaegu)</div>
+                    <div style="font-family: var(--font-display); font-size: 48px; color: var(--primary); text-shadow: 2px 2px var(--yellow);">LIA 메인 타이틀</div>
+                </div>
+                <div class="type-sample">
+                    <div class="label">AppTextStyles.h1 (Noto Sans KR)</div>
+                    <div style="font-size: 32px; font-weight: 900;">헤드라인 1</div>
+                </div>
+                <div class="type-sample">
+                    <div class="label">AppTextStyles.h2 (Noto Sans KR)</div>
+                    <div style="font-size: 24px; font-weight: 700;">헤드라인 2</div>
+                </div>
+                <div class="type-sample">
+                    <div class="label">AppTextStyles.body (Noto Sans KR)</div>
+                    <div style="font-size: 16px; line-height: 1.6;">이것은 일반 본문 텍스트입니다. 가독성을 중심으로 설정되었습니다.</div>
+                </div>
+                 <div class="type-sample">
+                    <div class="label">AppTextStyles.helper (Noto Sans KR)</div>
+                    <div style="font-size: 14px; color: var(--secondary-text);">이것은 도움말이나 부가 설명을 위한 텍스트입니다.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="buttons">
+            <div class="section-header">
+                <h1>3. 버튼 (Buttons)</h1>
+                <p>버튼은 사용자의 가장 중요한 상호작용을 유도합니다. LIA는 긍정적이고 주요한 액션을 위한 `PrimaryButton`과, 보조적인 액션을 위한 `SecondaryButton` 두 가지를 기본으로 제공합니다.</p>
+            </div>
+            <div class="component-grid">
+                <div class="card">
+                    <h3>Primary Button</h3>
+                    <div class="button-demo-grid">
+                        <button class="primary-button">메시지 생성</button>
+                    </div>
+                    <pre><code>PrimaryButton(
+  onPressed: () {},
+  text: "메시지 생성",
+)</code></pre>
+                </div>
+                <div class="card">
+                    <h3>Secondary Button</h3>
+                    <div class="button-demo-grid">
+                        <button class="secondary-button">취소</button>
+                    </div>
+                    <pre><code>SecondaryButton(
+  onPressed: () {},
+  text: "취소",
+)</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="forms">
+            <div class="section-header">
+                <h1>4. 폼 요소 (Forms)</h1>
+                <p>사용자로부터 정보를 입력받기 위한 다양한 UI 요소들입니다. 친근한 디자인으로 사용자가 정보를 입력하는 과정이 지루하지 않도록 돕습니다.</p>
+            </div>
+             <div class="card">
+                <h3>Floating Label TextField</h3>
+                <p>입력 필드를 클릭하면 라벨이 위로 올라가는 애니메이션 효과가 적용된 텍스트 필드입니다.</p>
+                <br>
+                <div style="background-color: #f9f9f9; padding: 20px; border-radius: 8px;">
+                    <input type="text" placeholder="썸남 이름 알려줘!" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--card-border); font-size: 16px;">
+                </div>
+            </div>
+        </section>
+
+        <section id="charts">
+            <div class="section-header">
+                <h1>5. 차트 (Charts)</h1>
+                <p>복잡한 데이터를 사용자가 쉽게 이해할 수 있도록 시각화합니다. LIA의 핵심 기능인 관계 분석 결과를 보여주는 데 사용되며, 애니메이션과 인터랙션을 통해 데이터 탐색의 즐거움을 제공합니다.</p>
+            </div>
+            <div class="component-grid">
+                <div class="card">
+                    <h3>Pie Chart</h3>
+                    <div class="chart-demo-container">
+                         <svg width="200" height="200" viewBox="0 0 200 200" style="transform: rotate(-90deg);"><path class="pie-slice" fill="var(--primary)" d="M 100 100 L 100 0 A 100 100 0 0 1 200 100 Z"></path><path class="pie-slice" fill="var(--accent)" d="M 100 100 L 200 100 A 100 100 0 0 1 100 200 Z"></path><path class="pie-slice" fill="var(--yellow)" d="M 100 100 L 100 200 A 100 100 0 0 1 0 100 Z"></path><path class="pie-slice" fill="var(--blue)" d="M 100 100 L 0 100 A 100 100 0 0 1 100 0 Z"></path></svg>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Semicircle Gauge</h3>
+                     <div class="chart-demo-container">
+                        <svg width="250" height="125" viewBox="0 0 250 125"><path fill="none" stroke="#eee" stroke-width="30" stroke-linecap="round" d="M 15 125 A 110 110 0 0 1 235 125"></path><path fill="none" stroke="var(--primary)" stroke-width="30" stroke-linecap="round" d="M 15 125 A 110 110 0 0 1 235 125" style="stroke-dasharray: 392.7; stroke-dashoffset: 98.175;"></path></svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <section id="feedback">
+            <div class="section-header">
+                <h1>6. 피드백 (Feedback)</h1>
+                <p>사용자의 행동에 대한 시각적인 피드백을 제공하여 시스템이 작동하고 있음을 알리고, 긍정적인 경험을 강화합니다.</p>
+            </div>
+            <div class="component-grid">
+                <div class="card">
+                    <h3>Toast Notification</h3>
+                    <div style="padding: 12px; background: var(--success); color: white; border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <span>메시지 전송 완료! 💌</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Pulsating Dot</h3>
+                    <div style="display: flex; align-items: center; justify-content: center; height: 50px;">
+                        <div style="width: 12px; height: 12px; background: var(--primary); border-radius: 50%; animation: pulse 1.5s infinite ease-in-out;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Sidebar active link handling on scroll
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Simple pulse animation for CSS-in-JS example
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.5); } }`;
+        document.head.appendChild(styleSheet);
+
+    </script>
+
+</body>
+</html>

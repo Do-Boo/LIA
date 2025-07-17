@@ -1,0 +1,152 @@
+# LIA Cursor Rules 통합 가이드
+
+## 📚 사용 가능한 Cursor Rules
+
+LIA 프로젝트 개발 시 다음 규칙들을 참조하세요:
+
+### 1. 🎯 [LIA 위젯 사용법 가이드](mdc:.cursor/rules/lia-widget-usage-guide.mdc)
+**언제 사용:** 위젯 사용법이나 파라미터를 확인하고 싶을 때
+- 모든 위젯의 상세한 사용법과 파라미터 설명
+- 서현 페르소나에 맞는 텍스트 가이드
+- 색상 및 텍스트 스타일 사용법
+- 빠른 import: `import 'package:lia/presentation/widgets/lia_widgets.dart';`
+
+### 2. 🎬 [실제 사용 시나리오 가이드](mdc:.cursor/rules/lia-usage-scenarios.mdc)
+**언제 사용:** 실제 화면 구성이나 사용자 플로우를 구현할 때
+- 메시지 생성 플로우 시나리오
+- 대시보드 확인 플로우
+- 설정 변경 플로우
+- 로딩 및 피드백 시나리오
+- 화면별 위젯 조합 예시
+
+### 3. 🏗️ [개발 베스트 프랙티스](mdc:.cursor/rules/lia-development-best-practices.mdc)
+**언제 사용:** 코드 품질, 성능, 아키텍처를 고려할 때
+- 18세 서현 페르소나 개발 원칙
+- 아키텍처 및 파일 구조 가이드
+- 반응형 디자인 원칙
+- 성능 최적화 및 접근성 원칙
+- 서현 페르소나 체크리스트
+
+## 🚀 빠른 참조 가이드
+
+### 위젯 Import
+```dart
+import 'package:lia/presentation/widgets/lia_widgets.dart';
+```
+
+### 주요 색상
+```dart
+AppColors.primary      // 핑크 #FF70A6
+AppColors.accent       // 퍼플 #A162F7
+AppColors.green        // 성공 #70FFA6
+AppColors.error        // 오류 #FF6B6B
+```
+
+### 서현이 말투 버튼
+```dart
+PrimaryButton(
+  onPressed: () => action(),
+  text: '메시지 ㄱㄱ',
+)
+
+SecondaryButton(
+  onPressed: () => cancel(),
+  text: '아니야',
+)
+```
+
+### 호감도 차트
+```dart
+GaugeChart() // 기본 75% 호감도 표시
+```
+
+## 📋 개발 체크리스트
+
+### 🎯 서현 페르소나 체크
+- [ ] 버튼 텍스트가 서현이 말투인가? ("메시지 ㄱㄱ", "아니야")
+- [ ] 색상이 18세 여성에게 어필하는가? (핑크, 퍼플 톤)
+- [ ] 폰트가 친근하고 귀여운가? (Gaegu 폰트)
+- [ ] 터치 영역이 충분한가? (최소 44px)
+
+### 🎨 UX 플로우 체크
+- [ ] 3번의 탭으로 원하는 기능에 도달 가능한가?
+- [ ] 로딩 시간이 5초 이상일 때 진행률을 보여주는가?
+- [ ] 오류 발생 시 친근한 메시지를 보여주는가?
+- [ ] 성공 시 즉각적인 피드백을 제공하는가?
+
+### ⚡ 성능 체크
+- [ ] 화면 전환이 60fps로 부드러운가?
+- [ ] 메모리 사용량이 적절한가?
+- [ ] 네트워크 오류 시 적절히 처리되는가?
+- [ ] 오프라인 상태에서도 기본 기능이 작동하는가?
+
+## 🔄 개발 워크플로우
+
+### 1. 새로운 화면 개발 시
+1. **시나리오 가이드** 참조하여 사용자 플로우 파악
+2. **위젯 사용법** 참조하여 필요한 컴포넌트 선택
+3. **베스트 프랙티스** 참조하여 코드 구조 설계
+4. **체크리스트** 확인하여 품질 검증
+
+### 2. 기존 코드 리팩토링 시
+1. **베스트 프랙티스** 참조하여 개선점 파악
+2. **위젯 사용법** 참조하여 최신 패턴 적용
+3. **시나리오 가이드** 참조하여 UX 개선
+4. **체크리스트** 확인하여 완성도 검증
+
+### 3. 버그 수정 시
+1. **베스트 프랙티스** 참조하여 원인 분석
+2. **위젯 사용법** 참조하여 올바른 사용법 확인
+3. **시나리오 가이드** 참조하여 사용자 영향 파악
+4. **체크리스트** 확인하여 재발 방지
+
+## 💡 개발 팁
+
+### 자주 사용하는 패턴
+```dart
+// 버튼 조합 (2:1 비율)
+Row(
+  children: [
+    Expanded(
+      child: SecondaryButton(
+        onPressed: () => Navigator.pop(context),
+        text: '취소',
+      ),
+    ),
+    SizedBox(width: 12),
+    Expanded(
+      flex: 2,
+      child: PrimaryButton(
+        onPressed: () => confirm(),
+        text: '확인',
+      ),
+    ),
+  ],
+)
+
+// 로딩 상태 표시
+isLoading ? GeneratingProgress() : MainContent()
+
+// 성공 피드백
+ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text('메시지 복사 완료! 이제 붙여넣기해서 써봐 ㄱㄱ'),
+    backgroundColor: AppColors.green,
+  ),
+);
+```
+
+### 서현이 페르소나 텍스트 예시
+- **버튼**: "메시지 ㄱㄱ", "아니야", "완전 좋아!", "나중에"
+- **질문**: "내 이름이 뭐야?", "어떤 상황이야?", "뭐라고 보낼까?"
+- **상태**: "로딩 중...", "생성 중이야", "완료됐어!"
+- **피드백**: "완전 좋은데!", "이거 괜찮네", "다시 해볼까?"
+
+---
+
+**📌 참고:** 이 규칙은 모든 .dart 파일에 자동으로 적용되며, 개발 시 언제든지 참조할 수 있습니다.
+description:
+globs:
+alwaysApply: false
+---
+ 

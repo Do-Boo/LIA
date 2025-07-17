@@ -1,0 +1,332 @@
+
+# LIA 메인 페이지 제작 가이드 (Chart Demo 스타일)
+
+## 📱 메인 페이지 구조 (2025.07.16 20:52 업데이트)
+메인 페이지는 Chart Demo 스타일로 완전히 개선되어 18세 서현 페르소나에 맞는 친근하고 트렌디한 UI로 구성됩니다.
+
+### 📊 막대 차트 범례 시스템 (2025.07.16 20:52 추가)
+#### 범례 기능
+- **표시 제어**: `showLegend` 매개변수로 범례 켜기/끄기 가능
+- **기본값**: `showLegend: true` (범례 표시)
+- **스타일**: LineChart와 동일한 범례 스타일로 일관성 유지
+- **레이아웃**: Wrap 위젯으로 반응형 범례 배치
+
+#### 사용 예시
+```dart
+// 범례 포함 (기본값)
+const BarChart()
+const BarChart(showLegend: true)
+
+// 범례 없이 표시
+const BarChart(showLegend: false)
+```
+
+#### 범례 구성
+- 카페 데이트: AppColors.primary
+- 영화관: AppColors.accent  
+- 공원 산책: AppColors.blue
+- 음식 이야기: AppColors.green
+- 취미 공유: AppColors.yellow
+
+### 🎨 Chart Demo 스타일 적용 (핵심 개선사항)
+#### 1. 레이아웃 구조 개선
+- ❌ **복잡한 반응형 그리드**: 모바일/태블릿/데스크톱별 다른 레이아웃
+- ✅ **단순한 세로 스크롤**: Chart Demo와 동일한 구조
+
+#### 2. 애니메이션 최적화
+- ❌ **flutter_staggered_animations**: 의존성과 복잡한 애니메이션
+- ✅ **애니메이션 제거**: 빠른 로딩 속도와 단순함
+
+#### 3. 카드 디자인 통일
+- ❌ **ComponentCard 래퍼**: 불필요한 래퍼 사용
+- ✅ **Chart Demo 스타일**: Container + BoxShadow 직접 구현
+
+#### 4. 일관된 간격과 패딩
+- ❌ **불규칙한 여백**: 16px, 20px, 24px 혼재
+- ✅ **일관된 간격**: 32px 간격, 20px 패딩
+
+#### 5. 명확한 구조
+- ❌ **제목만 있는 애매한 구조**: 단순한 제목 표시
+- ✅ **번호 + 제목 + 설명 + 위젯**: 명확한 계층구조
+
+### 필수 구성 요소
+1. **대시보드 헤더**: 분석 완료 상태 표시 및 브랜드 아이덴티티
+2. **1. 종합 분석 요약**: 썸 지수 시각화 (단독 배치)
+3. **2. 감정 흐름 분석**: 시간에 따른 감정 변화 추이
+4. **3. 메시지 시간대별 연락 빈도**: 히트맵 차트로 활동 패턴 시각화
+5. **4. 대화 주제 분석**: 파이 차트로 주제 분포 표시
+6. **5. AI 추천 액션 플랜**: 관계 개선을 위한 구체적 조언
+
+### 차트 시각화 가이드 (2025.07.16 19:35 개선)
+#### 1. 썸 지수 표시
+- **형태**: 숫자 표기 (게이지 차트 → 대형 숫자)
+- **구현**: 48px 크기의 굵은 숫자 + % 기호
+- **색상**: AppColors.primary
+- **레이아웃**: 단독 배치 (연인 발전 가능성 제거됨)
+
+#### 3. 메시지 시간대별 연락 빈도
+- **형태**: 히트맵 차트 (7일×24시간 그리드)
+- **구현**: `HeatmapChart` 위젯 사용
+- **데이터**: `_generateHeatmapData()` 함수로 시뮬레이션
+- **색상**: AppColors.surface → AppColors.primary 그라데이션
+
+#### 4. 대화 주제 분석
+- **형태**: 파이 차트 (크기 증가 및 범례 개선)
+- **구현**: `PieChart` 위젯 사용
+- **설정**: height: 400, radius: 120, showCenterValue: false
+- **데이터**: 5개 주제 (일상 대화, 취미/관심사, 미래 계획, 감정 표현, 기타)
+
+#### 5. 감정 흐름 분석
+- **형태**: 라인 차트 (기존 유지)
+- **구현**: `LineChart` 위젯 사용
+- **용도**: 시간에 따른 감정 변화 추이 표시
+
+## 🧭 Chart Demo 스타일 섹션 구조
+
+### _buildChartDemoSection() 함수
+```dart
+Widget _buildChartDemoSection({
+  required String number,
+  required String title,
+  required String description,
+  required Widget child,
+}) {
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.08),
+          blurRadius: 20,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 번호 + 제목
+        Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Text(
+                  number,
+                  style: AppTextStyles.body1.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: AppTextStyles.h2.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.charcoal,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        // 설명
+        Text(
+          description,
+          style: AppTextStyles.body2.copyWith(
+            color: AppColors.secondaryText,
+            height: 1.4,
+          ),
+        ),
+        const SizedBox(height: 24),
+        // 콘텐츠
+        child,
+      ],
+    ),
+  );
+}
+```
+
+## 🎯 데이터 시각화 구현 가이드
+
+### 1. 썸 지수 숫자 표기
+```dart
+Widget _buildHeartBasedSomeIndex() {
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          AppColors.primary.withValues(alpha: 0.1),
+          AppColors.accent.withValues(alpha: 0.1),
+        ],
+      ),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+    ),
+    child: Column(
+      children: [
+        // 제목
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(HugeIcons.strokeRoundedHeartAdd, size: 20, color: AppColors.primary),
+            const SizedBox(width: 8),
+            Text('썸 지수', style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        // 숫자 표기
+        Text('$someIndex', style: AppTextStyles.h1.copyWith(fontSize: 48, fontWeight: FontWeight.bold)),
+        Text('%', style: AppTextStyles.h2.copyWith(fontWeight: FontWeight.w600)),
+      ],
+    ),
+  );
+}
+```
+
+
+
+### 2. 막대 차트로 대화 주제 순위 TOP 5 표시 (범례 포함)
+```dart
+Widget _buildConversationTopicsContent() {
+  return Column(
+    children: [
+      // 막대 차트 - 상위 5개 대화 주제 순위
+      Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 차트 제목
+            Row(
+              children: [
+                Icon(HugeIcons.strokeRoundedAnalytics01, size: 20, color: AppColors.primary),
+                const SizedBox(width: 8),
+                Text(
+                  '대화 주제 순위 TOP 5',
+                  style: AppTextStyles.body1.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+                         // 막대 차트 (범례 포함)
+             const BarChart(showLegend: true),
+          ],
+        ),
+      ),
+      const SizedBox(height: 16),
+      // 인사이트 메시지
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Icon(HugeIcons.strokeRoundedTrendingUp01, size: 18, color: AppColors.primary),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                '카페 데이트 주제가 1위! 실제 데이트 제안을 해보세요 ☕️',
+                style: AppTextStyles.body2.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+```
+
+## 🎨 디자인 시스템
+
+### 색상 시스템
+```dart
+// 카드 배경
+color: Colors.white
+
+// 그림자
+BoxShadow(
+  color: Colors.black.withValues(alpha: 0.08),
+  blurRadius: 20,
+  offset: const Offset(0, 4),
+)
+
+// 번호 배지
+color: AppColors.primary
+borderRadius: BorderRadius.circular(8)
+
+// 제목 색상
+color: AppColors.charcoal
+fontWeight: FontWeight.bold
+
+// 설명 색상
+color: AppColors.secondaryText
+```
+
+### 크기 및 간격
+- **카드 패딩**: `20px`
+- **섹션 간격**: `32px`
+- **번호 배지**: `32x32px`
+- **모서리 반경**: `20px` (카드), `8px` (배지)
+- **그림자**: `blurRadius: 20, offset: Offset(0, 4)`
+
+## 🔄 차트 구현 체크리스트
+
+### ✅ 완료된 항목
+- [x] flutter_staggered_animations 제거
+- [x] Chart Demo 스타일 적용
+- [x] 번호 + 제목 + 설명 + 위젯 구조
+- [x] 일관된 32px 간격, 20px 패딩
+- [x] 썸 지수 숫자 표기 (48px)
+- [x] SemicircleGaugeChart 연인 발전 가능성
+- [x] 파이 차트 크기 증가 (400px, radius: 120)
+- [x] 히트맵 차트 시간대별 연락 빈도
+- [x] 라인 차트 감정 흐름 분석 유지
+
+### 🎯 18세 서현 페르소나 고려사항
+
+#### 선호하는 디자인 스타일
+- ✅ **깔끔하고 모던한** Chart Demo 스타일
+- ✅ **직관적이고 이해하기 쉬운** 번호 + 제목 + 설명 구조
+- ✅ **트렌디하고 세련된** 카드 디자인과 그림자 효과
+- ✅ **감성적이고 친근한** 색상과 아이콘 사용
+
+#### 피해야 할 스타일
+- ❌ 복잡한 애니메이션과 의존성
+- ❌ 불규칙한 간격과 패딩
+- ❌ 애매한 구조와 계층
+- ❌ 너무 작은 차트 크기
+
+## 📝 Update History
+
+- **2025.07.16 18:45**: Chart Demo 스타일 완전 적용, SemicircleGaugeChart 도입, 파이 차트 크기 증가
+- **2025.07.16 18:11**: 메인 화면 차트 시각화 개선 및 Cursor Rules 업데이트
+- **2025.07.15 14:38**: 이모티콘 사용 금지 정책 추가 (📊, 🧠, 📈, 💡 등 → HugeIcons 대체)
+- **2025.07.14 14:36**: HugeIcons 패키지 도입 및 아이콘 시스템 구축
+- **2025.07.14 13:30**: 네비게이션 메뉴 구조 변경 (홈, 코칭센터, AI 메시지, 히스토리, MY)

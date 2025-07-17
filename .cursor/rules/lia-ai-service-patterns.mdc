@@ -1,0 +1,413 @@
+# LIA AI Service Integration Patterns
+
+## 🤖 AI Message Generation Architecture
+
+### Service Layer Structure
+```dart
+// Core AI service interface
+abstract class MessageGenerationService {
+  Future<MessageGenerationResult> generateMessages({
+    required UserProfile userProfile,
+    required RecipientProfile recipientProfile,
+    required MessageContext context,
+    required List<EmotionTag> emotions,
+  });
+  
+  Future<MessageOptimizationResult> optimizeMessage({
+    required String originalMessage,
+    required ConversationHistory history,
+    required OptimizationGoals goals,
+  });
+}
+
+// Implementation with proper error handling
+class OpenAIMessageService implements MessageGenerationService {
+  final String apiKey;
+  final HttpClient httpClient;
+  
+  @override
+  Future<MessageGenerationResult> generateMessages({...}) async {
+    try {
+      // Implement with proper 서현 persona prompting
+      final prompt = _buildPersonaPrompt(userProfile, recipientProfile, context);
+      final response = await _callAI(prompt);
+      return _parseResponse(response);
+    } catch (e) {
+      // Return graceful fallback messages in 서현's tone
+      return MessageGenerationResult.fallback("앗! 잠깐만, 다시 생각해볼게 ㅠㅠ");
+    }
+  }
+}
+```
+
+### Persona-Driven Prompting
+```dart
+class PersonaPromptBuilder {
+  static String buildPrompt({
+    required UserProfile user,
+    required RecipientProfile recipient,
+    required MessageContext context,
+  }) {
+    return """
+    You are helping 박서현, an 18-year-old trendy high school student (ENFP).
+    
+    User Context:
+    - MBTI: ${user.mbti}
+    - Personality Tags: ${user.personalityTags.join(', ')}
+    - Communication Style: Uses current slang, memes, casual tone
+    
+    Recipient Analysis:
+    - MBTI: ${recipient.mbti}
+    - Interests: ${recipient.interests.join(', ')}
+    - Response Pattern: ${recipient.responsePattern}
+    
+    Situation: ${context.situation}
+    Desired Emotions: ${context.emotions.join(', ')}
+    
+    Generate 3 message options (A안, B안, C안) that:
+    1. Match 서현's trendy, casual speaking style
+    2. Consider recipient's personality type
+    3. Include appropriate current slang/memes
+    4. Maintain natural conversation flow
+    
+    Format as JSON with explanation for each option.
+    """;
+  }
+}
+```
+
+## 📊 Data Models & State Management
+
+### Core Data Models
+```dart
+// User profile with 서현 persona characteristics
+class UserProfile {
+  final String mbti;
+  final List<String> personalityTags; // #인싸력뿜뿜, #유행선도자, etc.
+  final CommunicationStyle style;
+  final List<String> favoriteSlang;
+  
+  // Factory for 서현 default profile
+  factory UserProfile.seohyunDefault() => UserProfile(
+    mbti: 'ENFP',
+    personalityTags: ['#인싸력뿜뿜', '#유행선도자', '#금사빠'],
+    style: CommunicationStyle.trendy,
+    favoriteSlang: ['완전', 'ㄱㄱ', '멋있어ㅋㅋ'],
+  );
+}
+
+// Message generation context
+class MessageContext {
+  final SituationType situation; // Instagram story reply, reconnection, etc.
+  final List<EmotionTag> emotions;
+  final ConversationHistory? recentHistory;
+  final DateTime timestamp;
+  
+  // Common scenarios for 서현
+  static const commonSituations = [
+    SituationType.instagramStoryReply,
+    SituationType.reconnectionMessage,
+    SituationType.dateInvitation,
+    SituationType.casualCheck,
+  ];
+}
+```
+
+### State Management with Provider
+```dart
+class MessageGenerationProvider extends ChangeNotifier {
+  MessageGenerationState _state = MessageGenerationState.idle;
+  List<MessageOption> _generatedMessages = [];
+  String? _error;
+  
+  // Progress tracking for UI feedback
+  GenerationProgress _progress = GenerationProgress.analyzing;
+  
+  Future<void> generateMessages({
+    required MessageContext context,
+  }) async {
+    _updateState(MessageGenerationState.loading);
+    _progress = GenerationProgress.analyzing;
+    notifyListeners();
+    
+    try {
+      // Stage 1: Analyzing person (25%)
+      await Future.delayed(Duration(milliseconds: 800));
+      _progress = GenerationProgress.understandingSituation;
+      notifyListeners();
+      
+      // Stage 2: Understanding situation (50%)
+      await Future.delayed(Duration(milliseconds: 600));
+      _progress = GenerationProgress.combiningEmotions;
+      notifyListeners();
+      
+      // Stage 3: Combining emotions (75%)
+      await Future.delayed(Duration(milliseconds: 700));
+      _progress = GenerationProgress.finalizingMessage;
+      notifyListeners();
+      
+      // Stage 4: Generate actual messages
+      final result = await _messageService.generateMessages(context: context);
+      
+      _generatedMessages = result.messages;
+      _updateState(MessageGenerationState.success);
+    } catch (e) {
+      _error = "앗! 메시지 만들기에 실패했어 ㅠㅠ 다시 시도해볼까?";
+      _updateState(MessageGenerationState.error);
+    }
+  }
+}
+```
+
+## 🎨 UI Integration Patterns
+
+### Loading States with Persona
+```dart
+class GeneratingProgress extends StatefulWidget {
+  final GenerationProgress progress;
+  final VoidCallback? onCancel;
+  
+  @override
+  _GeneratingProgressState createState() => _GeneratingProgressState();
+}
+
+class _GeneratingProgressState extends State<GeneratingProgress>
+    with TickerProviderStateMixin {
+  
+  late AnimationController _heartController;
+  late AnimationController _waveController;
+  
+  // 서현-style progress messages
+  static const progressMessages = {
+    GenerationProgress.analyzing: "상대방 분석 중... 🤔",
+    GenerationProgress.understandingSituation: "상황 파악하는 중! 📱",
+    GenerationProgress.combiningEmotions: "감정 조합 중... 💕",
+    GenerationProgress.finalizingMessage: "최종 다듬는 중! ✨",
+  };
+  
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Heart animation with waves
+          _buildHeartWithWaves(),
+          SizedBox(height: 24),
+          
+          // Progress message in 서현's tone
+          Text(
+            progressMessages[widget.progress] ?? "메시지 만드는 중...",
+            style: AppTextStyles.h3.copyWith(
+              color: AppColors.primary,
+            ),
+          ),
+          
+          SizedBox(height: 16),
+          
+          // Progress indicator
+          LinearProgressIndicator(
+            value: _getProgressValue(),
+            backgroundColor: AppColors.lightGray,
+            valueColor: AlwaysStoppedAnimation(AppColors.primary),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+### Message Display with 서현 Persona
+```dart
+class MessageOptionCard extends StatelessWidget {
+  final MessageOption option;
+  final String label; // A안, B안, C안
+  final VoidCallback onSelect;
+  final VoidCallback onCopy;
+  
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Option label with 서현 style
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primaryGradient,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    label,
+                    style: AppTextStyles.caption.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Spacer(),
+                // Reaction prediction in 서현's tone
+                Text(
+                  option.predictedReaction,
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.secondary,
+                  ),
+                ),
+              ],
+            ),
+            
+            SizedBox(height: 12),
+            
+            // Message content
+            Text(
+              option.message,
+              style: AppTextStyles.body1,
+            ),
+            
+            SizedBox(height: 8),
+            
+            // Explanation in 서현's casual tone
+            Text(
+              option.explanation,
+              style: AppTextStyles.caption.copyWith(
+                color: AppColors.textSecondary,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            
+            SizedBox(height: 16),
+            
+            // Action buttons
+            Row(
+              children: [
+                Expanded(
+                  child: SecondaryButton(
+                    text: "복사하기",
+                    onPressed: onCopy,
+                    icon: Icons.copy,
+                  ),
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: PrimaryButton(
+                    text: "이걸로 ㄱㄱ!",
+                    onPressed: onSelect,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+## 🔒 Privacy & Ethics Implementation
+
+### Data Protection Patterns
+```dart
+class ConversationDataManager {
+  static const _encryptionKey = 'lia_conversation_key';
+  
+  // Secure storage for conversation history
+  Future<void> saveConversation(Conversation conversation) async {
+    final encrypted = await _encryptData(conversation.toJson());
+    await _secureStorage.write(
+      key: 'conversation_${conversation.id}',
+      value: encrypted,
+    );
+  }
+  
+  // Privacy-first data export
+  Future<String> exportUserData() async {
+    final conversations = await getAllConversations();
+    return jsonEncode({
+      'export_date': DateTime.now().toIso8601String(),
+      'user_note': '서현이의 대화 기록이에요! 💕',
+      'conversations': conversations.map((c) => c.toExportJson()).toList(),
+    });
+  }
+}
+
+// Ethical usage warnings in 서현's tone
+class EthicsManager {
+  static const warnings = [
+    "진짜 마음을 담아서 보내는 게 제일 좋아! 💕",
+    "상대방도 사람이니까 배려하면서 써요 😊",
+    "AI가 도와주지만 진심은 내가 담는 거야! ✨",
+  ];
+  
+  static void showEthicsReminder(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => CustomModal(
+        title: "잠깐! 이것만 기억해줘 💕",
+        content: warnings[Random().nextInt(warnings.length)],
+        actions: [
+          PrimaryButton(
+            text: "알겠어!",
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+## 📈 Analytics & Optimization
+
+### Success Tracking
+```dart
+class MessageAnalytics {
+  // Track message success in 서현's context
+  static Future<void> trackMessageSent({
+    required MessageOption option,
+    required RecipientProfile recipient,
+  }) async {
+    await _analytics.track('message_sent', {
+      'option_type': option.type,
+      'recipient_mbti': recipient.mbti,
+      'emotions_used': option.emotions.join(','),
+      'user_age': 18, // 서현's age
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+    });
+  }
+  
+  // Track conversation outcomes
+  static Future<void> trackConversationOutcome({
+    required String messageId,
+    required ConversationOutcome outcome,
+  }) async {
+    await _analytics.track('conversation_outcome', {
+      'message_id': messageId,
+      'outcome': outcome.toString(),
+      'response_time_minutes': outcome.responseTimeMinutes,
+    });
+  }
+}
+```
+
+---
+
+**Key Implementation Principles:**
+1. **Persona-First**: Every technical decision should enhance 서현's user experience
+2. **Privacy-Conscious**: Implement strong data protection with user-friendly controls
+3. **Ethical AI**: Include gentle reminders about authentic communication
+4. **Performance**: Optimize for mobile-first, smooth animations, quick responses
+5. **Localization**: Proper Korean text handling and cultural context awareness
+description:
+globs:
+alwaysApply: false
+---
+ 

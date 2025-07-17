@@ -1,0 +1,236 @@
+---
+alwaysApply: true
+---
+
+# LIA Icon System Guide
+> 2025.07.15 14:38:35 업데이트 - 이모티콘 사용 금지 정책 추가
+
+## 🎨 Icon Architecture
+
+### 아이콘 패키지 ([pubspec.yaml](mdc:pubspec.yaml))
+LIA 앱은 **HugeIcons 패키지**를 사용하여 일관되고 트렌디한 아이콘 시스템을 구축합니다.
+
+```yaml
+dependencies:
+  hugeicons: ^0.0.11
+```
+
+#### ✨ HugeIcons 특징
+- ✅ **4,700+ 모던 아이콘** 보유
+- ✅ **완전 무료** MIT 라이선스
+- ✅ **일관된 스트로크 디자인**
+- ✅ **18세 타겟**에 적합한 트렌디한 스타일
+- ✅ **Flutter 최적화**된 패키지
+
+## 🧭 Navigation Icons
+
+### 하단 네비게이션 바 아이콘 ([bottom_navigation_bar.dart](mcd:lib/presentation/widgets/specific/navigation/bottom_navigation_bar.dart))
+
+#### 📱 현재 메뉴 구조 (2025.07.14)
+1. **홈**: `HugeIcons.strokeRoundedHome01`
+   - 메인 대시보드 및 앱 개요
+   - 직관적인 홈 아이콘
+
+2. **코칭센터**: `HugeIcons.strokeRoundedBookOpen01`
+   - AI 메시지 작성 가이드 및 팁
+   - 열린 책 모양으로 학습/교육 의미
+
+3. **AI 메시지**: `Icons.auto_awesome` (중앙 버튼)
+   - 핵심 메시지 생성 기능
+   - Material Icons의 AI/마법 아이콘
+
+4. **히스토리**: `HugeIcons.strokeRoundedClock01`
+   - 메시지 작성 기록
+   - 시계 모양으로 시간/기록 의미
+
+5. **MY**: `HugeIcons.strokeRoundedUserCircle`
+   - 프로필 및 개인 설정
+   - 원형 프로필 아이콘
+
+## 🎯 Icon Selection Guidelines
+
+### ✅ 올바른 아이콘 선택 기준
+1. **의미적 적합성**: 기능과 직관적으로 연결되는 아이콘
+2. **일관된 스타일**: 모두 `strokeRounded` 스타일 사용
+3. **18세 타겟**: 젊은 여성이 선호하는 세련된 디자인
+4. **브랜드 매치**: LIA의 모던하고 감성적인 이미지와 일치
+
+### ❌ 피해야 할 아이콘들
+- 너무 복잡하거나 세부적인 아이콘
+- 구식이거나 촌스러운 디자인
+- 의미가 모호한 아이콘
+- 다른 아이콘들과 스타일이 다른 것
+
+## 🚫 이모티콘 사용 금지 정책
+
+### ❌ 절대 사용하지 말 것
+다음 이모티콘들은 **절대 사용하지 않고** 반드시 **HugeIcons로 대체**해야 합니다:
+
+#### 분석/데이터 관련 이모티콘
+- `📊` → `HugeIcons.strokeRoundedAnalytics01`
+- `📈` → `HugeIcons.strokeRoundedTrendingUp01`
+- `📉` → `HugeIcons.strokeRoundedTrendingDown01`
+- `🧠` → `HugeIcons.strokeRoundedBrain01`
+- `💡` → `HugeIcons.strokeRoundedBulb`
+- `🎯` → `HugeIcons.strokeRoundedTarget01`
+- `⚡` → `HugeIcons.strokeRoundedFlash01`
+- `🔍` → `HugeIcons.strokeRoundedSearch01`
+
+#### 감정/상태 관련 이모티콘
+- `❤️` → `HugeIcons.strokeRoundedHeartAdd`
+- `💝` → `HugeIcons.strokeRoundedGift01`
+- `😊` → `HugeIcons.strokeRoundedHappy01`
+- `😢` → `HugeIcons.strokeRoundedSad01`
+- `🎉` → `HugeIcons.strokeRoundedCelebration01`
+- `⭐` → `HugeIcons.strokeRoundedStar`
+
+#### 기타 UI 관련 이모티콘
+- `🔔` → `HugeIcons.strokeRoundedNotification01`
+- `⚙️` → `HugeIcons.strokeRoundedSettings01`
+- `📱` → `HugeIcons.strokeRoundedMobilePhone01`
+- `🏠` → `HugeIcons.strokeRoundedHome01`
+- `👤` → `HugeIcons.strokeRoundedUserCircle`
+
+### ✅ 올바른 대체 예시
+```dart
+// ❌ 잘못된 방법 - 이모티콘 사용
+Text('📊 분석 결과'),
+Icon(Icons.star, color: Colors.yellow), // 이모티콘 대신 기본 아이콘
+
+// ✅ 올바른 방법 - HugeIcons 사용
+Row(
+  children: [
+    HugeIcon(
+      icon: HugeIcons.strokeRoundedAnalytics01,
+      color: AppColors.primary,
+      size: 20,
+    ),
+    SizedBox(width: 8),
+    Text('분석 결과'),
+  ],
+),
+```
+
+### 🎨 이모티콘 → HugeIcons 변환 가이드
+1. **의미 파악**: 이모티콘이 표현하는 의미 분석
+2. **적절한 아이콘 검색**: HugeIcons에서 유사한 의미의 아이콘 찾기
+3. **strokeRounded 스타일 확인**: 일관성 유지
+4. **크기 및 색상 적용**: AppColors와 일치하는 스타일 적용
+5. **테스트**: 다양한 화면에서 가독성 확인
+
+## 🛠 Implementation Pattern
+
+### 아이콘 사용 패턴
+```dart
+// ✅ 올바른 구현
+import 'package:hugeicons/hugeicons.dart';
+
+// 네비게이션 아이템 구성
+_buildNavItem(0, HugeIcons.strokeRoundedHome01, '홈'),
+_buildNavItem(1, HugeIcons.strokeRoundedBookOpen01, '코칭센터'),
+_buildNavItem(2, HugeIcons.strokeRoundedClock01, '히스토리'),
+_buildNavItem(3, HugeIcons.strokeRoundedUserCircle, 'MY'),
+
+// 선택된 상태 처리
+IconData selectedIcon;
+switch (index) {
+  case 0:
+    selectedIcon = HugeIcons.strokeRoundedHome01;
+    break;
+  // ... 다른 케이스들
+}
+```
+
+### 아이콘 상태 관리
+- **비선택 상태**: 기본 `strokeRounded` 아이콘 사용
+- **선택 상태**: 동일한 아이콘 사용 (색상으로 구분)
+- **애니메이션**: 200ms 부드러운 전환 효과
+
+## 🎨 Design Consistency
+
+### 색상 시스템
+```dart
+// 선택된 상태
+color: isSelected ? AppColors.primary : AppColors.secondaryText
+
+// 배경 강조
+color: isSelected 
+  ? AppColors.primary.withOpacity(0.1) 
+  : Colors.transparent
+```
+
+### 크기 및 간격
+- **아이콘 크기**: `24px`
+- **컨테이너 크기**: 선택시 `60px`, 비선택시 `50px`
+- **애니메이션**: `Duration(milliseconds: 200)`
+
+## 🔄 Icon Alternatives
+
+### 코칭센터 대안 아이콘들
+현재 사용: `HugeIcons.strokeRoundedBookOpen01`
+
+**다른 옵션들:**
+- `HugeIcons.strokeRoundedGraduationCap01` - 졸업모자 (교육)
+- `HugeIcons.strokeRoundedTeacher` - 선생님 (코칭)
+- `HugeIcons.strokeRoundedBulb` - 전구 (아이디어/팁)
+- `HugeIcons.strokeRoundedTarget01` - 타겟 (목표 달성)
+- `HugeIcons.strokeRoundedMentoring` - 멘토링 (이전 사용)
+
+### 히스토리 대안 아이콘들
+현재 사용: `HugeIcons.strokeRoundedClock01`
+
+**다른 옵션들:**
+- `HugeIcons.strokeRoundedHistory01` - 히스토리
+- `HugeIcons.strokeRoundedCalendar01` - 달력
+- `HugeIcons.strokeRoundedTime01` - 시간
+- `HugeIcons.strokeRoundedArchive01` - 아카이브
+
+## 🚀 Best Practices
+
+### 1. 아이콘 변경 시 주의사항
+```dart
+// ❌ 잘못된 방법 - 일부만 변경
+_buildNavItem(1, HugeIcons.strokeRoundedNewIcon, '코칭센터'),
+// switch 문에서 업데이트 누락
+
+// ✅ 올바른 방법 - 양쪽 모두 업데이트
+_buildNavItem(1, HugeIcons.strokeRoundedNewIcon, '코칭센터'),
+// + switch 문에서도 동일하게 업데이트
+case 1:
+  selectedIcon = HugeIcons.strokeRoundedNewIcon;
+  break;
+```
+
+### 2. 새로운 아이콘 추가 시
+1. HugeIcons 패키지에서 적절한 아이콘 선택
+2. `strokeRounded` 스타일 확인
+3. 18세 타겟에 적합한지 검토
+4. 기존 아이콘들과 일관성 확인
+5. 양쪽 위치 모두 업데이트
+
+### 3. 아이콘 테스트
+- 다양한 화면 크기에서 확인
+- 선택/비선택 상태 전환 테스트
+- 애니메이션 부드러움 확인
+- 색상 대비 적절성 검토
+
+## 🎯 18세 서현 페르소나 고려사항
+
+### 선호하는 아이콘 스타일
+- ✅ **심플하고 깔끔한** 스트로크 디자인
+- ✅ **직관적이고 이해하기 쉬운** 의미
+- ✅ **트렌디하고 모던한** 느낌
+- ✅ **감성적이고 친근한** 디자인
+
+### 피해야 할 스타일
+- ❌ 너무 복잡하거나 어려운 아이콘
+- ❌ 구식이거나 촌스러운 디자인
+- ❌ 의미가 불분명한 추상적 아이콘
+- ❌ 너무 비즈니스적이거나 딱딱한 느낌
+
+## 📝 Update History
+
+- **2025.07.15 14:38:35**: 이모티콘 사용 금지 정책 추가 (📊, 🧠, 📈, 💡 등 → HugeIcons 대체)
+- **2025.07.14 14:36:59**: HugeIcons 패키지 도입 및 아이콘 시스템 구축
+- **2025.07.14 13:30:21**: 네비게이션 메뉴 구조 변경 (홈, 코칭센터, AI 메시지, 히스토리, MY)
+- **2025.07.14 14:36:00**: 코칭센터 아이콘 변경 (Mentoring → BookOpen01)

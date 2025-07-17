@@ -1,0 +1,47 @@
+# 🚨 CRITICAL: Flutter 실행 명령어 절대 금지 규칙 🚨
+
+## ⛔ 절대 사용 금지 명령어 ⛔
+**AI는 다음 명령어들을 절대로 사용해서는 안 됩니다:**
+
+### 🔥 완전 금지 목록
+- `flutter run` ❌ **절대 금지**
+- `flutter run --debug` ❌ **절대 금지**  
+- `flutter run --release` ❌ **절대 금지**
+- `flutter run -d macos` ❌ **절대 금지**
+- `flutter run -d chrome` ❌ **절대 금지**
+- `flutter run -d "iPhone 16 Pro Max"` ❌ **절대 금지**
+- `flutter run -d emulator-5554` ❌ **절대 금지**
+- `flutter run -d [ANY_DEVICE]` ❌ **절대 금지**
+
+## 🚨 중요한 이유
+사용자가 **명시적으로 금지**했습니다!
+- 시뮬레이터가 여러 개 있을 때 디바이스 선택 프롬프트 발생
+- 사용자 입력을 기다리며 무한 대기
+- 프로세스가 멈춤
+- 개발 워크플로우 중단
+
+## ✅ 대신 사용할 수 있는 명령어
+```bash
+flutter devices  # 디바이스 확인만
+flutter clean     # 클린 빌드
+flutter pub get   # 의존성 설치
+```
+
+## 🔥 AI 행동 규칙
+1. **절대로** `flutter run` 관련 명령어 제안하지 말 것
+2. 앱 실행이 필요한 경우 사용자에게 직접 실행하라고 안내
+3. 빌드 확인이 필요한 경우 `flutter clean && flutter pub get` 사용
+4. 의심스러우면 사용자에게 먼저 물어볼 것
+
+## 💀 기억하세요
+**시뮬레이터 + `flutter run` = 사용자 화남 + 프로세스 멈춤**
+
+### 🚨 이 규칙을 어기면 안 되는 이유:
+- 사용자가 명시적으로 금지했음
+- 시스템이 멈출 수 있음  
+- 개발 효율성 저하
+- 사용자 경험 악화
+
+
+**기억하세요: 시뮬레이터 + `flutter run` = 💀**
+ 

@@ -1,0 +1,238 @@
+# LIA 위젯 사용 가이드
+
+## 🎯 개요
+LIA 앱의 18세 서현 페르소나에 맞는 위젯들의 사용법과 가이드라인을 제공합니다.
+
+## 📱 모달 다이얼로그 (Custom Modal)
+
+### 기본 알림 모달 - `showCustomModal`
+확인 버튼만 있는 간단한 알림 모달입니다.
+
+```dart
+// 기본 사용법
+await showCustomModal(
+  context: context,
+  title: '완료',
+  message: '저장되었습니다',
+);
+
+// 버튼 텍스트 변경
+await showCustomModal(
+  context: context,
+  title: '알림',
+  message: '네트워크를 확인해주세요',
+  buttonText: '알겠어요',
+);
+
+// 콜백 함수 추가
+await showCustomModal(
+  context: context,
+  title: '성공',
+  message: '메시지가 전송되었습니다',
+  onConfirm: () {
+    // 확인 버튼 클릭 후 실행할 코드
+    Navigator.pushNamed(context, '/home');
+  },
+);
+```
+
+### 확인/취소 모달 - `showCustomConfirmModal`
+Yes/No 선택이 필요한 확인 모달입니다.
+
+```dart
+// 기본 사용법
+final result = await showCustomConfirmModal(
+  context: context,
+  title: '삭제',
+  message: '정말 삭제하시겠습니까?',
+);
+
+if (result == true) {
+  // 확인 클릭
+  deleteItem();
+} else {
+  // 취소 클릭 또는 뒤로가기
+  print('취소됨');
+}
+
+// 버튼 텍스트 변경
+final logout = await showCustomConfirmModal(
+  context: context,
+  title: '로그아웃',
+  message: '로그아웃 하시겠습니까?',
+  confirmText: '로그아웃',
+  cancelText: '취소',
+);
+```
+
+### 메시지 전송 모달 - `showMessageConfirmModal`
+메시지 전송 전용 확인 모달입니다.
+
+```dart
+// 메시지 전송 확인
+final sendMessage = await showMessageConfirmModal(
+  context: context,
+);
+
+if (sendMessage == true) {
+  // 메시지 전송 로직
+  await sendMessageToServer();
+  showCustomModal(
+    context: context,
+    title: '전송 완료',
+    message: '메시지가 전송되었습니다',
+  );
+}
+```
+
+## 🎨 버튼 위젯
+
+### PrimaryButton
+주요 액션용 버튼입니다.
+
+```dart
+PrimaryButton(
+  text: '확인',
+  onPressed: () {
+    // 클릭 이벤트
+  },
+)
+
+// 로딩 상태
+PrimaryButton(
+  text: '저장 중...',
+  isLoading: true,
+  onPressed: null,
+)
+```
+
+### SecondaryButton
+보조 액션용 버튼입니다.
+
+```dart
+SecondaryButton(
+  text: '취소',
+  onPressed: () {
+    Navigator.pop(context);
+  },
+)
+```
+
+## 📋 사용 시나리오
+
+### 1. 삭제 확인
+```dart
+void _deleteItem() async {
+  final confirm = await showCustomConfirmModal(
+    context: context,
+    title: '삭제',
+    message: '이 항목을 삭제하시겠습니까?',
+    confirmText: '삭제',
+    cancelText: '취소',
+  );
+  
+  if (confirm == true) {
+    // 삭제 로직
+    await deleteItemFromServer();
+    
+    await showCustomModal(
+      context: context,
+      title: '완료',
+      message: '삭제되었습니다',
+    );
+  }
+}
+```
+
+### 2. 설정 저장
+```dart
+void _saveSettings() async {
+  try {
+    await saveSettingsToServer();
+    
+    await showCustomModal(
+      context: context,
+      title: '저장 완료',
+      message: '설정이 저장되었습니다',
+      onConfirm: () {
+        Navigator.pop(context);
+      },
+    );
+  } catch (e) {
+    await showCustomModal(
+      context: context,
+      title: '오류',
+      message: '저장에 실패했습니다',
+      buttonText: '다시 시도',
+    );
+  }
+}
+```
+
+### 3. 로그아웃
+```dart
+void _logout() async {
+  final confirm = await showCustomConfirmModal(
+    context: context,
+    title: '로그아웃',
+    message: '정말 로그아웃 하시겠습니까?',
+    confirmText: '로그아웃',
+    cancelText: '취소',
+  );
+  
+  if (confirm == true) {
+    await authService.logout();
+    Navigator.pushNamedAndRemoveUntil(
+      context, 
+      '/login', 
+      (route) => false,
+    );
+  }
+}
+```
+
+## 💡 베스트 프랙티스
+
+### 1. 텍스트 길이
+- **제목**: 최대 10자 이내
+- **메시지**: 최대 30자 이내
+- **버튼**: 최대 6자 이내
+
+### 2. 좋은 텍스트 예시
+```dart
+// 좋은 예시
+title: '완료'
+message: '저장되었습니다'
+confirmText: '확인'
+cancelText: '취소'
+
+// 피해야 할 예시
+title: '작업이 성공적으로 완료되었습니다'
+message: '귀하의 요청이 정상적으로 처리되어 데이터베이스에 저장되었습니다'
+confirmText: '네, 알겠습니다'
+```
+
+### 3. 사용자 경험
+- 파괴적 액션(삭제)은 반드시 확인 모달 사용
+- 성공 액션은 간단한 알림 모달 사용
+- 중요한 액션은 명확한 버튼 텍스트 사용
+
+### 4. 에러 처리
+```dart
+try {
+  await performAction();
+  await showCustomModal(
+    context: context,
+    title: '완료',
+    message: '성공했습니다',
+  );
+} catch (e) {
+  await showCustomModal(
+    context: context,
+    title: '오류',
+    message: '다시 시도해주세요',
+    buttonText: '확인',
+  );
+}
+```
+ 

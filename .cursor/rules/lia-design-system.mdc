@@ -1,0 +1,366 @@
+# LIA Design System & Component Guidelines
+
+## 🎨 Design System Overview
+LIA 앱의 디자인 시스템은 **18세 서현 페르소나**에 최적화된 트렌디하고 친근한 UI/UX를 제공합니다. 현재 구현된 12개 주요 섹션으로 구성된 체계적인 디자인 가이드를 기반으로 합니다.
+
+## 🎯 Core Design Principles
+
+### Visual Identity
+- **Brand Colors**: 사랑스러운 핑크 (#FF70A6) + 세련된 퍼플 (#A162F7)
+- **Typography**: Gaegu (제목) + NotoSansKR (본문) 조합
+- **Personality**: 친근하고 캐주얼하면서도 트렌디한 느낌
+- **Tone**: 18세 서현의 말투 ("완전 멋있어ㅋㅋ", "메시지 ㄱㄱ")
+
+## 🌈 Color System ([app_colors.dart](mdc:lib/core/app_colors.dart))
+
+### Primary Colors
+```dart
+// 메인 브랜드 색상
+static const Color primary = Color(0xFFFF70A6);      // Lovely Pink
+static const Color accent = Color(0xFFA162F7);       // Witty Purple
+static const Color yellow = Color(0xFFFFD670);       // Sunshine Yellow
+static const Color blue = Color(0xFF70A6FF);         // Sky Blue
+static const Color green = Color(0xFF70FFA6);        // Fresh Green
+```
+
+### Gradient System
+```dart
+// 브랜드 그라데이션
+static const LinearGradient primaryGradient = LinearGradient(
+  colors: [primary, accent],
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+);
+
+// 차트용 그라데이션
+static const LinearGradient chartGradient = LinearGradient(
+  colors: [yellow, primary],
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+);
+```
+
+## ✍️ Typography System ([app_text_styles.dart](mdc:lib/core/app_text_styles.dart))
+
+### Font Hierarchy
+```dart
+// 제목용 폰트 (Gaegu)
+static const TextStyle h1 = TextStyle(
+  fontFamily: 'Gaegu',
+  fontSize: 32,
+  fontWeight: FontWeight.bold,
+);
+
+// 본문용 폰트 (NotoSansKR)
+static const TextStyle body1 = TextStyle(
+  fontFamily: 'NotoSansKR',
+  fontSize: 16,
+  fontWeight: FontWeight.normal,
+);
+```
+
+### 서현 페르소나 텍스트 톤
+- **긍정적 액션**: "알림 받을래!", "메시지 ㄱㄱ", "완전 좋아!"
+- **설정 관련**: "위치 정보 써도 돼", "개인정보 보호해줘"
+- **감정 표현**: "완전 멋있어ㅋㅋ", "진짜 센스있다", "대박 트렌디해"
+
+## 📱 Component Architecture
+
+### 현재 구현된 섹션 (12개)
+1. **Color Palette** - 브랜드 색상 시스템
+2. **Typography** - 텍스트 스타일 가이드
+3. **Buttons** - Primary/Secondary 버튼
+4. **Input Fields** - 플로팅 라벨 텍스트필드
+5. **Charts** - Gauge/Donut/Bar 차트
+6. **Feedback** - 로딩 스피너, 스켈레톤 UI
+7. **Navigation** - 투명 배경 하단 네비게이션 바 (Stack 오버레이)
+8. **Forms** - 태그 입력, 슬라이더, 토글
+9. **Cards** - 컴포넌트 카드 레이아웃
+10. **Dividers** - 점선 구분선
+11. **Modals** - 커스텀 모달
+12. **AI Generation** - 메시지 생성 진행상태
+
+### Widget 분류 체계
+
+#### Common Widgets ([lib/presentation/widgets/common/](mdc:lib/presentation/widgets/common/))
+```dart
+// 범용적으로 사용되는 기본 위젯들
+├── component_card.dart       // 컴포넌트 전시용 카드
+├── dashed_divider.dart      // 점선 구분선
+├── primary_button.dart      // 메인 액션 버튼
+└── secondary_button.dart    // 보조 액션 버튼
+```
+
+#### Specific Widgets ([lib/presentation/widgets/specific/](mdc:lib/presentation/widgets/specific/))
+```dart
+// 특정 기능에 특화된 위젯들
+├── charts/                  // 데이터 시각화
+│   ├── gauge_chart.dart    // 게이지 차트
+│   ├── donut_chart.dart    // 도넛 차트
+│   └── bar_chart.dart      // 막대 차트
+│
+├── forms/                   // 사용자 입력
+│   ├── floating_label_textfield.dart  // 플로팅 라벨
+│   ├── tag_input_field.dart           // 태그 입력
+│   ├── custom_toggle_switch.dart      // 토글 스위치
+│   └── custom_slider.dart             // 슬라이더
+│
+├── feedback/                // 사용자 피드백
+│   ├── heart_spinner.dart             // 하트 스피너
+│   ├── pulsating_dot.dart             // 맥박 점
+│   ├── skeleton_ui.dart               // 스켈레톤 UI
+│   └── generating_progress.dart       // AI 생성 진행상태
+│
+└── navigation/              // 네비게이션
+    └── bottom_navigation_bar.dart     // 투명 배경 하단 네비게이션 (Stack 오버레이)
+```
+
+## 🎭 Animation Guidelines
+
+### 애니메이션 타이밍
+```dart
+// 표준 애니메이션 지속시간
+const Duration standardDuration = Duration(milliseconds: 400);
+const Duration fastDuration = Duration(milliseconds: 200);
+const Duration slowDuration = Duration(milliseconds: 600);
+
+// 순차적 애니메이션 (flutter_staggered_animations)
+AnimationConfiguration.staggeredList(
+  position: index,
+  duration: standardDuration,
+  child: SlideAnimation(
+    verticalOffset: 50.0,
+    child: FadeInAnimation(child: widget),
+  ),
+);
+```
+
+### 하트 애니메이션 패턴
+```dart
+// 하트비트 효과 (1.0x → 1.4x → 1.0x)
+AnimationController heartController;
+Animation<double> heartAnimation = Tween<double>(
+  begin: 1.0,
+  end: 1.4,
+).animate(CurvedAnimation(
+  parent: heartController,
+  curve: Curves.easeInOut,
+));
+
+// 동심원 파동 효과
+List<Widget> waves = List.generate(3, (index) {
+  return AnimatedBuilder(
+    animation: waveAnimations[index],
+    builder: (context, child) {
+      return Container(
+        width: 60 + (waveAnimations[index].value * 40),
+        height: 60 + (waveAnimations[index].value * 40),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: AppColors.primary.withOpacity(
+              1.0 - waveAnimations[index].value,
+            ),
+            width: 2,
+          ),
+        ),
+      );
+    },
+  );
+});
+```
+
+## 🔧 Development Workflow
+
+### 파일 구조 규칙 ([flutter-refactoring-guide.mdc](mdc:.cursor/rules/flutter-refactoring-guide.mdc))
+```
+lib/
+├── main.dart                    # 앱 진입점
+├── core/                        # 디자인 시스템
+├── presentation/                # UI 컴포넌트
+│   ├── screens/                # 전체 화면
+│   └── widgets/                # 재사용 위젯
+│       ├── common/             # 범용 위젯
+│       └── specific/           # 특화 위젯
+└── utils/                      # 유틸리티
+```
+
+### 코딩 컨벤션
+```dart
+// 1. Dartdoc 주석 필수
+/// 위젯의 목적과 사용법을 설명합니다.
+///
+/// [parameter] 매개변수에 대한 설명입니다.
+class MyWidget extends StatelessWidget {
+  // 구현
+}
+
+// 2. const 생성자 사용
+const PrimaryButton({
+  super.key,
+  required this.text,
+  required this.onPressed,
+});
+
+// 3. 명확한 네이밍
+// ✅ Good
+class MessageGeneratingProgress extends StatefulWidget {}
+
+// ❌ Bad  
+class _Progress extends StatefulWidget {}
+```
+
+### Import 순서 규칙
+```dart
+// 1. Flutter/Dart 패키지
+import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+
+// 2. Core 시스템
+import '../../core/app_colors.dart';
+import '../../core/app_text_styles.dart';
+
+// 3. Common 위젯
+import '../widgets/common/primary_button.dart';
+
+// 4. Specific 위젯  
+import '../widgets/specific/feedback/generating_progress.dart';
+
+// 5. Utils
+import '../../utils/custom_modal.dart';
+```
+
+## 🎨 Design Token System
+
+### Spacing Scale
+```dart
+// 표준 간격 시스템
+static const double xs = 4.0;   // 최소 간격
+static const double sm = 8.0;   // 작은 간격  
+static const double md = 16.0;  // 기본 간격
+static const double lg = 24.0;  // 큰 간격
+static const double xl = 32.0;  // 최대 간격
+```
+
+### Border Radius
+```dart
+// 둥근 모서리 시스템
+static const double radiusXs = 4.0;   // 버튼 내부 요소
+static const double radiusSm = 8.0;   // 작은 카드
+static const double radiusMd = 12.0;  // 기본 카드
+static const double radiusLg = 16.0;  // 큰 카드
+static const double radiusXl = 20.0;  // 모달, 바텀시트
+```
+
+### Shadow System
+```dart
+// 그림자 깊이 시스템
+static const List<BoxShadow> shadowSm = [
+  BoxShadow(
+    color: Color(0x1A000000),
+    blurRadius: 4,
+    offset: Offset(0, 2),
+  ),
+];
+
+static const List<BoxShadow> shadowMd = [
+  BoxShadow(
+    color: Color(0x1A000000),
+    blurRadius: 8,
+    offset: Offset(0, 4),
+  ),
+];
+```
+
+## 📐 Layout Guidelines
+
+### 반응형 디자인
+```dart
+// 화면 크기별 레이아웃
+Widget responsiveLayout(BuildContext context) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  
+  if (screenWidth > 768) {
+    // 태블릿/데스크톱: 2열 그리드
+    return GridView.count(crossAxisCount: 2);
+  } else {
+    // 모바일: 1열 리스트
+    return ListView();
+  }
+}
+```
+
+### Safe Area 처리
+```dart
+// 모든 화면에 SafeArea 적용
+Scaffold(
+  body: SafeArea(
+    child: Padding(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      child: content,
+    ),
+  ),
+);
+```
+
+## 🎯 서현 페르소나 UX 패턴
+
+### 인터랙션 패턴
+- **즉시 피드백**: 버튼 탭 시 200ms 내 반응
+- **진행 상태 표시**: AI 생성 과정의 4단계 시각화
+- **감정적 연결**: 하트 애니메이션과 친근한 텍스트
+
+### 정보 구조
+- **단순함 우선**: 복잡한 설정은 숨기고 핵심 기능만 노출
+- **시각적 계층**: 색상과 크기로 중요도 구분
+- **친숙한 언어**: 전문 용어 대신 일상 언어 사용
+
+### 에러 처리
+```dart
+// 친근한 에러 메시지
+"앗, 뭔가 잘못됐어! 다시 한 번 해볼까?"
+"인터넷 연결을 확인해줘 🥺"
+"잠깐만, 다시 시도해볼게!"
+```
+
+## 🚀 성능 최적화 가이드
+
+### Widget 최적화
+```dart
+// 1. const 위젯 사용
+const Text('고정 텍스트');
+
+// 2. Builder 패턴으로 rebuild 범위 최소화
+AnimatedBuilder(
+  animation: animation,
+  builder: (context, child) => Transform.scale(
+    scale: animation.value,
+    child: child,
+  ),
+  child: const ExpensiveWidget(), // 애니메이션과 무관한 부분
+);
+
+// 3. 조건부 렌더링 최적화
+if (shouldShow) const ExpensiveWidget(),
+```
+
+### 메모리 관리
+```dart
+// AnimationController 해제
+@override
+void dispose() {
+  animationController.dispose();
+  super.dispose();
+}
+
+// 이미지 캐싱
+Image.asset(
+  'assets/images/heart.png',
+  cacheWidth: 100, // 적절한 크기로 캐싱
+);
+```
+
+---
+
+**핵심 철학**: LIA는 18세 서현이 자연스럽게 사용할 수 있는 직관적이고 트렌디한 앱이어야 합니다. 모든 디자인 결정은 이 페르소나의 니즈와 선호도를 중심으로 이루어져야 합니다.
+ 
