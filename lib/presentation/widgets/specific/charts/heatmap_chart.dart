@@ -130,7 +130,7 @@ class _HeatmapChartState extends State<HeatmapChart>
 
           // 차트
           SizedBox(
-            height: widget.height - 150, // 200 → 150으로 줄여서 차트 영역 확대
+            height: widget.height - 160, // 150 → 160으로 조정하여 여백 확보
             child: AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
@@ -263,13 +263,17 @@ class _HeatmapChartPainter extends CustomPainter {
       maxValue = math.max(maxValue, value);
     }
 
-    // 최소 셀 크기 설정 (더 큰 블록을 위해)
-    const double minCellSize = 16.0; // 최소 셀 크기를 16px로 설정
+    // 최소 셀 크기 설정하되 부모 위젯을 초과하지 않도록 제한
+    const double minCellSize = 12.0; // 16 → 12로 줄여서 오버플로우 방지
+    const double maxCellSize = 20.0; // 최대 셀 크기 제한 추가
 
-    // 셀 크기 계산 - 최소 크기 보장
+    // 셀 크기 계산 - 최소/최대 크기 제한
     final double cellSize = math.max(
       minCellSize,
-      math.min(chartWidth / maxCols, chartHeight / maxRows),
+      math.min(
+        maxCellSize,
+        math.min(chartWidth / maxCols, chartHeight / maxRows),
+      ),
     );
 
     // 실제 차트 크기 계산
@@ -280,14 +284,14 @@ class _HeatmapChartPainter extends CustomPainter {
     final double offsetX = leftMargin + (chartWidth - actualChartWidth) / 2;
     final double offsetY = topMargin + (chartHeight - actualChartHeight) / 2;
 
-    // Y축 레이블 그리기 (요일)
+    // Y축 레이블 그리기 (요일) - 먼저 그리기
     _drawYAxisLabels(canvas, offsetY, cellSize, maxRows);
 
     // X축 레이블 그리기 (시간)
     _drawXAxisLabels(
       canvas,
       offsetX,
-      offsetY + (cellSize * maxRows),
+      offsetY + actualChartHeight, // cellSize * maxRows 대신 actualChartHeight 사용
       cellSize,
       maxCols,
     );
@@ -363,14 +367,18 @@ class _HeatmapChartPainter extends CustomPainter {
         text: days[i],
         style: AppTextStyles.caption.copyWith(
           color: AppColors.secondaryText,
-          fontSize: 11,
+          fontSize: 12, // 11 → 12로 증가
         ),
       );
       textPainter.layout();
 
+      // 레이블 위치를 더 왼쪽으로 이동하여 확실히 보이도록
       textPainter.paint(
         canvas,
-        Offset(25 - textPainter.width, y - textPainter.height / 2),
+        Offset(
+          28 - textPainter.width,
+          y - textPainter.height / 2,
+        ), // 25 → 28로 조정
       );
     }
   }

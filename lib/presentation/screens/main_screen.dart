@@ -1513,7 +1513,7 @@ class _MainScreenState extends State<MainScreen> {
           data: _generateHeatmapData().expand((x) => x).toList(),
           title: '주간 메시지 활동 패턴',
           titleIcon: HugeIcons.strokeRoundedCalendar03,
-          height: 350, // 기본 300에서 350으로 증가
+          height: 320, // 350 → 320으로 조정하여 오버플로우 방지
         ),
 
         const SizedBox(height: 16),
