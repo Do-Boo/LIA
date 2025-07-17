@@ -39,6 +39,7 @@ class _MainScreenState extends State<MainScreen> {
   int _analysisStep = 0;
   AnalysisData? _analysisData;
   bool _isLoading = true;
+  bool _showFileUpload = false; // 파일 업로드 섹션 표시 여부
 
   // 컨트롤러들
   final TextEditingController _conversationController = TextEditingController();
@@ -99,279 +100,398 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // Part 1: 시작하기 (대화 내용이 없을 때의 초기 화면)
+  // Part 1: 개선된 시작 화면 - 모바일 우선 디자인
   Widget _buildStartScreen() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20.0),
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width > 600 ? 40.0 : 20.0,
+          vertical: 16.0,
+        ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: 600, // 최대 너비 제한으로 큰 화면에서도 읽기 좋게
+            minHeight: MediaQuery.of(context).size.height - 
+                       MediaQuery.of(context).padding.top - 
+                       MediaQuery.of(context).padding.bottom - 100, // 네비게이션 바 고려
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 16),
+              // 개선된 히어로 헤더
+              _buildHeroHeader(),
+
+              const SizedBox(height: 20),
+              // 퀵 스타트 카드 (간단한 입력)
+              _buildQuickStartCard(),
+
+              const SizedBox(height: 12),
+              // 파일 업로드 옵션 (접을 수 있는 형태)
+              _buildFileUploadOption(),
+
+              const SizedBox(height: 20),
+              // 분석 시작 버튼
+              _buildAnalysisStartButton(),
+
+              const SizedBox(height: 12),
+              // 간단한 도움말
+              _buildSimpleHelp(),
+
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 개선된 히어로 헤더 - 간결하고 임팩트 있는 디자인
+  Widget _buildHeroHeader() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: AppColors.primaryGradient,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.25),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
-          // 헤더 섹션
-          _buildStartHeader(),
-
-          const SizedBox(height: 32),
-          // 대화 내용 입력 섹션
-          _buildConversationInputSection(),
-
-          const SizedBox(height: 32),
-          // 파일 업로드 섹션
-          _buildFileUploadSection(),
-
-          const SizedBox(height: 32),
-          // 분석 시작 버튼
-          _buildAnalysisStartButton(),
-
-          const SizedBox(height: 32),
-          // 사용 팁 섹션
-          _buildUsageTips(),
-
-          const SizedBox(height: 80),
+          // 이모지 + 인사말
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('💕', style: TextStyle(fontSize: 32)),
+              const SizedBox(width: 12),
+              Text(
+                '안녕, 서현아!',
+                style: AppTextStyles.h1.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // 가치 제안
+          Text(
+            '대화 내용만 알려주면\n관계 분석 결과를 바로 받아볼 수 있어!',
+            textAlign: TextAlign.center,
+            style: AppTextStyles.body.copyWith(
+              color: Colors.white.withValues(alpha: 0.95),
+              fontSize: 16,
+              height: 1.4,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // 시작 화면 헤더
-  Widget _buildStartHeader() {
+
+  // 퀵 스타트 카드 - 간단하고 직관적인 입력
+  Widget _buildQuickStartCard() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppColors.primaryGradient,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.1),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: AppColors.primary.withValues(alpha: 0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 제목과 아이콘
           Row(
             children: [
-              const Icon(
-                HugeIcons.strokeRoundedHeartAdd,
-                color: Colors.white,
-                size: 28,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  HugeIcons.strokeRoundedMessage01,
+                  size: 20,
+                  color: AppColors.primary,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(
-                  '안녕하세요! 서현이에요',
-                  style: AppTextStyles.h2.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'LIA가 두 분의 관계를 정확하게 분석해 드릴게요.\n대화 내용을 알려주시면 맞춤형 인사이트를 제공해 드려요!',
-            style: AppTextStyles.body.copyWith(
-              color: Colors.white.withValues(alpha: 0.9),
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 대화 내용 입력 섹션
-  Widget _buildConversationInputSection() {
-    return ComponentCard(
-      title: '대화 내용 알려주기',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                HugeIcons.strokeRoundedMessage01,
-                size: 16,
-                color: AppColors.textSecondary,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  '카카오톡, 문자 등의 대화 내용을 붙여넣어 주세요',
-                  style: AppTextStyles.body2.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '대화 내용 입력하기',
+                      style: AppTextStyles.h3.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    Text(
+                      '카톡, 문자 등 대화 내용을 붙여넣어주세요',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          // 대화 내용 입력 필드
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: _conversationFocus.hasFocus
-                    ? AppColors.primary
-                    : AppColors.cardBorder,
-                width: 1.5,
-              ),
-            ),
-            child: TextField(
-              controller: _conversationController,
-              focusNode: _conversationFocus,
-              maxLines: null,
-              expands: true,
-              textAlignVertical: TextAlignVertical.top,
-              onChanged: (value) => setState(() {}),
-              decoration: InputDecoration(
-                hintText:
-                    '예시:\n서현: 오늘 날씨 정말 좋다!\n상대방: 맞아요~ 산책하기 딱 좋은 날씨네요\n서현: 혹시 시간 되시면 같이 산책 어떠세요?\n...',
-                hintStyle: AppTextStyles.body2.copyWith(
-                  color: AppColors.textSecondary.withValues(alpha: 0.7),
-                ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.all(16),
-              ),
-              style: AppTextStyles.body2,
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // 입력 상태 표시
-          Row(
-            children: [
-              Icon(
-                HugeIcons.strokeRoundedEdit02,
-                size: 16,
-                color: AppColors.textSecondary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '${_conversationController.text.length}자 입력됨',
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              const Spacer(),
-              if (_conversationController.text.isNotEmpty)
-                GestureDetector(
-                  onTap: () => _conversationController.clear(),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.error.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          HugeIcons.strokeRoundedDelete02,
-                          size: 14,
-                          color: AppColors.error,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '지우기',
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.error,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 파일 업로드 섹션
-  Widget _buildFileUploadSection() {
-    return ComponentCard(
-      title: '파일로 업로드하기',
-      child: Column(
-        children: [
-          // 드래그 앤 드롭 영역
+          
+          // 개선된 입력 필드 - 높이 줄이고 확장 가능하게
           GestureDetector(
-            onTap: _handleFileUpload,
-            child: Container(
-              height: 120,
+            onTap: () => _conversationFocus.requestFocus(),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: _conversationFocus.hasFocus || _conversationController.text.isNotEmpty 
+                ? 120 
+                : 80,
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: AppColors.surface,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: AppColors.cardBorder,
-                  width: 2,
-                  style: BorderStyle.solid,
+                  color: _conversationFocus.hasFocus
+                      ? AppColors.primary
+                      : AppColors.cardBorder,
+                  width: 1.5,
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    HugeIcons.strokeRoundedCloudUpload,
-                    size: 32,
-                    color: AppColors.primary,
+              child: TextField(
+                controller: _conversationController,
+                focusNode: _conversationFocus,
+                maxLines: null,
+                expands: true,
+                textAlignVertical: TextAlignVertical.top,
+                onChanged: (value) => setState(() {}),
+                decoration: InputDecoration(
+                  hintText: '서현: 오늘 날씨 정말 좋다!\n상대방: 맞아요~ 산책하기 딱 좋은 날씨네요\n서현: 혹시 시간 되시면 같이 산책 어떠세요?',
+                  hintStyle: AppTextStyles.body2.copyWith(
+                    color: AppColors.textSecondary.withValues(alpha: 0.6),
+                    fontSize: 14,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '파일을 선택하거나 여기에 드래그하세요',
-                    style: AppTextStyles.body2.copyWith(
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '.txt, .csv 파일 지원',
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                ),
+                style: AppTextStyles.body2.copyWith(fontSize: 14),
               ),
             ),
           ),
-
-          const SizedBox(height: 16),
-
-          // 파일 업로드 안내
-          Row(
-            children: [
-              Icon(
-                HugeIcons.strokeRoundedInformationCircle,
-                size: 16,
-                color: AppColors.textSecondary,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  '카카오톡 대화 내보내기, 문자 백업 파일 등을 업로드할 수 있어요',
+          
+          // 입력 상태 및 액션
+          if (_conversationController.text.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Icon(
+                  HugeIcons.strokeRoundedCheckmarkCircle02,
+                  size: 16,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  '${_conversationController.text.length}자 입력됨',
                   style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () {
+                    _conversationController.clear();
+                    setState(() {});
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.textSecondary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      '지우기',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+
+  // 파일 업로드 옵션 - 접을 수 있는 형태
+  Widget _buildFileUploadOption() {
+    return GestureDetector(
+      onTap: () => setState(() => _showFileUpload = !_showFileUpload),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: _showFileUpload 
+            ? AppColors.primary.withValues(alpha: 0.05)
+            : AppColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: _showFileUpload 
+              ? AppColors.primary.withValues(alpha: 0.2)
+              : AppColors.cardBorder,
+            width: 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            // 토글 헤더
+            Row(
+              children: [
+                Icon(
+                  HugeIcons.strokeRoundedCloudUpload,
+                  size: 20,
+                  color: _showFileUpload ? AppColors.primary : AppColors.textSecondary,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    '또는 파일로 업로드하기',
+                    style: AppTextStyles.body1.copyWith(
+                      color: _showFileUpload ? AppColors.primary : AppColors.textSecondary,
+                      fontWeight: _showFileUpload ? FontWeight.w600 : FontWeight.normal,
+                    ),
+                  ),
+                ),
+                AnimatedRotation(
+                  turns: _showFileUpload ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 300),
+                  child: Icon(
+                    HugeIcons.strokeRoundedArrowDown01,
+                    size: 16,
+                    color: _showFileUpload ? AppColors.primary : AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+            
+            // 접을 수 있는 내용
+            AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              child: _showFileUpload ? Column(
+                children: [
+                  const SizedBox(height: 16),
+                  // 파일 업로드 영역
+                  GestureDetector(
+                    onTap: _handleFileUpload,
+                    child: Container(
+                      height: 80,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          width: 2,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            HugeIcons.strokeRoundedUpload04,
+                            size: 24,
+                            color: AppColors.primary,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '파일 선택하기',
+                            style: AppTextStyles.body2.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '카카오톡 대화 내보내기, .txt, .csv 파일 지원',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ) : const SizedBox.shrink(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 간단한 도움말
+  Widget _buildSimpleHelp() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.accent.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.accent.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            HugeIcons.strokeRoundedInformationCircle,
+            size: 20,
+            color: AppColors.accent,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              '최소 10개 이상의 메시지가 있으면 더 정확한 분석이 가능해요',
+              style: AppTextStyles.body2.copyWith(
+                color: AppColors.accent,
+                fontSize: 14,
               ),
-            ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  // 분석 시작 버튼
+  // 개선된 분석 시작 버튼 - 모바일 친화적
   Widget _buildAnalysisStartButton() {
     final bool canAnalyze = _conversationController.text.trim().isNotEmpty;
 
@@ -379,9 +499,22 @@ class _MainScreenState extends State<MainScreen> {
       duration: const Duration(milliseconds: 300),
       child: _isAnalyzing
           ? _buildAnalyzingProgress()
-          : PrimaryButton(
-              text: '관계 분석 시작하기',
-              onPressed: canAnalyze ? _startAnalysis : null,
+          : Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: canAnalyze ? [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  ),
+                ] : null,
+              ),
+              child: PrimaryButton(
+                text: canAnalyze ? '✨ 관계 분석 시작하기' : '대화 내용을 입력해주세요',
+                onPressed: canAnalyze ? _startAnalysis : null,
+              ),
             ),
     );
   }
@@ -429,94 +562,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // 사용 팁 섹션
-  Widget _buildUsageTips() {
-    return ComponentCard(
-      title: '더 정확한 분석을 위한 팁',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                HugeIcons.strokeRoundedBulb,
-                size: 20,
-                color: AppColors.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '분석 정확도를 높이는 방법',
-                style: AppTextStyles.body1.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          _buildTipItem(
-            icon: HugeIcons.strokeRoundedMessage01,
-            title: '대화량이 많을수록 좋아요',
-            description: '최소 20개 이상의 메시지가 있으면 더 정확한 분석이 가능해요',
-          ),
-          const SizedBox(height: 16),
-          _buildTipItem(
-            icon: HugeIcons.strokeRoundedCalendar03,
-            title: '최근 대화를 포함해 주세요',
-            description: '최근 1-2주 내의 대화가 포함되면 현재 관계 상태를 더 잘 파악할 수 있어요',
-          ),
-          const SizedBox(height: 16),
-          _buildTipItem(
-            icon: HugeIcons.strokeRoundedUserMultiple,
-            title: '개인정보는 자동으로 보호돼요',
-            description: '이름, 전화번호 등 개인정보는 분석에서 제외되니 안심하세요',
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 팁 아이템 위젯
-  Widget _buildTipItem({
-    required IconData icon,
-    required String title,
-    required String description,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, size: 20, color: AppColors.primary),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: AppTextStyles.body1.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                description,
-                style: AppTextStyles.body2.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
   // Part 2: 분석 대시보드 (Chart Demo 스타일로 개선)
   Widget _buildAnalysisDashboard() {
