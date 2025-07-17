@@ -1,6 +1,7 @@
 // File: lib/presentation/widgets/specific/charts/bar_chart.dart
 
 import 'package:flutter/material.dart';
+import 'package:lia/presentation/widgets/specific/charts/chart_common.dart';
 
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_text_styles.dart';
@@ -28,12 +29,6 @@ class BarChartData {
       if (color != null) 'color': color!.value,
     };
   }
-}
-
-/// 범례 위치 열거형
-enum LegendPosition {
-  top, // 상단
-  bottom, // 하단
 }
 
 /// 대화 주제 분포를 막대 차트로 표시하는 위젯
@@ -69,7 +64,7 @@ class BarChart extends StatefulWidget {
     this.titleIcon,
     this.data,
     this.showLegend = true,
-    this.legendPosition = LegendPosition.bottom,
+    this.legendPosition = LegendPosition.bottomCenter,
     this.height = 200,
   });
 
@@ -177,7 +172,9 @@ class _BarChartState extends State<BarChart>
 
           // 상단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.top) ...[
+              (widget.legendPosition == LegendPosition.topLeft ||
+                  widget.legendPosition == LegendPosition.topCenter ||
+                  widget.legendPosition == LegendPosition.topRight)) ...[
             _buildLegend(),
             const SizedBox(height: 16),
           ],
@@ -201,7 +198,9 @@ class _BarChartState extends State<BarChart>
 
           // 하단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.bottom) ...[
+              (widget.legendPosition == LegendPosition.bottomLeft ||
+                  widget.legendPosition == LegendPosition.bottomCenter ||
+                  widget.legendPosition == LegendPosition.bottomRight)) ...[
             const SizedBox(height: 16),
             _buildLegend(),
           ],
@@ -225,10 +224,32 @@ class _BarChartState extends State<BarChart>
 
   /// 범례 위젯 생성
   Widget _buildLegend() {
-    return Wrap(
-      spacing: 16,
-      runSpacing: 8,
-      children: _chartData.map((data) => _buildLegendItem(data)).toList(),
+    MainAxisAlignment alignment;
+    switch (widget.legendPosition) {
+      case LegendPosition.topLeft:
+      case LegendPosition.bottomLeft:
+        alignment = MainAxisAlignment.start;
+        break;
+      case LegendPosition.topCenter:
+      case LegendPosition.bottomCenter:
+        alignment = MainAxisAlignment.center;
+        break;
+      case LegendPosition.topRight:
+      case LegendPosition.bottomRight:
+        alignment = MainAxisAlignment.end;
+        break;
+    }
+
+    return Row(
+      mainAxisAlignment: alignment,
+      children: _chartData
+          .map(
+            (data) => Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: _buildLegendItem(data),
+            ),
+          )
+          .toList(),
     );
   }
 

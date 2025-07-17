@@ -4,15 +4,10 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:lia/presentation/widgets/specific/charts/chart_common.dart';
 
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_text_styles.dart';
-
-/// 범례 위치 열거형
-enum LegendPosition {
-  top, // 상단
-  bottom, // 하단
-}
 
 /// 히트맵 차트 위젯
 class HeatmapChart extends StatefulWidget {
@@ -40,7 +35,7 @@ class HeatmapChart extends StatefulWidget {
     this.titleIcon,
     required this.data,
     this.showLegend = true,
-    this.legendPosition = LegendPosition.bottom,
+    this.legendPosition = LegendPosition.bottomCenter,
     this.height = 300,
   });
 
@@ -126,7 +121,9 @@ class _HeatmapChartState extends State<HeatmapChart>
 
           // 상단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.top) ...[
+              (widget.legendPosition == LegendPosition.topLeft ||
+                  widget.legendPosition == LegendPosition.topCenter ||
+                  widget.legendPosition == LegendPosition.topRight)) ...[
             _buildLegend(),
             const SizedBox(height: 20),
           ],
@@ -151,7 +148,9 @@ class _HeatmapChartState extends State<HeatmapChart>
 
           // 하단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.bottom) ...[
+              (widget.legendPosition == LegendPosition.bottomLeft ||
+                  widget.legendPosition == LegendPosition.bottomCenter ||
+                  widget.legendPosition == LegendPosition.bottomRight)) ...[
             const SizedBox(height: 20),
             _buildLegend(),
           ],
@@ -175,7 +174,24 @@ class _HeatmapChartState extends State<HeatmapChart>
 
   /// 범례 위젯 생성 (실제 사용되는 색상과 일치)
   Widget _buildLegend() {
+    MainAxisAlignment alignment;
+    switch (widget.legendPosition) {
+      case LegendPosition.topLeft:
+      case LegendPosition.bottomLeft:
+        alignment = MainAxisAlignment.start;
+        break;
+      case LegendPosition.topCenter:
+      case LegendPosition.bottomCenter:
+        alignment = MainAxisAlignment.center;
+        break;
+      case LegendPosition.topRight:
+      case LegendPosition.bottomRight:
+        alignment = MainAxisAlignment.end;
+        break;
+    }
+
     return Row(
+      mainAxisAlignment: alignment,
       children: [
         Text(
           '적음',

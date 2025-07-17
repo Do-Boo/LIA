@@ -3,6 +3,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:lia/presentation/widgets/specific/charts/chart_common.dart';
 
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_text_styles.dart';
@@ -53,12 +54,6 @@ class LineChartSeries {
   }
 }
 
-/// 범례 위치 열거형
-enum LegendPosition {
-  top, // 상단
-  bottom, // 하단
-}
-
 /// 라인 차트 위젯
 class LineChart extends StatefulWidget {
   /// 차트 제목 (선택사항)
@@ -85,7 +80,7 @@ class LineChart extends StatefulWidget {
     this.titleIcon,
     this.data,
     this.showLegend = true,
-    this.legendPosition = LegendPosition.bottom,
+    this.legendPosition = LegendPosition.bottomCenter,
     this.height = 200,
   });
 
@@ -205,7 +200,9 @@ class _LineChartState extends State<LineChart>
 
           // 상단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.top) ...[
+              (widget.legendPosition == LegendPosition.topLeft ||
+                  widget.legendPosition == LegendPosition.topCenter ||
+                  widget.legendPosition == LegendPosition.topRight)) ...[
             _buildLegend(),
             const SizedBox(height: 20),
           ],
@@ -232,7 +229,9 @@ class _LineChartState extends State<LineChart>
 
           // 하단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.bottom) ...[
+              (widget.legendPosition == LegendPosition.bottomLeft ||
+                  widget.legendPosition == LegendPosition.bottomCenter ||
+                  widget.legendPosition == LegendPosition.bottomRight)) ...[
             const SizedBox(height: 20),
             _buildLegend(),
           ],
@@ -256,10 +255,32 @@ class _LineChartState extends State<LineChart>
 
   /// 범례 위젯 생성
   Widget _buildLegend() {
-    return Wrap(
-      spacing: 16,
-      runSpacing: 8,
-      children: _chartSeries.map((series) => _buildLegendItem(series)).toList(),
+    MainAxisAlignment alignment;
+    switch (widget.legendPosition) {
+      case LegendPosition.topLeft:
+      case LegendPosition.bottomLeft:
+        alignment = MainAxisAlignment.start;
+        break;
+      case LegendPosition.topCenter:
+      case LegendPosition.bottomCenter:
+        alignment = MainAxisAlignment.center;
+        break;
+      case LegendPosition.topRight:
+      case LegendPosition.bottomRight:
+        alignment = MainAxisAlignment.end;
+        break;
+    }
+
+    return Row(
+      mainAxisAlignment: alignment,
+      children: _chartSeries
+          .map(
+            (series) => Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: _buildLegendItem(series),
+            ),
+          )
+          .toList(),
     );
   }
 
@@ -489,14 +510,17 @@ class _LineChartPainter extends CustomPainter {
       );
     }
 
-    // X축 레이블 (인덱스 기반)
+    // X축 레이블
     final xSteps = math.min(data.length - 1, 6);
     for (int i = 0; i <= xSteps; i++) {
       final dataIndex = ((i / xSteps) * (data.length - 1)).round();
       final x = leftMargin + (i / xSteps) * chartWidth;
 
+      // 데이터에서 실제 라벨 가져오기
+      final label = data[dataIndex]['label'] as String;
+
       textPainter.text = TextSpan(
-        text: (dataIndex + 1).toString(),
+        text: label,
         style: AppTextStyles.caption.copyWith(
           color: AppColors.secondaryText,
           fontSize: 11,

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:lia/core/app_colors.dart';
 import 'package:lia/core/app_text_styles.dart';
+import 'package:lia/presentation/widgets/specific/charts/chart_common.dart';
 
 /// 반원 게이지 차트 데이터 모델
 class SemicircleGaugeData {
@@ -45,12 +46,6 @@ class SemicircleGaugeData {
       'thresholdValue': thresholdValue,
     };
   }
-}
-
-/// 범례 위치 열거형
-enum LegendPosition {
-  top, // 상단
-  bottom, // 하단
 }
 
 /// 반원 게이지 차트 위젯
@@ -116,7 +111,7 @@ class SemicircleGaugeChart extends StatefulWidget {
     this.titleIcon,
     this.data,
     this.showLegend = true,
-    this.legendPosition = LegendPosition.bottom,
+    this.legendPosition = LegendPosition.bottomCenter,
     this.size = 200,
     this.maxValue = 100,
   });
@@ -250,7 +245,9 @@ class _SemicircleGaugeChartState extends State<SemicircleGaugeChart>
 
           // 상단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.top) ...[
+              (widget.legendPosition == LegendPosition.topLeft ||
+                  widget.legendPosition == LegendPosition.topCenter ||
+                  widget.legendPosition == LegendPosition.topRight)) ...[
             _buildLegend(),
             const SizedBox(height: 20),
           ],
@@ -303,7 +300,9 @@ class _SemicircleGaugeChartState extends State<SemicircleGaugeChart>
 
           // 하단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.bottom) ...[
+              (widget.legendPosition == LegendPosition.bottomLeft ||
+                  widget.legendPosition == LegendPosition.bottomCenter ||
+                  widget.legendPosition == LegendPosition.bottomRight)) ...[
             const SizedBox(height: 20),
             _buildLegend(),
           ],
@@ -328,9 +327,26 @@ class _SemicircleGaugeChartState extends State<SemicircleGaugeChart>
 
   /// 범례 위젯 생성
   Widget _buildLegend() {
+    WrapAlignment alignment;
+    switch (widget.legendPosition) {
+      case LegendPosition.topLeft:
+      case LegendPosition.bottomLeft:
+        alignment = WrapAlignment.start;
+        break;
+      case LegendPosition.topCenter:
+      case LegendPosition.bottomCenter:
+        alignment = WrapAlignment.center;
+        break;
+      case LegendPosition.topRight:
+      case LegendPosition.bottomRight:
+        alignment = WrapAlignment.end;
+        break;
+    }
+
     return Wrap(
       spacing: 16,
       runSpacing: 8,
+      alignment: alignment,
       children: _chartData.map((data) => _buildLegendItem(data)).toList(),
     );
   }

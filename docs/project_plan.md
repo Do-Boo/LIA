@@ -100,6 +100,27 @@ AI가 썸남·썸녀에게 보내는 메시지를 상대방의 성격, MBTI, 대
   - 시각적 노이즈 감소로 사용자 경험 향상
 - **결과**: 성격 분석 차트가 더 간결하면서도 축 정보는 명확하게 제공
 
+#### 18:15 - 18:20: 차트 범례 정렬 문제 해결 완료
+- **완료**: RadarChart, BarChart, LineChart의 범례 중앙 정렬 문제 해결
+- **문제점 분석**:
+  1. **WrapAlignment 사용**: Wrap 위젯의 WrapAlignment는 범례 아이템의 정렬에 제한적 효과
+  2. **중앙 정렬 미작동**: legendPosition.bottomCenter 설정이 시각적으로 반영되지 않음
+  3. **일관성 부족**: 차트마다 다른 정렬 방식 사용
+- **해결 방안**:
+  1. **Row + MainAxisAlignment**: Wrap 대신 Row 위젯과 MainAxisAlignment 사용
+  2. **통일된 정렬 로직**: 모든 차트에서 동일한 정렬 방식 적용
+  3. **Padding 적용**: 범례 아이템 간 일관된 간격 유지
+- **수정된 차트들**:
+  - **RadarChart**: WrapAlignment → MainAxisAlignment 변경
+  - **BarChart**: WrapAlignment → MainAxisAlignment 변경  
+  - **LineChart**: WrapAlignment → MainAxisAlignment 변경
+  - **HeatmapChart**: 이미 올바르게 구현되어 있음
+- **구현 세부사항**:
+  - `_buildLegend()` 메서드에서 switch 문으로 정렬 방식 결정
+  - Padding(EdgeInsets.only(right: 16))으로 아이템 간 간격 설정
+  - MainAxisAlignment.center로 중앙 정렬 구현
+- **결과**: legendPosition.bottomCenter 설정이 모든 차트에서 정상적으로 작동
+
 #### 11:55 - 12:00: Phase 35 - 차트 UI/UX 개선 완료
 - **완료**: 사용자 피드백 반영한 LineChart, HeatmapChart 개선
 - **변경사항**:

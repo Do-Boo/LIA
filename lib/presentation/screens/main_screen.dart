@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:lia/presentation/widgets/specific/charts/bar_chart.dart';
+import 'package:lia/presentation/widgets/specific/charts/chart_common.dart';
 import 'package:lia/presentation/widgets/specific/charts/heatmap_chart.dart';
 import 'package:lia/presentation/widgets/specific/charts/line_chart.dart';
 import 'package:lia/presentation/widgets/specific/charts/radar_chart.dart';
@@ -1096,6 +1097,7 @@ class _MainScreenState extends State<MainScreen> {
           titleIcon: HugeIcons.strokeRoundedUser,
           size: 280,
           showLegend: true,
+          legendPosition: LegendPosition.bottomCenter,
           data: [
             {
               'name': '나',
@@ -1502,6 +1504,7 @@ class _MainScreenState extends State<MainScreen> {
               .map((e) => {'label': e.time, 'value': e.myEmotion.toDouble()})
               .toList(),
           height: 200,
+          showLegend: false,
         ),
 
         const SizedBox(height: 16),

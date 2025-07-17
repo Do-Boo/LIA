@@ -1,6 +1,7 @@
 // File: lib/presentation/widgets/specific/charts/donut_chart.dart
 
 import 'package:flutter/material.dart';
+import 'package:lia/presentation/widgets/specific/charts/chart_common.dart';
 
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_text_styles.dart';
@@ -30,12 +31,6 @@ class DonutChartData {
   }
 }
 
-/// 범례 위치 열거형
-enum LegendPosition {
-  top, // 상단
-  bottom, // 하단
-}
-
 /// 도넛 차트 위젯
 class DonutChart extends StatefulWidget {
   /// 차트 제목 (선택사항)
@@ -62,7 +57,7 @@ class DonutChart extends StatefulWidget {
     this.titleIcon,
     this.data,
     this.showLegend = true,
-    this.legendPosition = LegendPosition.bottom,
+    this.legendPosition = LegendPosition.bottomCenter,
     this.size = 200,
   });
 
@@ -170,7 +165,9 @@ class _DonutChartState extends State<DonutChart>
 
           // 상단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.top) ...[
+              (widget.legendPosition == LegendPosition.topLeft ||
+                  widget.legendPosition == LegendPosition.topCenter ||
+                  widget.legendPosition == LegendPosition.topRight)) ...[
             _buildLegend(),
             const SizedBox(height: 20),
           ],
@@ -195,7 +192,9 @@ class _DonutChartState extends State<DonutChart>
 
           // 하단 범례
           if (widget.showLegend &&
-              widget.legendPosition == LegendPosition.bottom) ...[
+              (widget.legendPosition == LegendPosition.bottomLeft ||
+                  widget.legendPosition == LegendPosition.bottomCenter ||
+                  widget.legendPosition == LegendPosition.bottomRight)) ...[
             const SizedBox(height: 20),
             _buildLegend(),
           ],
@@ -220,9 +219,26 @@ class _DonutChartState extends State<DonutChart>
 
   /// 범례 위젯 생성
   Widget _buildLegend() {
+    WrapAlignment alignment;
+    switch (widget.legendPosition) {
+      case LegendPosition.topLeft:
+      case LegendPosition.bottomLeft:
+        alignment = WrapAlignment.start;
+        break;
+      case LegendPosition.topCenter:
+      case LegendPosition.bottomCenter:
+        alignment = WrapAlignment.center;
+        break;
+      case LegendPosition.topRight:
+      case LegendPosition.bottomRight:
+        alignment = WrapAlignment.end;
+        break;
+    }
+
     return Wrap(
       spacing: 16,
       runSpacing: 8,
+      alignment: alignment,
       children: _chartData.map((data) => _buildLegendItem(data)).toList(),
     );
   }
