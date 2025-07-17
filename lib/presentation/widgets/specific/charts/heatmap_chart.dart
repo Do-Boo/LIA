@@ -130,7 +130,7 @@ class _HeatmapChartState extends State<HeatmapChart>
 
           // 차트
           SizedBox(
-            height: widget.height - 200,
+            height: widget.height - 150, // 200 → 150으로 줄여서 차트 영역 확대
             child: AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
@@ -242,8 +242,8 @@ class _HeatmapChartPainter extends CustomPainter {
     // 축 레이블을 위한 최소 여백 설정
     const double leftMargin = 30;
     const double rightMargin = 10;
-    const double topMargin = 5; // 10 → 5로 축소
-    const double bottomMargin = 20; // 30 → 20으로 축소
+    const double topMargin = 5;
+    const double bottomMargin = 20;
 
     final double chartWidth = size.width - leftMargin - rightMargin;
     final double chartHeight = size.height - topMargin - bottomMargin;
@@ -263,15 +263,22 @@ class _HeatmapChartPainter extends CustomPainter {
       maxValue = math.max(maxValue, value);
     }
 
-    // 정사각형 셀 크기 계산
-    final double cellSize = math.min(
-      chartWidth / maxCols,
-      chartHeight / maxRows,
+    // 최소 셀 크기 설정 (더 큰 블록을 위해)
+    const double minCellSize = 16.0; // 최소 셀 크기를 16px로 설정
+
+    // 셀 크기 계산 - 최소 크기 보장
+    final double cellSize = math.max(
+      minCellSize,
+      math.min(chartWidth / maxCols, chartHeight / maxRows),
     );
 
+    // 실제 차트 크기 계산
+    final double actualChartWidth = cellSize * maxCols;
+    final double actualChartHeight = cellSize * maxRows;
+
     // 중앙 정렬을 위한 오프셋 계산
-    final double offsetX = leftMargin + (chartWidth - (cellSize * maxCols)) / 2;
-    final double offsetY = topMargin + (chartHeight - (cellSize * maxRows)) / 2;
+    final double offsetX = leftMargin + (chartWidth - actualChartWidth) / 2;
+    final double offsetY = topMargin + (chartHeight - actualChartHeight) / 2;
 
     // Y축 레이블 그리기 (요일)
     _drawYAxisLabels(canvas, offsetY, cellSize, maxRows);
@@ -314,7 +321,10 @@ class _HeatmapChartPainter extends CustomPainter {
 
       // 셀 그리기 (둥근 모서리)
       canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, const Radius.circular(2)),
+        RRect.fromRectAndRadius(
+          rect,
+          const Radius.circular(1),
+        ), // 2 → 1로 줄여서 더 각진 모양
         paint,
       );
 
@@ -322,10 +332,13 @@ class _HeatmapChartPainter extends CustomPainter {
       final borderPaint = Paint()
         ..color = Colors.white.withOpacity(animation)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1;
+        ..strokeWidth = 0.5; // 1 → 0.5로 줄여서 더 얇은 테두리
 
       canvas.drawRRect(
-        RRect.fromRectAndRadius(rect, const Radius.circular(2)),
+        RRect.fromRectAndRadius(
+          rect,
+          const Radius.circular(1),
+        ), // 2 → 1로 줄여서 더 각진 모양
         borderPaint,
       );
     }
@@ -374,13 +387,13 @@ class _HeatmapChartPainter extends CustomPainter {
       textAlign: TextAlign.center,
     );
 
-    // 3시간 간격으로 레이블 표시 (0, 3, 6, 9, 12, 15, 18, 21)
+    // 4시간 간격으로 레이블 표시 (0, 4, 8, 12, 16, 20)
     for (int i = 0; i < maxCols; i += 4) {
       if (i < maxCols) {
         final x = offsetX + (i * cellSize) + (cellSize / 2);
 
         textPainter.text = TextSpan(
-          text: '$i시',
+          text: '${i}h', // '시' 대신 'h'로 간소화
           style: AppTextStyles.caption.copyWith(
             color: AppColors.secondaryText,
             fontSize: 10,
@@ -390,7 +403,7 @@ class _HeatmapChartPainter extends CustomPainter {
 
         textPainter.paint(
           canvas,
-          Offset(x - textPainter.width / 2, baselineY + 3), // 5 → 3으로 축소
+          Offset(x - textPainter.width / 2, baselineY + 3),
         );
       }
     }

@@ -901,7 +901,7 @@ class _MainScreenState extends State<MainScreen> {
               // 썸 지수
               Expanded(
                 child: _buildSummaryMetric(
-                  icon: HugeIcons.strokeRoundedHeartAdd,
+                  icon: HugeIcons.strokeRoundedCardiogram02,
                   title: '썸 지수',
                   value: '${_analysisData!.someIndex}%',
                   color: AppColors.primary,
@@ -911,7 +911,7 @@ class _MainScreenState extends State<MainScreen> {
               // 호환성 점수
               Expanded(
                 child: _buildSummaryMetric(
-                  icon: HugeIcons.strokeRoundedUserMultiple,
+                  icon: HugeIcons.strokeRoundedCheckList,
                   title: '호환성',
                   value: _analysisData!.personalityAnalysis != null
                       ? '${_analysisData!.personalityAnalysis!.compatibilityScore}%'
@@ -1036,7 +1036,7 @@ class _MainScreenState extends State<MainScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
-                  HugeIcons.strokeRoundedHeartAdd,
+                  HugeIcons.strokeRoundedCheckList,
                   size: 24,
                   color: AppColors.primary,
                 ),
@@ -1093,7 +1093,7 @@ class _MainScreenState extends State<MainScreen> {
 
         // 레이더 차트 - 성격 비교
         const RadarChart(
-          title: '성격 5요소 비교',
+          title: 'MBTI 성격 비교',
           titleIcon: HugeIcons.strokeRoundedUser,
           size: 280,
           showLegend: true,
@@ -1106,7 +1106,7 @@ class _MainScreenState extends State<MainScreen> {
                 {'label': '개방성', 'value': 80},
                 {'label': '성실성', 'value': 65},
                 {'label': '친화성', 'value': 90},
-                {'label': '감정안정성', 'value': 70},
+                {'label': '사고', 'value': 70},
               ],
               'color': 0xFFFF70A6,
             },
@@ -1117,7 +1117,7 @@ class _MainScreenState extends State<MainScreen> {
                 {'label': '개방성', 'value': 85},
                 {'label': '성실성', 'value': 80},
                 {'label': '친화성', 'value': 75},
-                {'label': '감정안정성', 'value': 65},
+                {'label': '사고', 'value': 65},
               ],
               'color': 0xFF7B68EE,
             },
@@ -1127,27 +1127,22 @@ class _MainScreenState extends State<MainScreen> {
         const SizedBox(height: 20),
 
         // 강점과 개선점
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Column(
           children: [
             // 강점
-            Expanded(
-              child: _buildPersonalityInsight(
-                title: '관계의 강점',
-                icon: HugeIcons.strokeRoundedThumbsUp,
-                items: personality.strengths,
-                color: AppColors.green,
-              ),
+            _buildPersonalityInsight(
+              title: '관계의 강점',
+              icon: HugeIcons.strokeRoundedThumbsUp,
+              items: personality.strengths,
+              color: AppColors.green,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(height: 16),
             // 개선점
-            Expanded(
-              child: _buildPersonalityInsight(
-                title: '개선 포인트',
-                icon: HugeIcons.strokeRoundedIdea,
-                items: personality.improvements,
-                color: AppColors.accent,
-              ),
+            _buildPersonalityInsight(
+              title: '개선 포인트',
+              icon: HugeIcons.strokeRoundedIdea,
+              items: personality.improvements,
+              color: AppColors.accent,
             ),
           ],
         ),
@@ -1180,7 +1175,7 @@ class _MainScreenState extends State<MainScreen> {
     required Color color,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16), // 12 → 16으로 증가
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
@@ -1191,46 +1186,50 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           Row(
             children: [
-              Icon(icon, size: 16, color: color),
-              const SizedBox(width: 6),
+              Icon(icon, size: 20, color: color), // 16 → 20으로 증가
+              const SizedBox(width: 8), // 6 → 8로 증가
               Expanded(
                 child: Text(
                   title,
-                  style: AppTextStyles.body2.copyWith(
+                  style: AppTextStyles.body1.copyWith(
+                    // body2 → body1로 변경
                     fontWeight: FontWeight.w600,
                     color: color,
-                    fontSize: 13,
+                    fontSize: 15, // 13 → 15로 증가
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12), // 8 → 12로 증가
           ...items
               .take(2)
               .map(
                 (item) => Padding(
-                  padding: const EdgeInsets.only(bottom: 4),
+                  padding: const EdgeInsets.only(bottom: 6), // 4 → 6으로 증가
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: 4,
-                        height: 4,
-                        margin: const EdgeInsets.only(top: 6),
+                        width: 5, // 4 → 5로 증가
+                        height: 5, // 4 → 5로 증가
+                        margin: const EdgeInsets.only(top: 7), // 6 → 7로 조정
                         decoration: BoxDecoration(
                           color: color,
-                          borderRadius: BorderRadius.circular(2),
+                          borderRadius: BorderRadius.circular(
+                            2.5,
+                          ), // 2 → 2.5로 조정
                         ),
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: 8), // 6 → 8로 증가
                       Expanded(
                         child: Text(
                           item,
-                          style: AppTextStyles.caption.copyWith(
+                          style: AppTextStyles.body2.copyWith(
+                            // caption → body2로 변경
                             color: AppColors.textSecondary,
-                            fontSize: 11,
-                            height: 1.3,
+                            fontSize: 13, // 11 → 13으로 증가
+                            height: 1.4, // 1.3 → 1.4로 조정
                           ),
                         ),
                       ),
@@ -1332,7 +1331,7 @@ class _MainScreenState extends State<MainScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                HugeIcons.strokeRoundedHeartAdd,
+                HugeIcons.strokeRoundedCardiogram02,
                 size: 20,
                 color: AppColors.primary,
               ),
@@ -1494,54 +1493,14 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildEmotionLineVisualization() {
     final emotionData = _analysisData!.emotionData;
 
-    return Column(
-      children: [
-        // 감정 변화 차트
-        LineChart(
-          title: '감정 변화 추이',
-          titleIcon: HugeIcons.strokeRoundedHeartAdd,
-          data: emotionData
-              .map((e) => {'label': e.time, 'value': e.myEmotion.toDouble()})
-              .toList(),
-          height: 200,
-          showLegend: false,
-        ),
-
-        const SizedBox(height: 16),
-
-        // 감정 일치도
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                HugeIcons.strokeRoundedHeartAdd,
-                size: 18,
-                color: AppColors.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '감정 일치도',
-                style: AppTextStyles.body2.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '${_calculateEmotionMatch()}%',
-                style: AppTextStyles.body1.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+    return LineChart(
+      title: '감정 변화 추이',
+      titleIcon: HugeIcons.strokeRoundedCardiogram02,
+      data: emotionData
+          .map((e) => {'label': e.time, 'value': e.myEmotion.toDouble()})
+          .toList(),
+      height: 200,
+      showLegend: false,
     );
   }
 
@@ -1554,6 +1513,7 @@ class _MainScreenState extends State<MainScreen> {
           data: _generateHeatmapData().expand((x) => x).toList(),
           title: '주간 메시지 활동 패턴',
           titleIcon: HugeIcons.strokeRoundedCalendar03,
+          height: 350, // 기본 300에서 350으로 증가
         ),
 
         const SizedBox(height: 16),

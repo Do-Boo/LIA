@@ -293,66 +293,91 @@ class _BarChartPainter extends CustomPainter {
     final maxValue = data.map((d) => d.value).reduce((a, b) => a > b ? a : b);
     if (maxValue == 0) return;
 
-    // 라벨 공간을 위한 패딩
-    const leftPadding = 80.0;
-    const rightPadding = 40.0;
-    final chartWidth = size.width - leftPadding - rightPadding;
+    // 패딩 설정
+    const topPadding = 20.0;
+    const bottomPadding = 20.0;
+    const leftPadding = 80.0; // 레이블 공간 확보
+    const rightPadding = 60.0; // 퍼센트 공간 확보
 
-    // 가로 바 차트 그리기
-    final barHeight = size.height / data.length * 0.6;
-    final barSpacing = size.height / data.length * 0.4;
+    final chartWidth = size.width - leftPadding - rightPadding;
+    final chartHeight = size.height - topPadding - bottomPadding;
+
+    // 각 행의 높이 계산
+    final rowHeight = chartHeight / data.length;
+    final progressBarHeight = 20.0; // 진행바 높이
 
     for (int i = 0; i < data.length; i++) {
       final barData = data[i];
-      final barWidth = (barData.value / maxValue) * chartWidth * animation;
+      final progressWidth = (barData.value / maxValue) * chartWidth * animation;
 
-      final x = leftPadding;
-      final y = i * (barHeight + barSpacing) + barSpacing / 2;
+      // 각 행의 Y 위치
+      final rowY = topPadding + i * rowHeight;
 
-      // 바 그리기
-      paint.color = barData.color ?? AppColors.primary;
-      final barRect = RRect.fromRectAndRadius(
-        Rect.fromLTWH(x, y, barWidth, barHeight),
-        const Radius.circular(4),
+      // 진행바 Y 위치 (행 중앙에 배치)
+      final progressY = rowY + (rowHeight - progressBarHeight) / 2;
+
+      // 진행바 배경 (회색)
+      final backgroundRect = RRect.fromRectAndRadius(
+        Rect.fromLTWH(leftPadding, progressY, chartWidth, progressBarHeight),
+        const Radius.circular(10),
       );
-      canvas.drawRRect(barRect, paint);
+      paint.color = AppColors.lightGray;
+      canvas.drawRRect(backgroundRect, paint);
 
-      // 값 표시 (바 끝에)
-      final textPainter = TextPainter(
-        text: TextSpan(
-          text: barData.value.toInt().toString(),
-          style: const TextStyle(
-            color: AppColors.charcoal,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+      // 진행바 (컬러)
+      if (progressWidth > 0) {
+        final progressRect = RRect.fromRectAndRadius(
+          Rect.fromLTWH(
+            leftPadding,
+            progressY,
+            progressWidth,
+            progressBarHeight,
           ),
-        ),
-        textDirection: TextDirection.ltr,
-      );
-      textPainter.layout();
-
-      final textX = x + barWidth + 4;
-      final textY = y + (barHeight - textPainter.height) / 2;
-
-      if (textX + textPainter.width <= size.width - rightPadding) {
-        textPainter.paint(canvas, Offset(textX, textY));
+          const Radius.circular(10),
+        );
+        paint.color = barData.color ?? AppColors.primary;
+        canvas.drawRRect(progressRect, paint);
       }
 
-      // 라벨 표시 (왼쪽에)
+      // 라벨 (진행바 왼쪽, 같은 높이)
       final labelPainter = TextPainter(
         text: TextSpan(
           text: barData.label,
-          style: const TextStyle(color: AppColors.secondaryText, fontSize: 10),
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.secondaryText,
+            fontSize: 11,
+          ),
         ),
         textDirection: TextDirection.ltr,
       );
       labelPainter.layout();
 
       final labelX = leftPadding - labelPainter.width - 8;
-      final labelY = y + (barHeight - labelPainter.height) / 2;
+      final labelY = progressY + (progressBarHeight - labelPainter.height) / 2;
 
       if (labelX >= 0) {
         labelPainter.paint(canvas, Offset(labelX, labelY));
+      }
+
+      // 퍼센트 (진행바 오른쪽, 같은 높이)
+      final percentPainter = TextPainter(
+        text: TextSpan(
+          text: '${barData.value.toInt()}%',
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.secondaryText,
+            fontSize: 11,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      );
+      percentPainter.layout();
+
+      final percentX = leftPadding + chartWidth + 8;
+      final percentY =
+          progressY + (progressBarHeight - percentPainter.height) / 2;
+
+      if (percentX + percentPainter.width <= size.width) {
+        percentPainter.paint(canvas, Offset(percentX, percentY));
       }
     }
   }
