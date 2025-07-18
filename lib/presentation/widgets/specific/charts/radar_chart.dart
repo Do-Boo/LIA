@@ -8,75 +8,7 @@ import 'package:lia/presentation/widgets/specific/charts/chart_common.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/app_text_styles.dart';
 
-/// 레이더 차트 데이터 모델
-class RadarChartData {
-  final String label;
-  final double value;
-  final double maxValue;
 
-  RadarChartData({
-    required this.label,
-    required this.value,
-    this.maxValue = 100,
-  });
-
-  /// JSON으로부터 데이터 생성
-  factory RadarChartData.fromJson(Map<String, dynamic> json) {
-    return RadarChartData(
-      label: json['label'] ?? '',
-      value: (json['value'] ?? 0).toDouble(),
-      maxValue: (json['maxValue'] ?? 100).toDouble(),
-    );
-  }
-
-  /// JSON으로 변환
-  Map<String, dynamic> toJson() {
-    return {'label': label, 'value': value, 'maxValue': maxValue};
-  }
-}
-
-/// 레이더 차트 데이터셋 모델
-class RadarDataSet {
-  final String name;
-  final List<RadarChartData> data;
-  final Color color;
-  final Color fillColor;
-  final double strokeWidth;
-
-  RadarDataSet({
-    required this.name,
-    required this.data,
-    required this.color,
-    Color? fillColor,
-    this.strokeWidth = 2.0,
-  }) : fillColor = fillColor ?? color.withValues(alpha: 0.2);
-
-  /// JSON으로부터 데이터 생성
-  factory RadarDataSet.fromJson(Map<String, dynamic> json) {
-    return RadarDataSet(
-      name: json['name'] ?? '',
-      data:
-          (json['data'] as List<dynamic>?)
-              ?.map((item) => RadarChartData.fromJson(item))
-              .toList() ??
-          [],
-      color: Color(json['color'] ?? 0xFF6C5CE7),
-      fillColor: json['fillColor'] != null ? Color(json['fillColor']) : null,
-      strokeWidth: (json['strokeWidth'] ?? 2.0).toDouble(),
-    );
-  }
-
-  /// JSON으로 변환
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'data': data.map((item) => item.toJson()).toList(),
-      'color': color.value,
-      'fillColor': fillColor.value,
-      'strokeWidth': strokeWidth,
-    };
-  }
-}
 
 /// 레이더 차트 데이터 포인트 모델
 class RadarChartDataPoint {

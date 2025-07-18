@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:lia/presentation/widgets/specific/charts/bar_chart.dart';
 import 'package:lia/presentation/widgets/specific/charts/chart_common.dart';
-import 'package:lia/presentation/widgets/specific/charts/heatmap_chart.dart';
 import 'package:lia/presentation/widgets/specific/charts/line_chart.dart';
 import 'package:lia/presentation/widgets/specific/charts/radar_chart.dart';
 
@@ -1508,12 +1507,13 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildMessageFrequencyContent() {
     return Column(
       children: [
-        // 히트맵 차트
-        HeatmapChart(
-          data: _generateHeatmapData().expand((x) => x).toList(),
-          title: '주간 메시지 활동 패턴',
+        // 라인 차트
+        LineChart(
+          data: _generateMessageFrequencyData(),
+          title: '시간대별 메시지 빈도',
           titleIcon: HugeIcons.strokeRoundedCalendar03,
-          height: 320, // 350 → 320으로 조정하여 오버플로우 방지
+          height: 320,
+          showLegend: true,
         ),
 
         const SizedBox(height: 16),
@@ -1522,7 +1522,7 @@ class _MainScreenState extends State<MainScreen> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.05),
+            color: AppColors.primary.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
@@ -1535,7 +1535,7 @@ class _MainScreenState extends State<MainScreen> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  '가장 활발한 시간대: 오후 7-9시 | 주말 오전에 대화가 많아요',
+                  '가장 활발한 시간대: 오후 7-9시 | 내가 더 많은 메시지를 보내는 시간대예요',
                   style: AppTextStyles.body2.copyWith(
                     color: AppColors.primary,
                     fontWeight: FontWeight.w500,
@@ -1697,27 +1697,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // 차트 범례 위젯
-  Widget _buildChartLegend(String label, Color color) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 12,
-          height: 12,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-        const SizedBox(width: 4),
-        Text(
-          label,
-          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-        ),
-      ],
-    );
-  }
 
   // 썸 지수 메시지 생성
   String _getSomeIndexMessage(int someIndex) {
@@ -1734,20 +1713,6 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  // 감정 일치도 계산
-  int _calculateEmotionMatch() {
-    if (_analysisData?.emotionData == null) return 0;
-
-    final emotions = _analysisData!.emotionData;
-    double totalMatch = 0;
-
-    for (var emotion in emotions) {
-      final diff = (emotion.myEmotion - emotion.partnerEmotion).abs();
-      totalMatch += (1 - diff);
-    }
-
-    return ((totalMatch / emotions.length) * 100).round();
-  }
 
   // 이벤트 마커 위젯
   Widget _buildEventMarker(AnalysisKeyEvent event) {
@@ -1940,42 +1905,58 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // 히트맵 데이터 생성
-  List<List<Map<String, dynamic>>> _generateHeatmapData() {
-    final days = ['월', '화', '수', '목', '금', '토', '일'];
-    final hours = List.generate(24, (i) => i);
-
-    return List.generate(days.length, (dayIndex) {
-      return List.generate(hours.length, (hourIndex) {
-        // 시뮬레이션 데이터 생성
-        double value = 0;
-
-        // 주말 패턴
-        if (dayIndex >= 5) {
-          if (hourIndex >= 10 && hourIndex <= 22) {
-            value = (hourIndex >= 19 && hourIndex <= 21) ? 0.9 : 0.6;
+  // 라인 차트용 메시지 빈도 데이터 생성
+  List<Map<String, dynamic>> _generateMessageFrequencyData() {
+    return [
+      {
+        'name': '내 메시지',
+        'data': List.generate(24, (hour) {
+          // 시간대별 내 메시지 개수 시뮬레이션
+          double myMessages = 0;
+          if (hour >= 7 && hour <= 9) {
+            myMessages = 3 + (hour - 7) * 2; // 아침 시간 증가
+          } else if (hour >= 12 && hour <= 14) {
+            myMessages = 5 + (hour - 12) * 1.5; // 점심 시간
+          } else if (hour >= 18 && hour <= 22) {
+            myMessages = 8 + (hour - 18) * 2; // 저녁 시간 활발
+          } else if (hour >= 23 || hour <= 1) {
+            myMessages = 2; // 늦은 밤
           } else {
-            value = 0.1;
+            myMessages = 1; // 기본값
           }
-        } else {
-          // 평일 패턴
-          if (hourIndex >= 9 && hourIndex <= 18) {
-            value = 0.3; // 업무 시간
-          } else if (hourIndex >= 19 && hourIndex <= 22) {
-            value = 0.8; // 저녁 시간
+          
+          return {
+            'label': '$hour시',
+            'value': myMessages,
+          };
+        }),
+        'color': AppColors.primary.toARGB32(),
+      },
+      {
+        'name': '상대 메시지',
+        'data': List.generate(24, (hour) {
+          // 시간대별 상대방 메시지 개수 시뮬레이션
+          double partnerMessages = 0;
+          if (hour >= 8 && hour <= 10) {
+            partnerMessages = 2 + (hour - 8) * 1.5; // 아침 시간
+          } else if (hour >= 13 && hour <= 15) {
+            partnerMessages = 4 + (hour - 13) * 1; // 점심 시간
+          } else if (hour >= 19 && hour <= 21) {
+            partnerMessages = 6 + (hour - 19) * 2.5; // 저녁 시간
+          } else if (hour >= 22 || hour <= 2) {
+            partnerMessages = 1.5; // 늦은 밤
           } else {
-            value = 0.1;
+            partnerMessages = 0.5; // 기본값
           }
-        }
-
-        return {
-          'row': dayIndex,
-          'col': hourIndex,
-          'value': value,
-          'tooltip': '${days[dayIndex]} $hourIndex시: ${(value * 10).toInt()}개',
-        };
-      });
-    });
+          
+          return {
+            'label': '$hour시',
+            'value': partnerMessages,
+          };
+        }),
+        'color': AppColors.accent.toARGB32(),
+      },
+    ];
   }
 }
 

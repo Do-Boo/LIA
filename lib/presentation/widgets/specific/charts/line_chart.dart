@@ -49,7 +49,7 @@ class LineChartSeries {
     return {
       'name': name,
       'data': data.map((point) => point.toJson()).toList(),
-      if (color != null) 'color': color!.value,
+      if (color != null) 'color': color!.toARGB32(),
     };
   }
 }
@@ -136,17 +136,41 @@ class _LineChartState extends State<LineChart>
         ),
       ];
     } else if (widget.data is List) {
-      // 단일 시리즈 데이터 (LineChartDataPoint 리스트)
-      final dataPoints = (widget.data as List).map((item) {
-        if (item is Map<String, dynamic>) {
-          return LineChartDataPoint.fromJson(item);
-        } else if (item is LineChartDataPoint) {
-          return item;
-        }
-        return LineChartDataPoint(label: '', value: 0);
-      }).toList();
+      // 다중 시리즈 또는 단일 시리즈 데이터 처리
+      final dataList = widget.data as List;
+      if (dataList.isNotEmpty && dataList.first is Map<String, dynamic>) {
+        final firstItem = dataList.first as Map<String, dynamic>;
+        if (firstItem.containsKey('name') && firstItem.containsKey('data')) {
+          // 다중 시리즈 형식
+          _chartSeries = dataList.map((item) {
+            final seriesData = item as Map<String, dynamic>;
+            return LineChartSeries(
+              name: seriesData['name'] ?? '',
+              data: (seriesData['data'] as List? ?? [])
+                  .map((dataPoint) => LineChartDataPoint.fromJson(dataPoint))
+                  .toList(),
+              color: seriesData['color'] != null
+                  ? Color(seriesData['color'])
+                  : null,
+            );
+          }).toList();
+        } else {
+          // 단일 시리즈 데이터 포인트들
+          final dataPoints = dataList.map((item) {
+            if (item is Map<String, dynamic>) {
+              return LineChartDataPoint.fromJson(item);
+            } else if (item is LineChartDataPoint) {
+              return item;
+            }
+            return LineChartDataPoint(label: '', value: 0);
+          }).toList();
 
-      _chartSeries = [LineChartSeries(name: '데이터', data: dataPoints)];
+          _chartSeries = [LineChartSeries(name: '데이터', data: dataPoints)];
+        }
+      } else {
+        // 빈 데이터
+        _chartSeries = [];
+      }
     } else if (widget.data is Map<String, dynamic>) {
       // 단일 시리즈 데이터 (JSON 형식)
       _chartSeries = [LineChartSeries.fromJson(widget.data)];
@@ -215,10 +239,7 @@ class _LineChartState extends State<LineChart>
               builder: (context, child) {
                 return CustomPaint(
                   painter: _LineChartPainter(
-                    data: _chartSeries
-                        .expand((series) => series.data)
-                        .map((point) => point.toJson())
-                        .toList(),
+                    series: _chartSeries,
                     animation: _animation.value,
                   ),
                   size: Size.infinite,
@@ -309,16 +330,16 @@ class _LineChartState extends State<LineChart>
 
 /// 라인 차트 페인터
 class _LineChartPainter extends CustomPainter {
-  final List<Map<String, dynamic>> data;
+  final List<LineChartSeries> series;
   final double animation;
 
-  _LineChartPainter({required this.data, required this.animation});
+  _LineChartPainter({required this.series, required this.animation});
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (data.isEmpty) return;
+    if (series.isEmpty) return;
 
-    // 최적화된 여백 설정 (왼쪽 여백 60 → 40으로 줄임)
+    // 최적화된 여백 설정
     const double leftMargin = 40;
     const double rightMargin = 20;
     const double topMargin = 20;
@@ -327,14 +348,17 @@ class _LineChartPainter extends CustomPainter {
     final chartWidth = size.width - leftMargin - rightMargin;
     final chartHeight = size.height - topMargin - bottomMargin;
 
-    // 데이터에서 최대/최소값 계산
+    // 모든 시리즈에서 최대/최소값 계산
     double minValue = double.infinity;
     double maxValue = double.negativeInfinity;
+    int maxDataPoints = 0;
 
-    for (var point in data) {
-      final value = (point['value'] as num).toDouble();
-      minValue = math.min(minValue, value);
-      maxValue = math.max(maxValue, value);
+    for (var serie in series) {
+      maxDataPoints = math.max(maxDataPoints, serie.data.length);
+      for (var point in serie.data) {
+        minValue = math.min(minValue, point.value);
+        maxValue = math.max(maxValue, point.value);
+      }
     }
 
     // 값 범위가 0이면 기본값 설정
@@ -358,80 +382,103 @@ class _LineChartPainter extends CustomPainter {
       minValue,
       maxValue,
       valueRange,
+      maxDataPoints,
     );
 
-    // 축 레이블 그리기
-    _drawAxisLabels(
-      canvas,
-      leftMargin,
-      topMargin,
-      bottomMargin,
-      chartWidth,
-      chartHeight,
-      minValue,
-      maxValue,
-      valueRange,
-    );
+    // 축 레이블 그리기 (첫 번째 시리즈의 라벨 사용)
+    if (series.isNotEmpty) {
+      _drawAxisLabels(
+        canvas,
+        leftMargin,
+        topMargin,
+        bottomMargin,
+        chartWidth,
+        chartHeight,
+        minValue,
+        maxValue,
+        valueRange,
+        series.first.data,
+      );
+    }
 
-    // 라인 그리기
-    if (data.length > 1) {
-      final path = Path();
-      final paint = Paint()
-        ..color = AppColors.primary
-        ..strokeWidth = 2.0
+    // 각 시리즈별로 라인 그리기
+    for (var serie in series) {
+      if (serie.data.length > 1) {
+        _drawLineSeries(
+          canvas,
+          serie,
+          leftMargin,
+          topMargin,
+          chartWidth,
+          chartHeight,
+          minValue,
+          valueRange,
+        );
+      }
+    }
+  }
+
+  void _drawLineSeries(
+    Canvas canvas,
+    LineChartSeries serie,
+    double leftMargin,
+    double topMargin,
+    double chartWidth,
+    double chartHeight,
+    double minValue,
+    double valueRange,
+  ) {
+    final path = Path();
+    final paint = Paint()
+      ..color = serie.color ?? AppColors.primary
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    // 라인 패스 생성
+    for (int i = 0; i < serie.data.length; i++) {
+      final point = serie.data[i];
+      final value = point.value;
+
+      final x = leftMargin + (i / (serie.data.length - 1)) * chartWidth;
+      final animatedY =
+          topMargin +
+          chartHeight -
+          ((value - minValue) / valueRange) * chartHeight * animation;
+
+      if (i == 0) {
+        path.moveTo(x, animatedY);
+      } else {
+        path.lineTo(x, animatedY);
+      }
+    }
+
+    canvas.drawPath(path, paint);
+
+    // 데이터 포인트 그리기
+    for (int i = 0; i < serie.data.length; i++) {
+      final point = serie.data[i];
+      final value = point.value;
+
+      final x = leftMargin + (i / (serie.data.length - 1)) * chartWidth;
+      final animatedY =
+          topMargin +
+          chartHeight -
+          ((value - minValue) / valueRange) * chartHeight * animation;
+
+      final pointPaint = Paint()
+        ..color = serie.color ?? AppColors.primary
+        ..style = PaintingStyle.fill;
+
+      canvas.drawCircle(Offset(x, animatedY), 4, pointPaint);
+
+      // 포인트 테두리
+      final borderPaint = Paint()
+        ..color = Colors.white
         ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round;
+        ..strokeWidth = 2;
 
-      for (int i = 0; i < data.length; i++) {
-        final point = data[i];
-        final value = (point['value'] as num).toDouble();
-
-        final x = leftMargin + (i / (data.length - 1)) * chartWidth;
-        final y =
-            topMargin +
-            chartHeight -
-            ((value - minValue) / valueRange) * chartHeight;
-
-        // 애니메이션 적용
-        final animatedY =
-            topMargin +
-            chartHeight -
-            ((value - minValue) / valueRange) * chartHeight * animation;
-
-        if (i == 0) {
-          path.moveTo(x, animatedY);
-        } else {
-          path.lineTo(x, animatedY);
-        }
-      }
-
-      canvas.drawPath(path, paint);
-
-      // 데이터 포인트 그리기
-      for (int i = 0; i < data.length; i++) {
-        final point = data[i];
-        final value = (point['value'] as num).toDouble();
-
-        final x = leftMargin + (i / (data.length - 1)) * chartWidth;
-        final animatedY =
-            topMargin +
-            chartHeight -
-            ((value - minValue) / valueRange) * chartHeight * animation;
-
-        final pointPaint = Paint()
-          ..color = AppColors.primary
-          ..style = PaintingStyle.fill;
-
-        canvas.drawCircle(Offset(x, animatedY), 3, pointPaint);
-
-        // 포인트 테두리
-        final borderPaint = Paint()
-          ..color = Colors.white
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2;
-
-        canvas.drawCircle(Offset(x, animatedY), 3, borderPaint);
-      }
+      canvas.drawCircle(Offset(x, animatedY), 4, borderPaint);
     }
   }
 
@@ -447,9 +494,10 @@ class _LineChartPainter extends CustomPainter {
     double minValue,
     double maxValue,
     double valueRange,
+    int maxDataPoints,
   ) {
     final gridPaint = Paint()
-      ..color = AppColors.border.withOpacity(0.3)
+      ..color = AppColors.border.withValues(alpha: 0.3)
       ..strokeWidth = 0.5;
 
     // 수평 격자선 (Y축)
@@ -463,7 +511,7 @@ class _LineChartPainter extends CustomPainter {
     }
 
     // 수직 격자선 (X축)
-    final xSteps = math.min(data.length - 1, 6);
+    final xSteps = math.min(maxDataPoints - 1, 6);
     for (int i = 0; i <= xSteps; i++) {
       final x = leftMargin + (i / xSteps) * chartWidth;
       canvas.drawLine(
@@ -484,6 +532,7 @@ class _LineChartPainter extends CustomPainter {
     double minValue,
     double maxValue,
     double valueRange,
+    List<LineChartDataPoint> dataPoints,
   ) {
     final textPainter = TextPainter(
       textDirection: TextDirection.ltr,
@@ -511,13 +560,13 @@ class _LineChartPainter extends CustomPainter {
     }
 
     // X축 레이블
-    final xSteps = math.min(data.length - 1, 6);
+    final xSteps = math.min(dataPoints.length - 1, 6);
     for (int i = 0; i <= xSteps; i++) {
-      final dataIndex = ((i / xSteps) * (data.length - 1)).round();
+      final dataIndex = ((i / xSteps) * (dataPoints.length - 1)).round();
       final x = leftMargin + (i / xSteps) * chartWidth;
 
       // 데이터에서 실제 라벨 가져오기
-      final label = data[dataIndex]['label'] as String;
+      final label = dataPoints[dataIndex].label;
 
       textPainter.text = TextSpan(
         text: label,

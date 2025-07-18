@@ -102,59 +102,61 @@ class _HeatmapChartState extends State<HeatmapChart>
   Widget build(BuildContext context) {
     final displayTitle = widget.title ?? '활동 히트맵';
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 제목 표시
-          _buildTitle(displayTitle),
-          const SizedBox(height: 20),
-
-          // 상단 범례
-          if (widget.showLegend &&
-              (widget.legendPosition == LegendPosition.topLeft ||
-                  widget.legendPosition == LegendPosition.topCenter ||
-                  widget.legendPosition == LegendPosition.topRight)) ...[
-            _buildLegend(),
-            const SizedBox(height: 20),
-          ],
-
-          // 차트
-          SizedBox(
-            height: widget.height - 200, // 150 → 160으로 조정하여 여백 확보
-            child: AnimatedBuilder(
-              animation: _animation,
-              builder: (context, child) {
-                return CustomPaint(
-                  painter: _HeatmapChartPainter(
-                    data: _parseData(),
-                    animation: _animation.value,
-                    colors: _heatmapColors,
-                  ),
-                  size: Size.infinite,
-                );
-              },
-            ),
+    return SizedBox(
+      height: widget.height,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.primary.withValues(alpha: 0.2),
+            width: 1,
           ),
-
-          // 하단 범례
-          if (widget.showLegend &&
-              (widget.legendPosition == LegendPosition.bottomLeft ||
-                  widget.legendPosition == LegendPosition.bottomCenter ||
-                  widget.legendPosition == LegendPosition.bottomRight)) ...[
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 제목 표시
+            _buildTitle(displayTitle),
             const SizedBox(height: 20),
-            _buildLegend(),
+
+            // 상단 범례
+            if (widget.showLegend &&
+                (widget.legendPosition == LegendPosition.topLeft ||
+                    widget.legendPosition == LegendPosition.topCenter ||
+                    widget.legendPosition == LegendPosition.topRight)) ...[
+              _buildLegend(),
+              const SizedBox(height: 20),
+            ],
+
+            // 차트
+            Expanded(
+              child: AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  return CustomPaint(
+                    painter: _HeatmapChartPainter(
+                      data: _parseData(),
+                      animation: _animation.value,
+                      colors: _heatmapColors,
+                    ),
+                    size: Size.infinite,
+                  );
+                },
+              ),
+            ),
+
+            // 하단 범례
+            if (widget.showLegend &&
+                (widget.legendPosition == LegendPosition.bottomLeft ||
+                    widget.legendPosition == LegendPosition.bottomCenter ||
+                    widget.legendPosition == LegendPosition.bottomRight)) ...[
+              const SizedBox(height: 20),
+              _buildLegend(),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
