@@ -35,7 +35,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   // 상태 관리 변수들
-  bool _hasAnalysisData = true; // 기본값을 true로 설정하여 대시보드 표시
+  bool _hasAnalysisData = false; // 기본값을 false로 설정하여 시작 화면을 먼저 표시
   bool _isAnalyzing = false;
   int _analysisStep = 0;
   AnalysisData? _analysisData;
@@ -1895,7 +1895,6 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _hasAnalysisData = false;
       _conversationController.clear();
-      _analysisData = null;
     });
 
     ToastNotification.show(

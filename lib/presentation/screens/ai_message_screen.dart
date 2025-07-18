@@ -1,47 +1,103 @@
 // File: lib/presentation/screens/ai_message_screen.dart
-// 2025.07.15 22:38:46 AI 메시지 생성 화면 구현
+// 2025.07.18 13:27:31 AI 메시지 화면 main_screen.dart 스타일로 리팩토링
 
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_text_styles.dart';
-import '../widgets/common/component_card.dart';
 import '../widgets/common/primary_button.dart';
 import '../widgets/common/secondary_button.dart';
 import '../widgets/specific/feedback/toast_notification.dart';
+import '../widgets/specific/forms/custom_text_field.dart';
 
-/// AI 메시지 생성 화면
+/// AI 메시지 화면
 ///
-/// 사용자의 상황과 상대방 정보를 바탕으로 AI가 메시지를 생성하는 화면
-/// 18세 서현 페르소나에 맞는 직관적인 메시지 생성 도구
-class AIMessageScreen extends StatefulWidget {
-  const AIMessageScreen({super.key});
+/// AI 기반 메시지 생성 및 편집 기능을 제공하는 화면
+/// 18세 서현 페르소나에 맞는 맞춤형 메시지 작성 도구
+/// main_screen.dart 스타일로 통일된 디자인 적용
+class AiMessageScreen extends StatefulWidget {
+  const AiMessageScreen({super.key});
 
   @override
-  State<AIMessageScreen> createState() => _AIMessageScreenState();
+  State<AiMessageScreen> createState() => _AiMessageScreenState();
 }
 
-class _AIMessageScreenState extends State<AIMessageScreen> {
-  final TextEditingController _situationController = TextEditingController();
+class _AiMessageScreenState extends State<AiMessageScreen> {
+  final TextEditingController _messageController = TextEditingController();
   final TextEditingController _contextController = TextEditingController();
 
+  // 메시지 생성 상태
   bool _isGenerating = false;
-  String? _generatedMessage;
+  String _generatedMessage = '';
+  int _selectedTone = 0; // 0: 친근함, 1: 정중함, 2: 유머러스, 3: 로맨틱
+  int _selectedCategory = 0; // 0: 일반, 1: 데이트, 2: 사과, 3: 감사, 4: 위로
 
-  // 메시지 타입 선택
-  int _selectedType = 0;
-  final List<String> _messageTypes = [
-    '일상 대화',
-    '데이트 제안',
-    '답장하기',
-    '감정 표현',
-    '사과하기',
-    '축하하기',
+  // 톤 옵션
+  final List<ToneOption> _toneOptions = [
+    ToneOption(
+      title: '친근함',
+      description: '편안하고 자연스러운 톤',
+      icon: HugeIcons.strokeRoundedHappy,
+      color: AppColors.primary,
+    ),
+    ToneOption(
+      title: '정중함',
+      description: '예의 바르고 정중한 톤',
+      icon: HugeIcons.strokeRoundedUserCheck01,
+      color: AppColors.accent,
+    ),
+    ToneOption(
+      title: '유머러스',
+      description: '재미있고 유쾌한 톤',
+      icon: HugeIcons.strokeRoundedLaughingSquareEyes,
+      color: AppColors.green,
+    ),
+    ToneOption(
+      title: '로맨틱',
+      description: '달콤하고 애정 어린 톤',
+      icon: HugeIcons.strokeRoundedHeartAdd,
+      color: AppColors.error,
+    ),
+  ];
+
+  // 카테고리 옵션
+  final List<CategoryOption> _categoryOptions = [
+    CategoryOption(
+      title: '일반 메시지',
+      description: '일상적인 대화',
+      icon: HugeIcons.strokeRoundedMessage01,
+      color: AppColors.primaryText,
+    ),
+    CategoryOption(
+      title: '데이트 제안',
+      description: '만남 제안하기',
+      icon: HugeIcons.strokeRoundedCalendarAdd01,
+      color: AppColors.primary,
+    ),
+    CategoryOption(
+      title: '사과 메시지',
+      description: '진심 어린 사과',
+      icon: HugeIcons.strokeRoundedSorry,
+      color: AppColors.accent,
+    ),
+    CategoryOption(
+      title: '감사 인사',
+      description: '고마움 표현하기',
+      icon: HugeIcons.strokeRoundedThumbsUp,
+      color: AppColors.green,
+    ),
+    CategoryOption(
+      title: '위로 메시지',
+      description: '따뜻한 위로와 격려',
+      icon: HugeIcons.strokeRoundedHeart,
+      color: AppColors.error,
+    ),
   ];
 
   @override
   void dispose() {
-    _situationController.dispose();
+    _messageController.dispose();
     _contextController.dispose();
     super.dispose();
   }
@@ -50,45 +106,620 @@ class _AIMessageScreenState extends State<AIMessageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primaryText),
-          onPressed: () => Navigator.pop(context),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
+            vertical: 12.0,
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20),
+                // 대시보드 헤더
+                _buildDashboardHeader(),
+
+                const SizedBox(height: 24),
+                // 1. 메시지 설정
+                _buildChartDemoSection(
+                  number: '1',
+                  title: '메시지 설정',
+                  description: '메시지 톤과 카테고리를 선택하세요',
+                  child: _buildMessageSettingsContent(),
+                ),
+
+                const SizedBox(height: 24),
+                // 2. 상황 설명
+                _buildChartDemoSection(
+                  number: '2',
+                  title: '상황 설명',
+                  description: '메시지를 보내는 상황을 자세히 설명해주세요',
+                  child: _buildContextInputContent(),
+                ),
+
+                const SizedBox(height: 24),
+                // 3. 메시지 생성 & 편집
+                _buildChartDemoSection(
+                  number: '3',
+                  title: 'AI 메시지 생성',
+                  description: 'AI가 상황에 맞는 완벽한 메시지를 생성합니다',
+                  child: _buildMessageGenerationContent(),
+                ),
+
+                const SizedBox(height: 24),
+                // 4. 생성된 메시지 & 편집
+                if (_generatedMessage.isNotEmpty)
+                  _buildChartDemoSection(
+                    number: '4',
+                    title: '생성된 메시지',
+                    description: '메시지를 확인하고 필요시 수정하세요',
+                    child: _buildGeneratedMessageContent(),
+                  ),
+
+                const SizedBox(height: 40),
+              ],
+            ),
+          ),
         ),
-        title: Text(
-          'AI 메시지 생성',
-          style: AppTextStyles.mainTitle.copyWith(color: AppColors.primaryText),
-        ),
-        centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 20),
-            _buildMessageTypeSelector(),
-            const SizedBox(height: 16),
-            _buildSituationInput(),
-            const SizedBox(height: 16),
-            _buildContextInput(),
-            const SizedBox(height: 20),
-            _buildGenerateButton(),
-            if (_generatedMessage != null) ...[
-              const SizedBox(height: 20),
-              _buildGeneratedMessage(),
+    );
+  }
+
+  // 대시보드 헤더
+  Widget _buildDashboardHeader() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primary.withValues(alpha: 0.9),
+            AppColors.primary.withValues(alpha: 0.7),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.auto_awesome,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'AI 메시지',
+                          style: AppTextStyles.h2.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          HugeIcons.strokeRoundedMagicWand01,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '완벽한 메시지를 AI가 만들어드려요',
+                      style: AppTextStyles.body2.copyWith(
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _buildQuickStatsButton(),
             ],
+          ),
+          const SizedBox(height: 20),
+          _buildQuickActions(),
+        ],
+      ),
+    );
+  }
+
+  // 빠른 통계 버튼
+  Widget _buildQuickStatsButton() {
+    return GestureDetector(
+      onTap: _showQuickStats,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.2),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              HugeIcons.strokeRoundedAnalytics01,
+              color: Colors.white,
+              size: 16,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              '통계',
+              style: AppTextStyles.helper.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  // 헤더
-  Widget _buildHeader() {
+  // 빠른 액션
+  Widget _buildQuickActions() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildQuickActionButton(
+            '빠른 생성',
+            HugeIcons.strokeRoundedFlash01,
+            () => _quickGenerate(),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildQuickActionButton(
+            '템플릿',
+            HugeIcons.strokeRoundedTemplate,
+            () => _showTemplates(),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildQuickActionButton(
+            '히스토리',
+            HugeIcons.strokeRoundedHistory01,
+            () => _showHistory(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // 빠른 액션 버튼
+  Widget _buildQuickActionButton(
+    String title,
+    IconData icon,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: Colors.white, size: 20),
+            const SizedBox(height: 6),
+            Text(
+              title,
+              style: AppTextStyles.helper.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 개선된 섹션 빌더 - main_screen.dart 스타일
+  Widget _buildChartDemoSection({
+    required String number,
+    required String title,
+    required String description,
+    required Widget child,
+  }) {
     return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(
+        MediaQuery.of(context).size.width > 600 ? 20 : 16,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(
+          MediaQuery.of(context).size.width > 600 ? 20 : 16,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.1),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 개선된 헤더
+          Row(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.primary, AppColors.accent],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    number,
+                    style: AppTextStyles.body1.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTextStyles.h3.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                        fontSize: MediaQuery.of(context).size.width > 600
+                            ? 18
+                            : 16,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      description,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondary,
+                        fontSize: MediaQuery.of(context).size.width > 600
+                            ? 13
+                            : 12,
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // 콘텐츠
+          child,
+        ],
+      ),
+    );
+  }
+
+  // 메시지 설정 컨텐츠
+  Widget _buildMessageSettingsContent() {
+    return Column(
+      children: [
+        // 톤 선택
+        _buildToneSelector(),
+        const SizedBox(height: 20),
+        // 카테고리 선택
+        _buildCategorySelector(),
+      ],
+    );
+  }
+
+  // 생성된 메시지 컨텐츠
+  Widget _buildGeneratedMessageContent() {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.auto_awesome,
+                    color: AppColors.primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'AI 생성 메시지',
+                    style: AppTextStyles.body.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                _generatedMessage,
+                style: AppTextStyles.body.copyWith(height: 1.5),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: SecondaryButton(
+                onPressed: _regenerateMessage,
+                text: '다시 생성',
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: SecondaryButton(onPressed: _editMessage, text: '직접 수정'),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: PrimaryButton(onPressed: _copyMessage, text: '복사하기'),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // 톤 선택기
+  Widget _buildToneSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(
+              HugeIcons.strokeRoundedVoice,
+              color: AppColors.primary,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '메시지 톤',
+              style: AppTextStyles.body.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: _toneOptions.asMap().entries.map((entry) {
+            int index = entry.key;
+            ToneOption option = entry.value;
+            bool isSelected = index == _selectedTone;
+
+            return GestureDetector(
+              onTap: () => setState(() => _selectedTone = index),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected ? option.color : AppColors.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected ? option.color : AppColors.border,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      option.icon,
+                      color: isSelected ? Colors.white : option.color,
+                      size: 20,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      option.title,
+                      style: AppTextStyles.helper.copyWith(
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.primaryText,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  // 카테고리 선택기
+  Widget _buildCategorySelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(
+              HugeIcons.strokeRoundedCategory,
+              color: AppColors.accent,
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '메시지 카테고리',
+              style: AppTextStyles.body.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.accent,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: _categoryOptions.asMap().entries.map((entry) {
+            int index = entry.key;
+            CategoryOption option = entry.value;
+            bool isSelected = index == _selectedCategory;
+
+            return GestureDetector(
+              onTap: () => setState(() => _selectedCategory = index),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: isSelected ? option.color : AppColors.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected ? option.color : AppColors.border,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Icon(
+                      option.icon,
+                      color: isSelected ? Colors.white : option.color,
+                      size: 20,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      option.title,
+                      style: AppTextStyles.helper.copyWith(
+                        color: isSelected
+                            ? Colors.white
+                            : AppColors.primaryText,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  // 상황 입력 컨텐츠
+  Widget _buildContextInputContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '상황 설명',
+          style: AppTextStyles.body.copyWith(color: AppColors.secondaryText),
+        ),
+        const SizedBox(height: 12),
+        CustomTextField(
+          controller: _contextController,
+          hintText: '예: 어제 데이트 후 감사 인사를 하고 싶어요',
+          maxLines: 3,
+        ),
+      ],
+    );
+  }
+
+  // 메시지 생성 컨텐츠
+  Widget _buildMessageGenerationContent() {
+    return Column(
+      children: [
+        _buildGenerateButton(),
+        if (_generatedMessage.isNotEmpty) ...[
+          const SizedBox(height: 20),
+          _buildGeneratedMessage(),
+        ],
+      ],
+    );
+  }
+
+  // 생성 버튼
+  Widget _buildGenerateButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: PrimaryButton(
+        onPressed: _canGenerate() ? _generateMessage : null,
+        text: _isGenerating ? '생성 중...' : 'AI 메시지 생성',
+        isLoading: _isGenerating,
+      ),
+    );
+  }
+
+  // 생성된 메시지 표시
+  Widget _buildGeneratedMessage() {
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -96,233 +727,36 @@ class _AIMessageScreenState extends State<AIMessageScreen> {
             AppColors.primary.withValues(alpha: 0.1),
             AppColors.accent.withValues(alpha: 0.1),
           ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(
-              Icons.auto_awesome,
-              color: AppColors.primary,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'AI가 완벽한 메시지를 만들어드려요!',
-                  style: AppTextStyles.body.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '상황과 맥락을 알려주시면 맞춤형 메시지를 생성해드릴게요',
-                  style: AppTextStyles.helper.copyWith(
-                    color: AppColors.secondaryText,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 메시지 타입 선택기
-  Widget _buildMessageTypeSelector() {
-    return ComponentCard(
-      title: '메시지 타입 선택',
-      child: Column(
-        children: [
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _messageTypes.asMap().entries.map((entry) {
-              int index = entry.key;
-              String type = entry.value;
-              bool isSelected = index == _selectedType;
-
-              return GestureDetector(
-                onTap: () => setState(() => _selectedType = index),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary : AppColors.surface,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isSelected ? AppColors.primary : AppColors.border,
-                    ),
-                  ),
-                  child: Text(
-                    type,
-                    style: AppTextStyles.body.copyWith(
-                      color: isSelected ? Colors.white : AppColors.primaryText,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 상황 입력
-  Widget _buildSituationInput() {
-    return ComponentCard(
-      title: '현재 상황',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '어떤 상황에서 메시지를 보내시나요?',
-            style: AppTextStyles.body.copyWith(color: AppColors.secondaryText),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _situationController,
-            maxLines: 3,
-            decoration: InputDecoration(
-              hintText: '예: 어제 데이트 후 감사 인사를 하고 싶어요',
-              hintStyle: AppTextStyles.body.copyWith(
-                color: AppColors.secondaryText.withValues(alpha: 0.7),
-              ),
-              filled: true,
-              fillColor: AppColors.surface,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.all(16),
-            ),
-            style: AppTextStyles.body,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 맥락 입력
-  Widget _buildContextInput() {
-    return ComponentCard(
-      title: '추가 정보',
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '상대방과의 관계나 특별한 맥락이 있나요?',
-            style: AppTextStyles.body.copyWith(color: AppColors.secondaryText),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _contextController,
-            maxLines: 3,
-            decoration: InputDecoration(
-              hintText: '예: 3번째 만남, 상대방이 ENFP 성격, 커피를 좋아함',
-              hintStyle: AppTextStyles.body.copyWith(
-                color: AppColors.secondaryText.withValues(alpha: 0.7),
-              ),
-              filled: true,
-              fillColor: AppColors.surface,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.all(16),
-            ),
-            style: AppTextStyles.body,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 생성 버튼
-  Widget _buildGenerateButton() {
-    return _isGenerating
-        ? Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'AI가 메시지를 생성하고 있어요...',
-                  style: AppTextStyles.body.copyWith(
-                    color: AppColors.primaryText,
-                  ),
-                ),
-              ],
-            ),
-          )
-        : PrimaryButton(
-            text: '메시지 생성하기',
-            onPressed: _canGenerate() ? _generateMessage : null,
-          );
-  }
-
-  // 생성된 메시지
-  Widget _buildGeneratedMessage() {
-    return ComponentCard(
-      title: '생성된 메시지',
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.2),
-              ),
-            ),
-            child: Text(
-              _generatedMessage!,
-              style: AppTextStyles.body.copyWith(height: 1.5),
-            ),
-          ),
-          const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(
-                child: SecondaryButton(
-                  onPressed: _regenerateMessage,
-                  text: '다시 생성',
+              const Icon(
+                Icons.auto_awesome,
+                color: AppColors.primary,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'AI 생성 메시지',
+                style: AppTextStyles.body.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primary,
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: PrimaryButton(onPressed: _copyMessage, text: '복사하기'),
-              ),
             ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            _generatedMessage,
+            style: AppTextStyles.body.copyWith(height: 1.5),
           ),
         ],
       ),
@@ -331,40 +765,43 @@ class _AIMessageScreenState extends State<AIMessageScreen> {
 
   // 생성 가능 여부 확인
   bool _canGenerate() {
-    return _situationController.text.trim().isNotEmpty;
+    return _contextController.text.trim().isNotEmpty;
   }
 
   // 메시지 생성
   void _generateMessage() async {
+    if (!_canGenerate()) return;
+
     setState(() => _isGenerating = true);
 
-    // 실제로는 AI API 호출
+    // 실제 AI 생성 시뮬레이션
     await Future.delayed(const Duration(seconds: 2));
-
-    // 샘플 메시지 생성
-    String sampleMessage = _getSampleMessage();
 
     setState(() {
       _isGenerating = false;
-      _generatedMessage = sampleMessage;
+      _generatedMessage = _getSampleMessage();
     });
+
+    ToastNotification.show(
+      context: context,
+      message: '메시지가 생성되었어요!',
+      type: ToastType.success,
+    );
   }
 
   // 샘플 메시지 반환
   String _getSampleMessage() {
-    switch (_selectedType) {
-      case 0: // 일상 대화
+    switch (_selectedCategory) {
+      case 0: // 일반 메시지
         return '안녕하세요! 오늘 하루 어떻게 보내셨어요? 날씨가 정말 좋네요 😊';
       case 1: // 데이트 제안
         return '혹시 이번 주말에 시간 되시면 새로 생긴 카페 가볼까요? 분위기 좋다고 하더라고요 ☕';
-      case 2: // 답장하기
-        return '답장 늦어서 죄송해요! 바빠서 못 봤어요 😅 말씀해주신 내용 정말 흥미롭네요!';
-      case 3: // 감정 표현
-        return '오늘 정말 즐거웠어요! 덕분에 기분이 많이 좋아졌답니다 💕';
-      case 4: // 사과하기
+      case 2: // 사과 메시지
         return '정말 죄송해요. 제가 잘못 생각했나 봐요. 다음에는 더 신중하게 할게요 🙏';
-      case 5: // 축하하기
-        return '정말 축하드려요! 그동안 노력한 보람이 있네요. 너무 기뻐요! 🎉';
+      case 3: // 감사 인사
+        return '오늘 정말 즐거웠어요! 덕분에 기분이 많이 좋아졌답니다 💕';
+      case 4: // 위로 메시지
+        return '힘든 시간이겠지만 항상 응원하고 있어요. 언제든 이야기하고 싶으면 연락해주세요 🤗';
       default:
         return '안녕하세요! 좋은 하루 보내세요 😊';
     }
@@ -375,13 +812,86 @@ class _AIMessageScreenState extends State<AIMessageScreen> {
     _generateMessage();
   }
 
-  // 메시지 복사
-  void _copyMessage() {
-    // 실제로는 클립보드에 복사
+  // 메시지 편집
+  void _editMessage() {
     ToastNotification.show(
       context: context,
-      message: '메시지가 복사되었어요!',
+      message: '메시지 편집 기능은 곧 추가될 예정이에요!',
+      type: ToastType.info,
+    );
+  }
+
+  // 메시지 복사
+  void _copyMessage() {
+    ToastNotification.show(
+      context: context,
+      message: '메시지가 클립보드에 복사되었어요!',
       type: ToastType.success,
     );
   }
+
+  // 빠른 생성
+  void _quickGenerate() {
+    if (_contextController.text.trim().isEmpty) {
+      _contextController.text = '일상적인 안부 인사를 하고 싶어요';
+    }
+    _generateMessage();
+  }
+
+  // 템플릿 보기
+  void _showTemplates() {
+    ToastNotification.show(
+      context: context,
+      message: '메시지 템플릿 기능은 곧 추가될 예정이에요!',
+      type: ToastType.info,
+    );
+  }
+
+  // 히스토리 보기
+  void _showHistory() {
+    ToastNotification.show(
+      context: context,
+      message: '메시지 히스토리 기능은 곧 추가될 예정이에요!',
+      type: ToastType.info,
+    );
+  }
+
+  // 빠른 통계 보기
+  void _showQuickStats() {
+    ToastNotification.show(
+      context: context,
+      message: '메시지 통계 기능은 곧 추가될 예정이에요!',
+      type: ToastType.info,
+    );
+  }
+}
+
+// 톤 옵션 클래스
+class ToneOption {
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color color;
+
+  ToneOption({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.color,
+  });
+}
+
+// 카테고리 옵션 클래스
+class CategoryOption {
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color color;
+
+  CategoryOption({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.color,
+  });
 }

@@ -1,25 +1,24 @@
 // File: lib/presentation/screens/history_screen.dart
-// 2025.07.15 22:05:00 히스토리 화면 구현 - Phase 4
+// 2025.07.18 13:27:31 히스토리 화면 main_screen.dart 스타일로 리팩토링
 
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:lia/presentation/widgets/specific/charts/bar_chart.dart';
 import 'package:lia/presentation/widgets/specific/charts/donut_chart.dart';
 import 'package:lia/presentation/widgets/specific/charts/gauge_chart.dart';
+import 'package:lia/presentation/widgets/specific/charts/line_chart.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_text_styles.dart';
-import '../widgets/common/component_card.dart';
 import '../widgets/common/primary_button.dart';
 import '../widgets/common/secondary_button.dart';
-import '../widgets/specific/charts/line_chart.dart';
 import '../widgets/specific/feedback/toast_notification.dart';
 
 /// 히스토리 화면
 ///
 /// 메시지 작성 기록, 성과 분석, 통계 대시보드를 제공하는 화면
 /// 18세 서현 페르소나에 맞는 성과 추적 및 개선 가이드 제공
+/// main_screen.dart 스타일로 통일된 디자인 적용
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
@@ -59,60 +58,134 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildFilters(),
-            Expanded(child: _buildContent()),
-          ],
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
+            vertical: 12.0,
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20),
+                // 대시보드 헤더
+                _buildDashboardHeader(),
+
+                const SizedBox(height: 24),
+                // 필터 섹션
+                _buildFilterSection(),
+
+                const SizedBox(height: 24),
+                // 1. 성과 차트
+                _buildChartDemoSection(
+                  number: '1',
+                  title: '호감도 변화 추이',
+                  description: '시간에 따른 호감도 변화를 한눈에 확인해보세요',
+                  child: _buildPerformanceChartContent(),
+                ),
+
+                const SizedBox(height: 24),
+                // 2. 통계 대시보드
+                _buildChartDemoSection(
+                  number: '2',
+                  title: '통계 대시보드',
+                  description: '다양한 차트로 메시지 성과를 분석해보세요',
+                  child: _buildChartsGridContent(),
+                ),
+
+                const SizedBox(height: 24),
+                // 3. 최근 메시지
+                _buildChartDemoSection(
+                  number: '3',
+                  title: '최근 메시지',
+                  description: '최근 보낸 메시지들의 성과를 확인해보세요',
+                  child: _buildRecentMessagesContent(),
+                ),
+
+                const SizedBox(height: 24),
+                // 4. 인사이트 & 추천
+                _buildChartDemoSection(
+                  number: '4',
+                  title: 'AI 인사이트 & 추천',
+                  description: 'AI가 분석한 개선 포인트와 맞춤 추천을 확인하세요',
+                  child: _buildInsightsAndRecommendationsContent(),
+                ),
+
+                const SizedBox(height: 40),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  // 헤더 섹션
-  Widget _buildHeader() {
+  // 대시보드 헤더
+  Widget _buildDashboardHeader() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.accent.withValues(alpha: 0.05),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
+        gradient: LinearGradient(
+          colors: [
+            AppColors.accent.withValues(alpha: 0.9),
+            AppColors.accent.withValues(alpha: 0.7),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.accent.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.accent.withValues(alpha: 0.1),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedClock01,
-                  color: AppColors.accent,
+                child: const Icon(
+                  HugeIcons.strokeRoundedClock01,
+                  color: Colors.white,
                   size: 24,
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '히스토리',
-                      style: AppTextStyles.mainTitle.copyWith(
-                        color: AppColors.accent,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          '히스토리',
+                          style: AppTextStyles.h2.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          HugeIcons.strokeRoundedAnalytics01,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 4),
                     Text(
                       '내 메시지 성과를 한눈에 확인하기',
-                      style: AppTextStyles.body.copyWith(
-                        color: AppColors.secondaryText,
+                      style: AppTextStyles.body2.copyWith(
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                   ],
@@ -121,7 +194,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               _buildStatsButton(),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           _buildQuickStats(),
         ],
       ),
@@ -135,14 +208,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: AppColors.accent,
+          color: Colors.white.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            HugeIcon(
-              icon: HugeIcons.strokeRoundedAnalytics01,
+            const Icon(
+              HugeIcons.strokeRoundedAnalytics01,
               color: Colors.white,
               size: 16,
             ),
@@ -169,7 +243,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             '총 메시지',
             '127',
             HugeIcons.strokeRoundedMessage01,
-            AppColors.primary,
+            Colors.white.withValues(alpha: 0.9),
           ),
         ),
         const SizedBox(width: 12),
@@ -178,7 +252,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             '성공률',
             '89.5%',
             HugeIcons.strokeRoundedTarget01,
-            AppColors.green,
+            Colors.white.withValues(alpha: 0.9),
           ),
         ),
         const SizedBox(width: 12),
@@ -187,7 +261,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
             '평균 답장률',
             '94.2%',
             Icons.reply,
-            AppColors.accent,
+            Colors.white.withValues(alpha: 0.9),
           ),
         ),
       ],
@@ -204,13 +278,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
-          HugeIcon(icon: icon, color: color, size: 20),
+          Icon(icon, color: color, size: 20),
           const SizedBox(height: 6),
           Text(
             value,
@@ -222,7 +296,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
           Text(
             title,
             style: AppTextStyles.helper.copyWith(
-              color: AppColors.secondaryText,
+              color: color.withValues(alpha: 0.8),
             ),
           ),
         ],
@@ -231,23 +305,48 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   // 필터 섹션
-  Widget _buildFilters() {
+  Widget _buildFilterSection() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.accent.withValues(alpha: 0.1),
+            AppColors.primary.withValues(alpha: 0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.accent.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
       child: Column(
         children: [
           // 기간 필터
           Row(
             children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedCalendar01,
-                color: AppColors.primaryText,
-                size: 18,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.accent.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  HugeIcons.strokeRoundedCalendar01,
+                  size: 18,
+                  color: AppColors.accent,
+                ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Text(
                 '기간',
-                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+                style: AppTextStyles.body.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.accent,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -298,19 +397,29 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           // 상태 필터
           Row(
             children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedFilter,
-                color: AppColors.primaryText,
-                size: 18,
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  HugeIcons.strokeRoundedFilter,
+                  size: 18,
+                  color: AppColors.primary,
+                ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Text(
                 '상태',
-                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+                style: AppTextStyles.body.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primary,
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -345,8 +454,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              HugeIcon(
-                                icon: filter.icon,
+                              Icon(
+                                filter.icon,
                                 color: isSelected ? Colors.white : filter.color,
                                 size: 14,
                               ),
@@ -377,103 +486,301 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  // 메인 컨텐츠
-  Widget _buildContent() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: AnimationLimiter(
-        child: Column(
-          children: AnimationConfiguration.toStaggeredList(
-            duration: const Duration(milliseconds: 375),
-            childAnimationBuilder: (widget) => SlideAnimation(
-              horizontalOffset: 50.0,
-              child: FadeInAnimation(child: widget),
-            ),
-            children: [
-              _buildPerformanceChart(),
-              const SizedBox(height: 16),
-              _buildChartsGrid(),
-              const SizedBox(height: 16),
-              _buildRecentMessages(),
-              const SizedBox(height: 16),
-              _buildInsights(),
-              const SizedBox(height: 16),
-              _buildRecommendations(),
-            ],
+  // 개선된 섹션 빌더 - main_screen.dart 스타일
+  Widget _buildChartDemoSection({
+    required String number,
+    required String title,
+    required String description,
+    required Widget child,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(
+        MediaQuery.of(context).size.width > 600 ? 20 : 16,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(
+          MediaQuery.of(context).size.width > 600 ? 20 : 16,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
           ),
+        ],
+        border: Border.all(
+          color: AppColors.accent.withValues(alpha: 0.1),
+          width: 1,
         ),
       ),
-    );
-  }
-
-  // 성과 차트 (호감도 변화 추이)
-  Widget _buildPerformanceChart() {
-    return ComponentCard(
-      title: '📈 호감도 변화 추이',
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 200,
-            child: LineChart(
-              title: "주간 호감도 변화",
-              data: [
-                LineChartDataPoint(label: "월", value: 65),
-                LineChartDataPoint(label: "화", value: 72),
-                LineChartDataPoint(label: "수", value: 68),
-                LineChartDataPoint(label: "목", value: 78),
-                LineChartDataPoint(label: "금", value: 85),
-                LineChartDataPoint(label: "토", value: 82),
-                LineChartDataPoint(label: "일", value: 88),
-              ],
-              showLegend: true,
-            ),
-          ),
-          const SizedBox(height: 16),
+          // 개선된 헤더
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildChartLegend('호감도', AppColors.primary),
-              _buildChartLegend('답장률', AppColors.accent),
-              _buildChartLegend('성공률', AppColors.green),
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.accent, AppColors.primary],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.accent.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    number,
+                    style: AppTextStyles.body1.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTextStyles.h3.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                        fontSize: MediaQuery.of(context).size.width > 600
+                            ? 18
+                            : 16,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      description,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondary,
+                        fontSize: MediaQuery.of(context).size.width > 600
+                            ? 13
+                            : 12,
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
+
+          const SizedBox(height: 16),
+
+          // 콘텐츠
+          child,
         ],
       ),
     );
   }
 
+  // 성과 차트 (호감도 변화 추이)
+  Widget _buildPerformanceChartContent() {
+    return Column(
+      children: [
+        SizedBox(
+          height: 200,
+          child: LineChart(
+            title: "주간 호감도 변화",
+            data: [
+              LineChartDataPoint(label: "월", value: 65),
+              LineChartDataPoint(label: "화", value: 72),
+              LineChartDataPoint(label: "수", value: 68),
+              LineChartDataPoint(label: "목", value: 78),
+              LineChartDataPoint(label: "금", value: 85),
+              LineChartDataPoint(label: "토", value: 82),
+              LineChartDataPoint(label: "일", value: 88),
+            ],
+            showLegend: true,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildChartLegend('호감도', AppColors.primary),
+            _buildChartLegend('답장률', AppColors.accent),
+            _buildChartLegend('성공률', AppColors.green),
+          ],
+        ),
+      ],
+    );
+  }
+
   // 차트 그리드 (다양한 차트 타입 시연)
-  Widget _buildChartsGrid() {
+  Widget _buildChartsGridContent() {
     return Column(
       children: [
         Row(
           children: [
             // 전체 호감도 게이지 차트
             Expanded(
-              child: ComponentCard(
-                title: '🎯 전체 호감도',
-                child: GaugeChart(
-                  data: {
-                    'value': 88,
-                    'maxValue': 100,
-                    'unit': '%',
-                    'primaryColor': AppColors.primary,
-                    'backgroundColor': AppColors.primary.withValues(alpha: 0.1),
-                  },
-                  title: "현재 호감도",
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.06),
+                      blurRadius: 16,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: AppColors.accent.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          HugeIcons.strokeRoundedAnalytics01,
+                          color: AppColors.primary,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            '🎯 전체 호감도',
+                            style: AppTextStyles.body.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    GaugeChart(
+                      data: {
+                        'value': 88,
+                        'maxValue': 100,
+                        'unit': '%',
+                        'primaryColor': AppColors.primary,
+                        'backgroundColor': AppColors.primary.withValues(
+                          alpha: 0.1,
+                        ),
+                      },
+                      title: "현재 호감도",
+                    ),
+                  ],
                 ),
               ),
             ),
             const SizedBox(width: 16),
             // 메시지 성공률 도넛 차트
             Expanded(
-              child: ComponentCard(title: '🍩 메시지 성공률', child: DonutChart()),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.06),
+                      blurRadius: 16,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: AppColors.accent.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          HugeIcons.strokeRoundedPieChart,
+                          color: AppColors.accent,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            '🍩 메시지 성공률',
+                            style: AppTextStyles.body.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.accent,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    DonutChart(),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
         const SizedBox(height: 16),
         // 대화 주제별 통계 막대 차트
-        ComponentCard(title: '📊 대화 주제별 성공률', child: BarChart()),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.06),
+                blurRadius: 16,
+                offset: const Offset(0, 2),
+              ),
+            ],
+            border: Border.all(
+              color: AppColors.accent.withValues(alpha: 0.1),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    HugeIcons.strokeRoundedBarChart,
+                    color: AppColors.primary,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      '📊 대화 주제별 성고률',
+                      style: AppTextStyles.body.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              BarChart(),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -501,16 +808,116 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   // 최근 메시지 리스트
-  Widget _buildRecentMessages() {
+  Widget _buildRecentMessagesContent() {
     final messages = _getRecentMessages();
 
-    return ComponentCard(
-      title: '💬 최근 메시지',
-      child: Column(
-        children: messages
-            .map((message) => _buildMessageItem(message))
-            .toList(),
-      ),
+    return Column(
+      children: messages.map((message) => _buildMessageItem(message)).toList(),
+    );
+  }
+
+  // 인사이트 & 추천 컨텐츠
+  Widget _buildInsightsAndRecommendationsContent() {
+    return Column(
+      children: [
+        // 인사이트 섹션
+        _buildInsightItem(
+          '가장 성공적인 시간대',
+          '오후 7-9시',
+          '이 시간대 메시지 성공률이 95%로 가장 높아요',
+          HugeIcons.strokeRoundedClock01,
+          AppColors.green,
+        ),
+        const SizedBox(height: 12),
+        _buildInsightItem(
+          '선호하는 메시지 스타일',
+          '친근하고 유머러스한 톤',
+          '상대방이 가장 잘 반응하는 메시지 스타일이에요',
+          HugeIcons.strokeRoundedHappy,
+          AppColors.primary,
+        ),
+        const SizedBox(height: 12),
+        _buildInsightItem(
+          '개선이 필요한 부분',
+          '첫 메시지 응답률',
+          '첫 메시지 응답률이 75%로 평균보다 낮아요',
+          Icons.trending_up,
+          AppColors.accent,
+        ),
+        const SizedBox(height: 24),
+
+        // 추천 사항 섹션
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.accent.withValues(alpha: 0.1),
+                AppColors.primary.withValues(alpha: 0.1),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    HugeIcons.strokeRoundedBulb,
+                    color: AppColors.accent,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'AI가 분석한 개선 포인트',
+                      style: AppTextStyles.body.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.accent,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildRecommendationItem(
+                '메시지 타이밍 최적화',
+                '오후 7-9시에 메시지를 보내면 성공률이 20% 높아져요',
+              ),
+              const SizedBox(height: 12),
+              _buildRecommendationItem(
+                '개인화된 메시지 작성',
+                '상대방의 관심사를 더 많이 반영한 메시지를 작성해보세요',
+              ),
+              const SizedBox(height: 12),
+              _buildRecommendationItem(
+                '감정 표현 다양화',
+                '다양한 감정 표현을 통해 메시지에 생동감을 더해보세요',
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: SecondaryButton(
+                      onPressed: () => _showAllRecommendations(),
+                      text: '전체 보기',
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: PrimaryButton(
+                      onPressed: () => _applyRecommendations(),
+                      text: '적용하기',
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -537,8 +944,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
-                  child: HugeIcon(
-                    icon: message.status.icon,
+                  child: Icon(
+                    message.status.icon,
                     color: message.status.color,
                     size: 16,
                   ),
@@ -593,8 +1000,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
             const SizedBox(height: 8),
             Row(
               children: [
-                HugeIcon(
-                  icon: HugeIcons.strokeRoundedAnalytics01,
+                const Icon(
+                  HugeIcons.strokeRoundedAnalytics01,
                   color: AppColors.primaryText,
                   size: 16,
                 ),
@@ -608,40 +1015,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ],
             ),
           ],
-        ],
-      ),
-    );
-  }
-
-  // 인사이트
-  Widget _buildInsights() {
-    return ComponentCard(
-      title: '🔍 인사이트',
-      child: Column(
-        children: [
-          _buildInsightItem(
-            '가장 성공적인 시간대',
-            '오후 7-9시',
-            '이 시간대 메시지 성공률이 95%로 가장 높아요',
-            HugeIcons.strokeRoundedClock01,
-            AppColors.green,
-          ),
-          const SizedBox(height: 12),
-          _buildInsightItem(
-            '선호하는 메시지 스타일',
-            '친근하고 유머러스한 톤',
-            '상대방이 가장 잘 반응하는 메시지 스타일이에요',
-            HugeIcons.strokeRoundedHappy,
-            AppColors.primary,
-          ),
-          const SizedBox(height: 12),
-          _buildInsightItem(
-            '개선이 필요한 부분',
-            '첫 메시지 응답률',
-            '첫 메시지 응답률이 75%로 평균보다 낮아요',
-            Icons.trending_up,
-            AppColors.accent,
-          ),
         ],
       ),
     );
@@ -664,7 +1037,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       child: Row(
         children: [
-          HugeIcon(icon: icon, color: color, size: 20),
+          Icon(icon, color: color, size: 20),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -690,87 +1063,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   style: AppTextStyles.helper.copyWith(
                     color: AppColors.secondaryText,
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 추천 사항
-  Widget _buildRecommendations() {
-    return ComponentCard(
-      title: '💡 추천 사항',
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.accent.withValues(alpha: 0.1),
-                  AppColors.primary.withValues(alpha: 0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    HugeIcon(
-                      icon: HugeIcons.strokeRoundedBulb,
-                      color: AppColors.accent,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'AI가 분석한 개선 포인트',
-                        style: AppTextStyles.body.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.accent,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                _buildRecommendationItem(
-                  '메시지 타이밍 최적화',
-                  '오후 7-9시에 메시지를 보내면 성공률이 20% 높아져요',
-                ),
-                const SizedBox(height: 12),
-                _buildRecommendationItem(
-                  '개인화된 메시지 작성',
-                  '상대방의 관심사를 더 많이 반영한 메시지를 작성해보세요',
-                ),
-                const SizedBox(height: 12),
-                _buildRecommendationItem(
-                  '감정 표현 다양화',
-                  '다양한 감정 표현을 통해 메시지에 생동감을 더해보세요',
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: SecondaryButton(
-                        onPressed: () => _showAllRecommendations(),
-                        text: '전체 보기',
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: PrimaryButton(
-                        onPressed: () => _applyRecommendations(),
-                        text: '적용하기',
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),

@@ -1,13 +1,11 @@
 // File: lib/presentation/screens/coaching_center_screen.dart
-// 2025.07.15 22:03:00 코칭센터 화면 구현 - Phase 4
+// 2025.07.18 13:27:31 코칭센터 화면 main_screen.dart 스타일로 리팩토링
 
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_text_styles.dart';
-import '../widgets/common/component_card.dart';
 import '../widgets/common/primary_button.dart';
 import '../widgets/common/secondary_button.dart';
 import '../widgets/specific/feedback/toast_notification.dart';
@@ -16,6 +14,7 @@ import '../widgets/specific/feedback/toast_notification.dart';
 ///
 /// AI 메시지 작성 가이드, 팁, 상황별 템플릿을 제공하는 화면
 /// 18세 서현 페르소나에 맞는 연애 상담 및 조언 제공
+/// main_screen.dart 스타일로 통일된 디자인 적용
 class CoachingCenterScreen extends StatefulWidget {
   const CoachingCenterScreen({super.key});
 
@@ -59,26 +58,83 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            Expanded(child: _buildContent()),
-          ],
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
+            vertical: 12.0,
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20),
+                // 대시보드 헤더
+                _buildDashboardHeader(),
+
+                const SizedBox(height: 24),
+                // 카테고리 선택 섹션
+                _buildCategorySection(),
+
+                const SizedBox(height: 24),
+                // 1. 빠른 팁
+                _buildChartDemoSection(
+                  number: '1',
+                  title: '빠른 팁',
+                  description: '상황별 핵심 메시지 작성 팁을 확인해보세요',
+                  child: _buildQuickTipsContent(),
+                ),
+
+                const SizedBox(height: 24),
+                // 2. 메시지 템플릿
+                _buildChartDemoSection(
+                  number: '2',
+                  title: '메시지 템플릿',
+                  description: '검증된 메시지 템플릿으로 완벽한 메시지를 작성하세요',
+                  child: _buildTemplatesContent(),
+                ),
+
+                const SizedBox(height: 24),
+                // 3. 고급 팁
+                _buildChartDemoSection(
+                  number: '3',
+                  title: '고급 팁',
+                  description: '더 효과적인 커뮤니케이션을 위한 전문가 조언',
+                  child: _buildAdvancedTipsContent(),
+                ),
+
+                const SizedBox(height: 24),
+                // 4. 개인화된 조언
+                _buildChartDemoSection(
+                  number: '4',
+                  title: '서현이의 특별한 조언',
+                  description: '실제 경험을 바탕으로 한 리얼한 연애 꿀팁',
+                  child: _buildPersonalizedAdviceContent(),
+                ),
+
+                const SizedBox(height: 40),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  // 헤더 섹션
-  Widget _buildHeader() {
+  // 대시보드 헤더
+  Widget _buildDashboardHeader() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.05),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(20),
-          bottomRight: Radius.circular(20),
-        ),
+        gradient: AppColors.primaryGradient,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,15 +142,90 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedBookOpen01,
-                  color: AppColors.primary,
+                child: const Icon(
+                  HugeIcons.strokeRoundedBookOpen01,
+                  color: Colors.white,
                   size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          '코칭센터',
+                          style: AppTextStyles.h2.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          HugeIcons.strokeRoundedSparkles,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'AI와 함께 완벽한 메시지 만들기',
+                      style: AppTextStyles.body2.copyWith(
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 카테고리 선택 섹션
+  Widget _buildCategorySection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primary.withValues(alpha: 0.1),
+            AppColors.accent.withValues(alpha: 0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          // 상단 제목
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  HugeIcons.strokeRoundedMenuSquare,
+                  size: 20,
+                  color: AppColors.primary,
                 ),
               ),
               const SizedBox(width: 12),
@@ -103,14 +234,294 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '코칭센터',
-                      style: AppTextStyles.mainTitle.copyWith(
+                      '카테고리 선택',
+                      style: AppTextStyles.h3.copyWith(
+                        fontWeight: FontWeight.bold,
                         color: AppColors.primary,
                       ),
                     ),
                     Text(
-                      'AI와 함께 완벽한 메시지 만들기',
+                      '원하는 메시지 유형을 선택해보세요',
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // 카테고리 탭
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: _categories.asMap().entries.map((entry) {
+                int index = entry.key;
+                CoachingCategory category = entry.value;
+                bool isSelected = index == _selectedCategoryIndex;
+
+                return GestureDetector(
+                  onTap: () => _selectCategory(index),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    margin: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppColors.primary : AppColors.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.border,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: AppColors.primary.withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ]
+                          : null,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        HugeIcon(
+                          icon: category.icon,
+                          color: isSelected
+                              ? Colors.white
+                              : AppColors.primaryText,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          category.title,
+                          style: AppTextStyles.body.copyWith(
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.primaryText,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 개선된 섹션 빌더 - main_screen.dart 스타일
+  Widget _buildChartDemoSection({
+    required String number,
+    required String title,
+    required String description,
+    required Widget child,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(
+        MediaQuery.of(context).size.width > 600 ? 20 : 16,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(
+          MediaQuery.of(context).size.width > 600 ? 20 : 16,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 2),
+          ),
+        ],
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.1),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 개선된 헤더
+          Row(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  gradient: AppColors.primaryGradient,
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    number,
+                    style: AppTextStyles.body1.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: AppTextStyles.h3.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                        fontSize: MediaQuery.of(context).size.width > 600
+                            ? 18
+                            : 16,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      description,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textSecondary,
+                        fontSize: MediaQuery.of(context).size.width > 600
+                            ? 13
+                            : 12,
+                        height: 1.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          // 콘텐츠
+          child,
+        ],
+      ),
+    );
+  }
+
+  // 빠른 팁 컨텐츠
+  Widget _buildQuickTipsContent() {
+    final tips = _getQuickTips();
+
+    return Column(children: tips.map((tip) => _buildTipItem(tip)).toList());
+  }
+
+  // 메시지 템플릿 컨텐츠
+  Widget _buildTemplatesContent() {
+    final templates = _getTemplates();
+
+    return Column(
+      children: templates
+          .map((template) => _buildTemplateItem(template))
+          .toList(),
+    );
+  }
+
+  // 고급 팁 컨텐츠
+  Widget _buildAdvancedTipsContent() {
+    return Column(
+      children: [
+        _buildAdvancedTipCard(
+          '타이밍이 중요해요',
+          '상대방의 활동 패턴을 파악하고 적절한 시간에 메시지를 보내세요.',
+          HugeIcons.strokeRoundedClock01,
+          AppColors.accent,
+        ),
+        const SizedBox(height: 12),
+        _buildAdvancedTipCard(
+          '감정 표현의 균형',
+          '너무 급하지 않게, 그렇다고 너무 차갑지도 않게 적절한 선을 유지하세요.',
+          Icons.balance,
+          AppColors.green,
+        ),
+        const SizedBox(height: 12),
+        _buildAdvancedTipCard(
+          '개인화된 메시지',
+          '상대방의 관심사와 성격을 고려한 맞춤형 메시지를 작성하세요.',
+          HugeIcons.strokeRoundedUserCircle,
+          AppColors.primary,
+        ),
+      ],
+    );
+  }
+
+  // 개인화된 조언 컨텐츠
+  Widget _buildPersonalizedAdviceContent() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primary.withValues(alpha: 0.1),
+            AppColors.accent.withValues(alpha: 0.1),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Center(
+                  child: Text(
+                    '서',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '서현이의 연애 꿀팁',
                       style: AppTextStyles.body.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    Text(
+                      '실제 경험을 바탕으로 한 리얼한 조언',
+                      style: AppTextStyles.helper.copyWith(
                         color: AppColors.secondaryText,
                       ),
                     ),
@@ -120,96 +531,33 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          _buildCategoryTabs(),
-        ],
-      ),
-    );
-  }
-
-  // 카테고리 탭
-  Widget _buildCategoryTabs() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: _categories.asMap().entries.map((entry) {
-          int index = entry.key;
-          CoachingCategory category = entry.value;
-          bool isSelected = index == _selectedCategoryIndex;
-
-          return GestureDetector(
-            onTap: () => _selectCategory(index),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              margin: const EdgeInsets.only(right: 12),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : AppColors.surface,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected ? AppColors.primary : AppColors.border,
+          Text(
+            '"솔직히 말하면, 너무 완벽한 메시지보다는 진짜 내 마음이 담긴 메시지가 더 좋아. 상대방도 사람이니까 진심을 알아봐. 그리고 답장 안 온다고 너무 스트레스 받지 마! 타이밍이 안 맞을 수도 있거든. 중요한 건 내가 먼저 마음을 여는 거야."',
+            style: AppTextStyles.body.copyWith(
+              fontStyle: FontStyle.italic,
+              color: AppColors.primaryText,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: SecondaryButton(
+                  onPressed: () => _showMoreAdvice(),
+                  text: '더 많은 조언',
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  HugeIcon(
-                    icon: category.icon,
-                    color: isSelected ? Colors.white : AppColors.primaryText,
-                    size: 16,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    category.title,
-                    style: AppTextStyles.body.copyWith(
-                      color: isSelected ? Colors.white : AppColors.primaryText,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                    ),
-                  ),
-                ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: PrimaryButton(
+                  onPressed: () => _startPersonalizedCoaching(),
+                  text: '1:1 코칭',
+                ),
               ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  // 메인 컨텐츠
-  Widget _buildContent() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: AnimationLimiter(
-        child: Column(
-          children: AnimationConfiguration.toStaggeredList(
-            duration: const Duration(milliseconds: 375),
-            childAnimationBuilder: (widget) => SlideAnimation(
-              horizontalOffset: 50.0,
-              child: FadeInAnimation(child: widget),
-            ),
-            children: [
-              _buildQuickTips(),
-              const SizedBox(height: 16),
-              _buildTemplates(),
-              const SizedBox(height: 16),
-              _buildAdvancedTips(),
-              const SizedBox(height: 16),
-              _buildPersonalizedAdvice(),
             ],
           ),
-        ),
+        ],
       ),
-    );
-  }
-
-  // 빠른 팁
-  Widget _buildQuickTips() {
-    final tips = _getQuickTips();
-
-    return ComponentCard(
-      title: '💡 빠른 팁',
-      child: Column(children: tips.map((tip) => _buildTipItem(tip)).toList()),
     );
   }
 
@@ -255,20 +603,6 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // 메시지 템플릿
-  Widget _buildTemplates() {
-    final templates = _getTemplates();
-
-    return ComponentCard(
-      title: '📝 메시지 템플릿',
-      child: Column(
-        children: templates
-            .map((template) => _buildTemplateItem(template))
-            .toList(),
       ),
     );
   }
@@ -346,37 +680,6 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
     );
   }
 
-  // 고급 팁
-  Widget _buildAdvancedTips() {
-    return ComponentCard(
-      title: '🎯 고급 팁',
-      child: Column(
-        children: [
-          _buildAdvancedTipCard(
-            '타이밍이 중요해요',
-            '상대방의 활동 패턴을 파악하고 적절한 시간에 메시지를 보내세요.',
-            HugeIcons.strokeRoundedClock01,
-            AppColors.accent,
-          ),
-          const SizedBox(height: 12),
-          _buildAdvancedTipCard(
-            '감정 표현의 균형',
-            '너무 급하지 않게, 그렇다고 너무 차갑지도 않게 적절한 선을 유지하세요.',
-            Icons.balance,
-            AppColors.green,
-          ),
-          const SizedBox(height: 12),
-          _buildAdvancedTipCard(
-            '개인화된 메시지',
-            '상대방의 관심사와 성격을 고려한 맞춤형 메시지를 작성하세요.',
-            HugeIcons.strokeRoundedUserCircle,
-            AppColors.primary,
-          ),
-        ],
-      ),
-    );
-  }
-
   // 고급 팁 카드
   Widget _buildAdvancedTipCard(
     String title,
@@ -412,104 +715,6 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
                   style: AppTextStyles.helper.copyWith(
                     color: AppColors.secondaryText,
                   ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // 개인화된 조언
-  Widget _buildPersonalizedAdvice() {
-    return ComponentCard(
-      title: '🎪 서현이만의 특별한 조언',
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.primary.withValues(alpha: 0.1),
-                  AppColors.accent.withValues(alpha: 0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          '서',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '서현이의 연애 꿀팁',
-                            style: AppTextStyles.body.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                          Text(
-                            '실제 경험을 바탕으로 한 리얼한 조언',
-                            style: AppTextStyles.helper.copyWith(
-                              color: AppColors.secondaryText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  '"솔직히 말하면, 너무 완벽한 메시지보다는 진짜 내 마음이 담긴 메시지가 더 좋아. 상대방도 사람이니까 진심을 알아봐. 그리고 답장 안 온다고 너무 스트레스 받지 마! 타이밍이 안 맞을 수도 있거든. 중요한 건 내가 먼저 마음을 여는 거야."',
-                  style: AppTextStyles.body.copyWith(
-                    fontStyle: FontStyle.italic,
-                    color: AppColors.primaryText,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: SecondaryButton(
-                        onPressed: () => _showMoreAdvice(),
-                        text: '더 많은 조언',
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: PrimaryButton(
-                        onPressed: () => _startPersonalizedCoaching(),
-                        text: '1:1 코칭',
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
