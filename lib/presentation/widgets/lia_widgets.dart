@@ -112,18 +112,21 @@ library;
 
 // 🎨 Core (색상과 텍스트 스타일도 함께 제공)
 export '../../core/app_colors.dart';
+export '../../core/app_spacing.dart';
 export '../../core/app_text_styles.dart';
 // 🎭 Modal Functions (18세 서현 페르소나 모달 시스템)
 export '../../utils/custom_modal.dart';
 export 'common/code_copy_card.dart';
 // 🧩 Common Components
 export 'common/component_card.dart';
+export 'common/dashboard_header.dart';
 export 'common/dashed_divider.dart';
 export 'common/parameter_card.dart';
 // 🔘 Common Buttons
 export 'common/primary_button.dart';
 export 'common/scenario_card.dart';
 export 'common/secondary_button.dart';
+export 'common/section_card.dart';
 export 'specific/charts/bar_chart.dart' hide LegendPosition;
 export 'specific/charts/donut_chart.dart' hide LegendPosition;
 // 📊 Charts
@@ -138,6 +141,7 @@ export 'specific/feedback/generating_progress.dart';
 export 'specific/feedback/heart_spinner.dart';
 export 'specific/feedback/pulsating_dot.dart';
 export 'specific/feedback/skeleton_ui.dart';
+export 'specific/feedback/toast_notification.dart';
 export 'specific/forms/custom_slider.dart';
 export 'specific/forms/custom_toggle_switch.dart';
 // 📝 Form Inputs

@@ -9,32 +9,29 @@ import 'app_colors.dart';
 /// 이 클래스를 통해 앱 전체의 타이포그래피를 일관되게 관리할 수 있습니다.
 /// 모든 스타일은 static const로 정의되어 메모리 효율성을 보장합니다.
 ///
-/// 폰트 계층 시스템 (2025.07.15 21:13:00 UI/UX 개선):
-/// - Gaegu: 브랜드 타이틀만 사용 (친근하고 캐주얼한 브랜드 아이덴티티)
-/// - Pretendard: 섹션 제목, 중요 헤딩 (모던하고 세련된 제목용 폰트)
-/// - NotoSansKR: 본문, 설명 텍스트 (가독성 최적화된 본문용 폰트)
+/// 폰트 시스템:
+/// - Gaegu: 브랜드 타이틀과 컴포넌트 제목 (친근하고 캐주얼한 느낌)
+/// - NotoSansKR: 본문, 설명 텍스트 (가독성 최적화)
 ///
-/// 스타일 계층 (모바일 최적화):
-/// - [mainTitle]: 앱 메인 타이틀 (36px, Gaegu) - 브랜드 전용, 축소됨
-/// - [componentTitle]: 컴포넌트 제목 (22px, Pretendard) - 축소됨
-/// - [h1]: 주요 헤딩 (20px, Pretendard) - 대폭 축소됨
-/// - [h2]: 부제목 (18px, Pretendard) - 축소됨
-/// - [h3]: 세 번째 헤딩 (16px, Pretendard) - 축소됨
-/// - [questionTitle]: 질문형 제목 (18px, Pretendard) - 축소됨
-/// - [subtitle]: 설명 텍스트 (16px, NotoSansKR) - 축소됨
-/// - [body]: 본문 텍스트 (14px, NotoSansKR) - 축소됨
-/// - [helper]: 도움말 텍스트 (12px, NotoSansKR) - 축소됨
-/// - [accessibleHelper]: 접근성 개선 도움말 텍스트 (12px, NotoSansKR) - 축소됨
+/// 스타일 계층:
+/// - [mainTitle]: 앱 메인 타이틀 (48px, Gaegu)
+/// - [componentTitle]: 컴포넌트 제목 (32px, Gaegu)
+/// - [h1]: 주요 헤딩 (32px, NotoSansKR)
+/// - [h2]: 부제목 (24px, NotoSansKR)
+/// - [h3]: 세 번째 헤딩 (20px, NotoSansKR)
+/// - [questionTitle]: 질문형 제목 (20px, NotoSansKR)
+/// - [subtitle]: 설명 텍스트 (18px, NotoSansKR)
+/// - [body]: 본문 텍스트 (16px, NotoSansKR)
+/// - [helper]: 도움말 텍스트 (14px, NotoSansKR)
+/// - [accessibleHelper]: 접근성 개선 도움말 텍스트 (14px, NotoSansKR)
 class AppTextStyles {
   /// 앱의 메인 타이틀 스타일입니다.
   ///
   /// Gaegu 폰트를 사용하여 친근하고 캐주얼한 브랜드 아이덴티티를 제공하며,
   /// 그림자 효과로 입체감을 더합니다.
-  /// 오직 앱 브랜드 타이틀에만 사용됩니다.
-  /// 모바일 최적화: 48px → 36px
   static const TextStyle mainTitle = TextStyle(
     fontFamily: 'Gaegu',
-    fontSize: 36,
+    fontSize: 48,
     fontWeight: FontWeight.w700,
     color: AppColors.primary,
     shadows: [Shadow(color: AppColors.yellow, offset: Offset(2, 2))],
@@ -42,13 +39,11 @@ class AppTextStyles {
 
   /// 컴포넌트 카드의 제목 스타일입니다.
   ///
-  /// Pretendard 폰트를 사용하여 모던하고 세련된 느낌을 제공하며,
-  /// 브랜드 폰트와 본문 폰트 사이의 중간 역할을 합니다.
-  /// 각 섹션의 제목을 강조하며, 보조 브랜드 색상으로 시각적 계층을 만듭니다.
-  /// 모바일 최적화: 28px → 22px
+  /// Gaegu 폰트를 사용하여 친근하고 캐주얼한 느낌을 제공하며,
+  /// 각 섹션의 제목을 강조합니다.
   static const TextStyle componentTitle = TextStyle(
-    fontFamily: 'Pretendard',
-    fontSize: 22,
+    fontFamily: 'Gaegu',
+    fontSize: 32,
     fontWeight: FontWeight.w700,
     color: AppColors.accent,
     height: 1.3,
@@ -56,13 +51,11 @@ class AppTextStyles {
 
   /// 주요 헤딩 스타일입니다.
   ///
-  /// Pretendard 폰트를 사용하여 모던하고 세련된 제목을 제공하며,
-  /// 가장 중요한 내용의 제목에 사용됩니다.
+  /// NotoSansKR 폰트를 사용하여 가장 중요한 내용의 제목에 사용됩니다.
   /// 높은 폰트 굵기로 강한 시각적 임팩트를 제공합니다.
-  /// 모바일 최적화: 32px → 20px
   static const TextStyle h1 = TextStyle(
-    fontFamily: 'Pretendard',
-    fontSize: 20,
+    fontFamily: 'NotoSansKR',
+    fontSize: 32,
     fontWeight: FontWeight.w900,
     color: AppColors.charcoal,
     height: 1.3,
@@ -70,12 +63,11 @@ class AppTextStyles {
 
   /// 부제목 스타일입니다.
   ///
-  /// Pretendard 폰트를 사용하여 h1 다음으로 중요한 제목에 사용되며,
+  /// NotoSansKR 폰트를 사용하여 h1 다음으로 중요한 제목에 사용되며,
   /// 적절한 굵기로 가독성과 계층감을 제공합니다.
-  /// 모바일 최적화: 24px → 18px
   static const TextStyle h2 = TextStyle(
-    fontFamily: 'Pretendard',
-    fontSize: 18,
+    fontFamily: 'NotoSansKR',
+    fontSize: 24,
     fontWeight: FontWeight.w700,
     color: AppColors.charcoal,
     height: 1.3,
@@ -83,12 +75,11 @@ class AppTextStyles {
 
   /// 세 번째 수준의 헤딩 스타일입니다.
   ///
-  /// Pretendard 폰트를 사용하여 h2보다 작은 제목에 사용됩니다.
+  /// NotoSansKR 폰트를 사용하여 h2보다 작은 제목에 사용됩니다.
   /// 중간 크기의 제목으로 적절한 시각적 계층을 제공합니다.
-  /// 모바일 최적화: 20px → 16px
   static const TextStyle h3 = TextStyle(
-    fontFamily: 'Pretendard',
-    fontSize: 16,
+    fontFamily: 'NotoSansKR',
+    fontSize: 20,
     fontWeight: FontWeight.w600,
     color: AppColors.charcoal,
     height: 1.3,
@@ -96,13 +87,12 @@ class AppTextStyles {
 
   /// 질문형 제목 스타일입니다.
   ///
-  /// Pretendard 폰트를 사용하여 사용자에게 질문을 던지는 제목에 사용되며,
+  /// NotoSansKR 폰트를 사용하여 사용자에게 질문을 던지는 제목에 사용되며,
   /// h1보다 부드럽고 친근한 느낌을 제공합니다.
   /// 18세 서현 페르소나의 톤에 맞는 캐주얼한 질문에 적합합니다.
-  /// 모바일 최적화: 24px → 18px
   static const TextStyle questionTitle = TextStyle(
-    fontFamily: 'Pretendard',
-    fontSize: 18,
+    fontFamily: 'NotoSansKR',
+    fontSize: 20,
     fontWeight: FontWeight.w600,
     color: AppColors.charcoal,
     height: 1.4,
@@ -112,10 +102,9 @@ class AppTextStyles {
   ///
   /// NotoSansKR 폰트를 사용하여 제목 아래의 부가 설명이나 중간 크기의 텍스트에 사용되며,
   /// 보조 텍스트 색상으로 시각적 계층을 구분합니다.
-  /// 모바일 최적화: 20px → 16px
   static const TextStyle subtitle = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: FontWeight.w500,
     color: AppColors.secondaryText,
     height: 1.4,
@@ -138,10 +127,9 @@ class AppTextStyles {
   ///
   /// NotoSansKR 폰트를 사용하여 일반적인 내용과 설명에 사용되는 기본 스타일이며,
   /// 최적의 가독성을 위해 적절한 줄 간격을 제공합니다.
-  /// 모바일 최적화: 16px → 14px
   static const TextStyle body = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 14,
+    fontSize: 16,
     color: AppColors.charcoal,
     height: 1.5,
   );
@@ -172,10 +160,9 @@ class AppTextStyles {
   ///
   /// NotoSansKR 폰트를 사용하여 힌트, 캐션, 추가 설명 등에 사용되며,
   /// 작은 크기와 보조 색상으로 주요 내용을 방해하지 않습니다.
-  /// 모바일 최적화: 14px → 12px
   static const TextStyle helper = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 12,
+    fontSize: 14,
     color: AppColors.secondaryText,
     height: 1.5,
   );
@@ -185,10 +172,9 @@ class AppTextStyles {
   /// NotoSansKR 폰트를 사용하여 기본 helper 스타일보다 색상 대비를 개선하여
   /// 시각적 접근성을 향상시킨 스타일입니다.
   /// 중요한 도움말이나 설명에 사용됩니다.
-  /// 모바일 최적화: 14px → 12px
   static const TextStyle accessibleHelper = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 12,
+    fontSize: 14,
     color: AppColors.accessibleSecondaryText,
     height: 1.5,
   );

@@ -3,19 +3,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:lia/presentation/widgets/specific/charts/bar_chart.dart';
-import 'package:lia/presentation/widgets/specific/charts/chart_common.dart';
-import 'package:lia/presentation/widgets/specific/charts/line_chart.dart';
-import 'package:lia/presentation/widgets/specific/charts/radar_chart.dart';
 
-import '../../core/app_colors.dart';
-import '../../core/app_text_styles.dart';
+import '../../data/models/models.dart';
 import '../../services/analysis_data_service.dart';
-import '../widgets/common/component_card.dart';
-import '../widgets/common/primary_button.dart';
-import '../widgets/common/secondary_button.dart';
-import '../widgets/specific/feedback/generating_progress.dart';
-import '../widgets/specific/feedback/toast_notification.dart';
+import '../widgets/lia_widgets.dart';
 
 /// LIA 관계 분석 대시보드 - Chart Demo 스타일로 개선
 ///
@@ -76,437 +67,415 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: _isLoading
-          ? _buildLoadingScreen()
-          : _hasAnalysisData
-          ? _buildAnalysisDashboard()
-          : _buildStartScreen(),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: AppColors.background,
+    body: _isLoading
+        ? _buildLoadingScreen()
+        : _hasAnalysisData
+        ? _buildAnalysisDashboard()
+        : _buildStartScreen(),
+  );
 
   // 로딩 화면
-  Widget _buildLoadingScreen() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text('분석 데이터를 불러오는 중...'),
-        ],
-      ),
-    );
-  }
+  Widget _buildLoadingScreen() => const Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircularProgressIndicator(),
+        SizedBox(height: 16),
+        Text('분석 데이터를 불러오는 중...'),
+      ],
+    ),
+  );
 
   // Part 1: 개선된 시작 화면 - 모바일 우선 디자인
-  Widget _buildStartScreen() {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width > 600 ? 40.0 : 20.0,
-          vertical: 16.0,
+  Widget _buildStartScreen() => SafeArea(
+    child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width > 600 ? 40.0 : 20.0,
+        vertical: 16,
+      ),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 600, // 최대 너비 제한으로 큰 화면에서도 읽기 좋게
+          minHeight:
+              MediaQuery.of(context).size.height -
+              MediaQuery.of(context).padding.top -
+              MediaQuery.of(context).padding.bottom -
+              100, // 네비게이션 바 고려
         ),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: 600, // 최대 너비 제한으로 큰 화면에서도 읽기 좋게
-            minHeight:
-                MediaQuery.of(context).size.height -
-                MediaQuery.of(context).padding.top -
-                MediaQuery.of(context).padding.bottom -
-                100, // 네비게이션 바 고려
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 16),
-              // 개선된 히어로 헤더
-              _buildHeroHeader(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 16),
+            // 개선된 히어로 헤더
+            _buildHeroHeader(),
 
-              const SizedBox(height: 20),
-              // 퀵 스타트 카드 (간단한 입력)
-              _buildQuickStartCard(),
+            const SizedBox(height: 20),
+            // 퀵 스타트 카드 (간단한 입력)
+            _buildQuickStartCard(),
 
-              const SizedBox(height: 12),
-              // 파일 업로드 옵션 (접을 수 있는 형태)
-              _buildFileUploadOption(),
+            const SizedBox(height: 12),
+            // 파일 업로드 옵션 (접을 수 있는 형태)
+            _buildFileUploadOption(),
 
-              const SizedBox(height: 20),
-              // 분석 시작 버튼
-              _buildAnalysisStartButton(),
+            const SizedBox(height: 20),
+            // 분석 시작 버튼
+            _buildAnalysisStartButton(),
 
-              const SizedBox(height: 12),
-              // 간단한 도움말
-              _buildSimpleHelp(),
+            const SizedBox(height: 12),
+            // 간단한 도움말
+            _buildSimpleHelp(),
 
-              const SizedBox(height: 20),
-            ],
-          ),
+            const SizedBox(height: 20),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
 
   // 개선된 히어로 헤더 - 간결하고 임팩트 있는 디자인
-  Widget _buildHeroHeader() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: AppColors.primaryGradient,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.25),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+  Widget _buildHeroHeader() => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(24),
+    decoration: BoxDecoration(
+      gradient: AppColors.primaryGradient,
+      borderRadius: BorderRadius.circular(24),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.primary.withValues(alpha: 0.25),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        // 이모지 + 인사말
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('💕', style: TextStyle(fontSize: 32)),
+            const SizedBox(width: 12),
+            Text(
+              '안녕, 서현아!',
+              style: AppTextStyles.h1.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 28,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        // 가치 제안
+        Text(
+          '대화 내용만 알려주면\n관계 분석 결과를 바로 받아볼 수 있어!',
+          textAlign: TextAlign.center,
+          style: AppTextStyles.body.copyWith(
+            color: Colors.white.withValues(alpha: 0.95),
+            fontSize: 16,
+            height: 1.4,
           ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // 이모지 + 인사말
+        ),
+      ],
+    ),
+  );
+
+  // 퀵 스타트 카드 - 간단하고 직관적인 입력
+  Widget _buildQuickStartCard() => Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.primary.withValues(alpha: 0.08),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 제목과 아이콘
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Icon(
+                HugeIcons.strokeRoundedMessage01,
+                size: 20,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '대화 내용 입력하기',
+                    style: AppTextStyles.h3.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  Text(
+                    '카톡, 문자 등 대화 내용을 붙여넣어주세요',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+
+        // 개선된 입력 필드 - 높이 줄이고 확장 가능하게
+        GestureDetector(
+          onTap: _conversationFocus.requestFocus,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            height:
+                _conversationFocus.hasFocus ||
+                    _conversationController.text.isNotEmpty
+                ? 120
+                : 80,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: _conversationFocus.hasFocus
+                    ? AppColors.primary
+                    : AppColors.cardBorder,
+                width: 1.5,
+              ),
+            ),
+            child: TextField(
+              controller: _conversationController,
+              focusNode: _conversationFocus,
+              maxLines: null,
+              expands: true,
+              textAlignVertical: TextAlignVertical.top,
+              onChanged: (value) => setState(() {}),
+              decoration: InputDecoration(
+                hintText:
+                    '서현: 오늘 날씨 정말 좋다!\n상대방: 맞아요~ 산책하기 딱 좋은 날씨네요\n서현: 혹시 시간 되시면 같이 산책 어떠세요?',
+                hintStyle: AppTextStyles.body2.copyWith(
+                  color: AppColors.textSecondary.withValues(alpha: 0.6),
+                  fontSize: 14,
+                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+              ),
+              style: AppTextStyles.body2.copyWith(fontSize: 14),
+            ),
+          ),
+        ),
+
+        // 입력 상태 및 액션
+        if (_conversationController.text.isNotEmpty) ...[
+          const SizedBox(height: 12),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('💕', style: TextStyle(fontSize: 32)),
-              const SizedBox(width: 12),
+              const Icon(
+                HugeIcons.strokeRoundedCheckmarkCircle02,
+                size: 16,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: 6),
               Text(
-                '안녕, 서현아!',
-                style: AppTextStyles.h1.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 28,
+                '${_conversationController.text.length}자 입력됨',
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () {
+                  _conversationController.clear();
+                  setState(() {});
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.textSecondary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    '지우기',
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          // 가치 제안
-          Text(
-            '대화 내용만 알려주면\n관계 분석 결과를 바로 받아볼 수 있어!',
-            textAlign: TextAlign.center,
-            style: AppTextStyles.body.copyWith(
-              color: Colors.white.withValues(alpha: 0.95),
-              fontSize: 16,
-              height: 1.4,
-            ),
-          ),
         ],
-      ),
-    );
-  }
+      ],
+    ),
+  );
 
-  // 퀵 스타트 카드 - 간단하고 직관적인 입력
-  Widget _buildQuickStartCard() {
-    return Container(
-      padding: const EdgeInsets.all(20),
+  // 파일 업로드 옵션 - 접을 수 있는 형태
+  Widget _buildFileUploadOption() => GestureDetector(
+    onTap: () => setState(() => _showFileUpload = !_showFileUpload),
+    child: AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: _showFileUpload
+            ? AppColors.primary.withValues(alpha: 0.05)
+            : AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.1),
-          width: 1,
+          color: _showFileUpload
+              ? AppColors.primary.withValues(alpha: 0.2)
+              : AppColors.cardBorder,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 제목과 아이콘
+          // 토글 헤더
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  HugeIcons.strokeRoundedMessage01,
-                  size: 20,
-                  color: AppColors.primary,
-                ),
+              Icon(
+                HugeIcons.strokeRoundedCloudUpload,
+                size: 20,
+                color: _showFileUpload
+                    ? AppColors.primary
+                    : AppColors.textSecondary,
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '대화 내용 입력하기',
-                      style: AppTextStyles.h3.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    Text(
-                      '카톡, 문자 등 대화 내용을 붙여넣어주세요',
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // 개선된 입력 필드 - 높이 줄이고 확장 가능하게
-          GestureDetector(
-            onTap: () => _conversationFocus.requestFocus(),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              height:
-                  _conversationFocus.hasFocus ||
-                      _conversationController.text.isNotEmpty
-                  ? 120
-                  : 80,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.surface,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: _conversationFocus.hasFocus
-                      ? AppColors.primary
-                      : AppColors.cardBorder,
-                  width: 1.5,
-                ),
-              ),
-              child: TextField(
-                controller: _conversationController,
-                focusNode: _conversationFocus,
-                maxLines: null,
-                expands: true,
-                textAlignVertical: TextAlignVertical.top,
-                onChanged: (value) => setState(() {}),
-                decoration: InputDecoration(
-                  hintText:
-                      '서현: 오늘 날씨 정말 좋다!\n상대방: 맞아요~ 산책하기 딱 좋은 날씨네요\n서현: 혹시 시간 되시면 같이 산책 어떠세요?',
-                  hintStyle: AppTextStyles.body2.copyWith(
-                    color: AppColors.textSecondary.withValues(alpha: 0.6),
-                    fontSize: 14,
+                child: Text(
+                  '또는 파일로 업로드하기',
+                  style: AppTextStyles.body1.copyWith(
+                    color: _showFileUpload
+                        ? AppColors.primary
+                        : AppColors.textSecondary,
+                    fontWeight: _showFileUpload
+                        ? FontWeight.w600
+                        : FontWeight.normal,
                   ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
                 ),
-                style: AppTextStyles.body2.copyWith(fontSize: 14),
               ),
-            ),
-          ),
-
-          // 입력 상태 및 액션
-          if (_conversationController.text.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Icon(
-                  HugeIcons.strokeRoundedCheckmarkCircle02,
+              AnimatedRotation(
+                turns: _showFileUpload ? 0.5 : 0,
+                duration: const Duration(milliseconds: 300),
+                child: Icon(
+                  HugeIcons.strokeRoundedArrowDown01,
                   size: 16,
-                  color: AppColors.primary,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  '${_conversationController.text.length}자 입력됨',
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    _conversationController.clear();
-                    setState(() {});
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.textSecondary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      '지우기',
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  // 파일 업로드 옵션 - 접을 수 있는 형태
-  Widget _buildFileUploadOption() {
-    return GestureDetector(
-      onTap: () => setState(() => _showFileUpload = !_showFileUpload),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: _showFileUpload
-              ? AppColors.primary.withValues(alpha: 0.05)
-              : AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: _showFileUpload
-                ? AppColors.primary.withValues(alpha: 0.2)
-                : AppColors.cardBorder,
-            width: 1,
-          ),
-        ),
-        child: Column(
-          children: [
-            // 토글 헤더
-            Row(
-              children: [
-                Icon(
-                  HugeIcons.strokeRoundedCloudUpload,
-                  size: 20,
                   color: _showFileUpload
                       ? AppColors.primary
                       : AppColors.textSecondary,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    '또는 파일로 업로드하기',
-                    style: AppTextStyles.body1.copyWith(
-                      color: _showFileUpload
-                          ? AppColors.primary
-                          : AppColors.textSecondary,
-                      fontWeight: _showFileUpload
-                          ? FontWeight.w600
-                          : FontWeight.normal,
-                    ),
-                  ),
-                ),
-                AnimatedRotation(
-                  turns: _showFileUpload ? 0.5 : 0,
-                  duration: const Duration(milliseconds: 300),
-                  child: Icon(
-                    HugeIcons.strokeRoundedArrowDown01,
-                    size: 16,
-                    color: _showFileUpload
-                        ? AppColors.primary
-                        : AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-
-            // 접을 수 있는 내용
-            AnimatedSize(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              child: _showFileUpload
-                  ? Column(
-                      children: [
-                        const SizedBox(height: 16),
-                        // 파일 업로드 영역
-                        GestureDetector(
-                          onTap: _handleFileUpload,
-                          child: Container(
-                            height: 80,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: AppColors.surface,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: AppColors.primary.withValues(alpha: 0.3),
-                                width: 2,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  HugeIcons.strokeRoundedUpload04,
-                                  size: 24,
-                                  color: AppColors.primary,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '파일 선택하기',
-                                  style: AppTextStyles.body2.copyWith(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '카카오톡 대화 내보내기, .txt, .csv 파일 지원',
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // 간단한 도움말
-  Widget _buildSimpleHelp() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.accent.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.accent.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            HugeIcons.strokeRoundedInformationCircle,
-            size: 20,
-            color: AppColors.accent,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              '최소 10개 이상의 메시지가 있으면 더 정확한 분석이 가능해요',
-              style: AppTextStyles.body2.copyWith(
-                color: AppColors.accent,
-                fontSize: 14,
               ),
-            ),
+            ],
+          ),
+
+          // 접을 수 있는 내용
+          AnimatedSize(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: _showFileUpload
+                ? Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      // 파일 업로드 영역
+                      GestureDetector(
+                        onTap: _handleFileUpload,
+                        child: Container(
+                          height: 80,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: AppColors.primary.withValues(alpha: 0.3),
+                              width: 2,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                HugeIcons.strokeRoundedUpload04,
+                                size: 24,
+                                color: AppColors.primary,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '파일 선택하기',
+                                style: AppTextStyles.body2.copyWith(
+                                  color: AppColors.primary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '카카오톡 대화 내보내기, .txt, .csv 파일 지원',
+                        style: AppTextStyles.caption.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+
+  // 간단한 도움말
+  Widget _buildSimpleHelp() => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: AppColors.accent.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
+    ),
+    child: Row(
+      children: [
+        const Icon(
+          HugeIcons.strokeRoundedInformationCircle,
+          size: 20,
+          color: AppColors.accent,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            '최소 10개 이상의 메시지가 있으면 더 정확한 분석이 가능해요',
+            style: AppTextStyles.body2.copyWith(
+              color: AppColors.accent,
+              fontSize: 14,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 
   // 개선된 분석 시작 버튼 - 모바일 친화적
   Widget _buildAnalysisStartButton() {
@@ -561,7 +530,7 @@ class _MainScreenState extends State<MainScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 HugeIcons.strokeRoundedBrain,
                 size: 20,
                 color: AppColors.primary,
@@ -582,254 +551,91 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   // Part 2: 개선된 분석 대시보드 - 모바일 우선 디자인
-  Widget _buildAnalysisDashboard() {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
-          vertical: 12.0,
-        ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 20),
-              // 대시보드 헤더
-              _buildDashboardHeader(),
-
-              const SizedBox(height: 24),
-              // 핵심 요약 섹션
-              _buildSummarySection(),
-
-              const SizedBox(height: 24),
-              // 1. 성격 호환성 분석
-              _buildChartDemoSection(
-                number: '1',
-                title: '성격 호환성 분석',
-                description: '두 분의 성격을 5가지 요소로 분석하여 호환성을 확인해보세요',
-                child: _buildPersonalityCompatibilityContent(),
-              ),
-
-              const SizedBox(height: 24),
-              // 2. 감정 흐름 분석
-              _buildChartDemoSection(
-                number: '2',
-                title: '감정 흐름 분석',
-                description: '시간에 따른 감정 변화와 주요 이벤트를 확인해보세요',
-                child: _buildEmotionalFlowContent(),
-              ),
-
-              const SizedBox(height: 24),
-              // 3. 메시지 시간대별 연락 빈도
-              _buildChartDemoSection(
-                number: '3',
-                title: '메시지 시간대별 연락 빈도',
-                description: '언제 가장 활발하게 대화하는지 패턴을 분석해보세요',
-                child: _buildMessageFrequencyContent(),
-              ),
-
-              const SizedBox(height: 24),
-              // 4. 대화 주제 분석
-              _buildChartDemoSection(
-                number: '4',
-                title: '대화 주제 분석',
-                description: '어떤 주제로 주로 대화하는지 분포를 확인해보세요',
-                child: _buildConversationTopicsContent(),
-              ),
-
-              const SizedBox(height: 24),
-              // 5. AI 추천 액션 플랜
-              _buildChartDemoSection(
-                number: '5',
-                title: 'AI 추천 액션 플랜',
-                description: '관계 개선을 위한 구체적인 조언과 추천 전략을 확인해보세요',
-                child: _buildActionPlanContent(),
-              ),
-
-              const SizedBox(height: 32),
-              // 새로운 분석 버튼
-              _buildNewAnalysisButton(),
-
-              const SizedBox(height: 40),
-            ],
-          ),
-        ),
+  Widget _buildAnalysisDashboard() => SafeArea(
+    child: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
+        vertical: 12,
       ),
-    );
-  }
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AppSpacing.gapV24,
 
-  // 개선된 섹션 빌더 - 모바일 최적화
-  Widget _buildChartDemoSection({
-    required String number,
-    required String title,
-    required String description,
-    required Widget child,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(
-        MediaQuery.of(context).size.width > 600 ? 20 : 16,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(
-          MediaQuery.of(context).size.width > 600 ? 20 : 16,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 16,
-            offset: const Offset(0, 2),
-          ),
-        ],
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.1),
-          width: 1,
+            // 대시보드 헤더
+            const DashboardHeader(
+              title: '관계 분석 대시보드',
+              subtitle: '두 분의 대화를 AI가 분석하여 관계 개선 방향을 제시합니다',
+              icon: HugeIcons.strokeRoundedAnalytics01,
+            ),
+
+            AppSpacing.gapV24,
+
+            // 핵심 요약 섹션
+            _buildSummarySection(),
+
+            AppSpacing.gapV24,
+
+            // 1. 성격 호환성 분석
+            SectionCard(
+              number: '1',
+              title: '성격 호환성 분석',
+              description: '두 분의 성격을 5가지 요소로 분석하여 호환성을 확인해보세요',
+              child: _buildPersonalityCompatibilityContent(),
+            ),
+
+            AppSpacing.gapV24,
+
+            // 2. 감정 흐름 분석
+            SectionCard(
+              number: '2',
+              title: '감정 흐름 분석',
+              description: '시간에 따른 감정 변화와 주요 이벤트를 확인해보세요',
+              child: _buildEmotionalFlowContent(),
+            ),
+
+            AppSpacing.gapV24,
+
+            // 3. 메시지 시간대별 연락 빈도
+            SectionCard(
+              number: '3',
+              title: '메시지 시간대별 연락 빈도',
+              description: '언제 가장 활발하게 대화하는지 패턴을 분석해보세요',
+              child: _buildMessageFrequencyContent(),
+            ),
+
+            AppSpacing.gapV24,
+
+            // 4. 대화 주제 분석
+            SectionCard(
+              number: '4',
+              title: '대화 주제 분석',
+              description: '어떤 주제로 주로 대화하는지 분포를 확인해보세요',
+              child: _buildConversationTopicsContent(),
+            ),
+
+            AppSpacing.gapV24,
+
+            // 5. AI 추천 액션 플랜
+            SectionCard(
+              number: '5',
+              title: 'AI 추천 액션 플랜',
+              description: '관계 개선을 위한 구체적인 조언과 추천 전략을 확인해보세요',
+              child: _buildActionPlanContent(),
+            ),
+
+            AppSpacing.gapV32,
+            // 새로운 분석 버튼
+            _buildNewAnalysisButton(),
+
+            const SizedBox(height: 40),
+          ],
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 개선된 헤더
-          Row(
-            children: [
-              Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  gradient: AppColors.primaryGradient,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    number,
-                    style: AppTextStyles.body1.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: AppTextStyles.h3.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                        fontSize: MediaQuery.of(context).size.width > 600
-                            ? 18
-                            : 16,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      description,
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: MediaQuery.of(context).size.width > 600
-                            ? 13
-                            : 12,
-                        height: 1.3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // 콘텐츠
-          child,
-        ],
-      ),
-    );
-  }
-
-  // 대시보드 헤더
-  Widget _buildDashboardHeader() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: AppColors.primaryGradient,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  HugeIcons.strokeRoundedAnalytics01,
-                  color: Colors.white,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '관계 분석 완료!',
-                          style: AppTextStyles.h2.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(
-                          HugeIcons.strokeRoundedParty,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '두 분의 대화를 분석해서 맞춤 인사이트를 준비했어요',
-                      style: AppTextStyles.body2.copyWith(
-                        color: Colors.white.withValues(alpha: 0.9),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+    ),
+  );
 
   // 핵심 요약 섹션 - 한눈에 보는 핵심 지표
   Widget _buildSummarySection() {
@@ -847,10 +653,7 @@ class _MainScreenState extends State<MainScreen> {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.2),
-          width: 1,
-        ),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -941,7 +744,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   HugeIcons.strokeRoundedIdea,
                   size: 16,
                   color: AppColors.primary,
@@ -971,38 +774,36 @@ class _MainScreenState extends State<MainScreen> {
     required String title,
     required String value,
     required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, size: 20, color: color),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: AppTextStyles.h3.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
-              fontSize: 18,
-            ),
+  }) => Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.white.withValues(alpha: 0.9),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color.withValues(alpha: 0.3)),
+    ),
+    child: Column(
+      children: [
+        Icon(icon, size: 20, color: color),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: AppTextStyles.h3.copyWith(
+            fontWeight: FontWeight.bold,
+            color: color,
+            fontSize: 18,
           ),
-          Text(
-            title,
-            style: AppTextStyles.caption.copyWith(
-              color: AppColors.textSecondary,
-              fontSize: 11,
-            ),
-            textAlign: TextAlign.center,
+        ),
+        Text(
+          title,
+          style: AppTextStyles.caption.copyWith(
+            color: AppColors.textSecondary,
+            fontSize: 11,
           ),
-        ],
-      ),
-    );
-  }
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
 
   // 1. 성격 호환성 분석 콘텐츠
   Widget _buildPersonalityCompatibilityContent() {
@@ -1010,7 +811,7 @@ class _MainScreenState extends State<MainScreen> {
       return _buildDefaultPersonalityContent();
     }
 
-    final personality = _analysisData!.personalityAnalysis!;
+    final personality = _analysisData!.personalityAnalysis;
 
     return Column(
       children: [
@@ -1056,7 +857,7 @@ class _MainScreenState extends State<MainScreen> {
                     Row(
                       children: [
                         Text(
-                          '${personality.compatibilityScore}',
+                          '${personality?.compatibilityScore}',
                           style: AppTextStyles.h1.copyWith(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -1073,7 +874,7 @@ class _MainScreenState extends State<MainScreen> {
                         const SizedBox(width: 8),
                         Text(
                           _getCompatibilityMessage(
-                            personality.compatibilityScore,
+                            personality?.compatibilityScore ?? 0,
                           ),
                           style: AppTextStyles.caption.copyWith(
                             color: AppColors.textSecondary,
@@ -1095,8 +896,6 @@ class _MainScreenState extends State<MainScreen> {
           title: 'MBTI 성격 비교',
           titleIcon: HugeIcons.strokeRoundedUser,
           size: 280,
-          showLegend: true,
-          legendPosition: LegendPosition.bottomCenter,
           data: [
             {
               'name': '나',
@@ -1132,7 +931,7 @@ class _MainScreenState extends State<MainScreen> {
             _buildPersonalityInsight(
               title: '관계의 강점',
               icon: HugeIcons.strokeRoundedThumbsUp,
-              items: personality.strengths,
+              items: personality?.strengths ?? [],
               color: AppColors.green,
             ),
             const SizedBox(height: 16),
@@ -1140,7 +939,7 @@ class _MainScreenState extends State<MainScreen> {
             _buildPersonalityInsight(
               title: '개선 포인트',
               icon: HugeIcons.strokeRoundedIdea,
-              items: personality.improvements,
+              items: personality?.improvements ?? [],
               color: AppColors.accent,
             ),
           ],
@@ -1150,21 +949,19 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   // 기본 성격 분석 콘텐츠 (데이터가 없을 때)
-  Widget _buildDefaultPersonalityContent() {
-    return const RadarChart(
-      title: '성격 5요소 분석',
-      titleIcon: HugeIcons.strokeRoundedUser,
-      size: 280,
-      showLegend: false,
-      data: [
-        {'label': '외향성', 'value': 75},
-        {'label': '개방성', 'value': 80},
-        {'label': '성실성', 'value': 65},
-        {'label': '친화성', 'value': 90},
-        {'label': '감정안정성', 'value': 70},
-      ],
-    );
-  }
+  Widget _buildDefaultPersonalityContent() => const RadarChart(
+    title: '성격 5요소 분석',
+    titleIcon: HugeIcons.strokeRoundedUser,
+    size: 280,
+    showLegend: false,
+    data: [
+      {'label': '외향성', 'value': 75},
+      {'label': '개방성', 'value': 80},
+      {'label': '성실성', 'value': 65},
+      {'label': '친화성', 'value': 90},
+      {'label': '감정안정성', 'value': 70},
+    ],
+  );
 
   // 성격 인사이트 카드
   Widget _buildPersonalityInsight({
@@ -1172,74 +969,70 @@ class _MainScreenState extends State<MainScreen> {
     required IconData icon,
     required List<String> items,
     required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16), // 12 → 16으로 증가
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(icon, size: 20, color: color), // 16 → 20으로 증가
-              const SizedBox(width: 8), // 6 → 8로 증가
-              Expanded(
-                child: Text(
-                  title,
-                  style: AppTextStyles.body1.copyWith(
-                    // body2 → body1로 변경
-                    fontWeight: FontWeight.w600,
-                    color: color,
-                    fontSize: 15, // 13 → 15로 증가
-                  ),
+  }) => Container(
+    padding: const EdgeInsets.all(16), // 12 → 16으로 증가
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.05),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color.withValues(alpha: 0.2)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 20, color: color), // 16 → 20으로 증가
+            const SizedBox(width: 8), // 6 → 8로 증가
+            Expanded(
+              child: Text(
+                title,
+                style: AppTextStyles.body1.copyWith(
+                  // body2 → body1로 변경
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                  fontSize: 15, // 13 → 15로 증가
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 12), // 8 → 12로 증가
-          ...items
-              .take(2)
-              .map(
-                (item) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6), // 4 → 6으로 증가
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 5, // 4 → 5로 증가
-                        height: 5, // 4 → 5로 증가
-                        margin: const EdgeInsets.only(top: 7), // 6 → 7로 조정
-                        decoration: BoxDecoration(
-                          color: color,
-                          borderRadius: BorderRadius.circular(
-                            2.5,
-                          ), // 2 → 2.5로 조정
+            ),
+          ],
+        ),
+        const SizedBox(height: 12), // 8 → 12로 증가
+        ...items
+            .take(2)
+            .map(
+              (item) => Padding(
+                padding: const EdgeInsets.only(bottom: 6), // 4 → 6으로 증가
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 5, // 4 → 5로 증가
+                      height: 5, // 4 → 5로 증가
+                      margin: const EdgeInsets.only(top: 7), // 6 → 7로 조정
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(2.5), // 2 → 2.5로 조정
+                      ),
+                    ),
+                    const SizedBox(width: 8), // 6 → 8로 증가
+                    Expanded(
+                      child: Text(
+                        item,
+                        style: AppTextStyles.body2.copyWith(
+                          // caption → body2로 변경
+                          color: AppColors.textSecondary,
+                          fontSize: 13, // 11 → 13으로 증가
+                          height: 1.4, // 1.3 → 1.4로 조정
                         ),
                       ),
-                      const SizedBox(width: 8), // 6 → 8로 증가
-                      Expanded(
-                        child: Text(
-                          item,
-                          style: AppTextStyles.body2.copyWith(
-                            // caption → body2로 변경
-                            color: AppColors.textSecondary,
-                            fontSize: 13, // 11 → 13으로 증가
-                            height: 1.4, // 1.3 → 1.4로 조정
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-        ],
-      ),
-    );
-  }
+            ),
+      ],
+    ),
+  );
 
   // 호환성 점수 메시지
   String _getCompatibilityMessage(int score) {
@@ -1266,17 +1059,14 @@ class _MainScreenState extends State<MainScreen> {
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.2),
-              width: 1,
-            ),
+            border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     HugeIcons.strokeRoundedBrain,
                     size: 20,
                     color: AppColors.primary,
@@ -1329,7 +1119,7 @@ class _MainScreenState extends State<MainScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 HugeIcons.strokeRoundedCardiogram02,
                 size: 20,
                 color: AppColors.primary,
@@ -1399,7 +1189,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 HugeIcons.strokeRoundedAnalytics01,
                 size: 16,
                 color: AppColors.textSecondary,
@@ -1446,26 +1236,22 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   // 메타데이터 아이템
-  Widget _buildMetadataItem(String label, String value) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: AppTextStyles.caption.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            value,
-            style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildMetadataItem(String label, String value) => Expanded(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value,
+          style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.w600),
+        ),
+      ],
+    ),
+  );
 
   // 3. 감정 흐름 분석 콘텐츠
   Widget _buildEmotionalFlowContent() {
@@ -1481,7 +1267,7 @@ class _MainScreenState extends State<MainScreen> {
         // 주요 이벤트 마커들
         Column(
           children: _analysisData!.keyEvents
-              .map((event) => _buildEventMarker(event))
+              .map<Widget>(_buildEventMarker)
               .toList(),
         ),
       ],
@@ -1498,107 +1284,101 @@ class _MainScreenState extends State<MainScreen> {
       data: emotionData
           .map((e) => {'label': e.time, 'value': e.myEmotion.toDouble()})
           .toList(),
-      height: 200,
       showLegend: false,
     );
   }
 
   // 4. 메시지 시간대별 연락 빈도 콘텐츠
-  Widget _buildMessageFrequencyContent() {
-    return Column(
-      children: [
-        // 라인 차트
-        LineChart(
-          data: _generateMessageFrequencyData(),
-          title: '시간대별 메시지 빈도',
-          titleIcon: HugeIcons.strokeRoundedCalendar03,
-          height: 320,
-          showLegend: true,
+  Widget _buildMessageFrequencyContent() => Column(
+    children: [
+      // 라인 차트
+      LineChart(
+        data: _generateMessageFrequencyData(),
+        title: '시간대별 메시지 빈도',
+        titleIcon: HugeIcons.strokeRoundedCalendar03,
+        height: 320,
+      ),
+
+      const SizedBox(height: 16),
+
+      // 인사이트 메시지
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(8),
         ),
-
-        const SizedBox(height: 16),
-
-        // 인사이트 메시지
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedBulb,
-                size: 18,
-                color: AppColors.primary,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  '가장 활발한 시간대: 오후 7-9시 | 내가 더 많은 메시지를 보내는 시간대예요',
-                  style: AppTextStyles.body2.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w500,
-                  ),
+        child: Row(
+          children: [
+            const HugeIcon(
+              icon: HugeIcons.strokeRoundedBulb,
+              size: 18,
+              color: AppColors.primary,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                '가장 활발한 시간대: 오후 7-9시 | 내가 더 많은 메시지를 보내는 시간대예요',
+                style: AppTextStyles.body2.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  // 4. 대화 주제 분석 콘텐츠 (막대 차트로 상위 5개 주제 순위 표시)
-  Widget _buildConversationTopicsContent() {
-    return Column(
-      children: [
-        // 막대 차트 - 상위 5개 대화 주제 순위
-        const BarChart(
-          title: '대화 주제 순위 TOP 5',
-          titleIcon: HugeIcons.strokeRoundedAnalytics01,
-          showLegend: false,
-          data: [
-            {'label': '카페 데이트', 'value': 85},
-            {'label': '취미 공유', 'value': 72},
-            {'label': '일상 대화', 'value': 68},
-            {'label': '음식 이야기', 'value': 55},
-            {'label': '영화/드라마', 'value': 42},
+            ),
           ],
         ),
+      ),
+    ],
+  );
 
-        const SizedBox(height: 16),
+  // 4. 대화 주제 분석 콘텐츠 (막대 차트로 상위 5개 주제 순위 표시)
+  Widget _buildConversationTopicsContent() => Column(
+    children: [
+      // 막대 차트 - 상위 5개 대화 주제 순위
+      const BarChart(
+        title: '대화 주제 순위 TOP 5',
+        titleIcon: HugeIcons.strokeRoundedAnalytics01,
+        showLegend: false,
+        data: [
+          {'label': '카페 데이트', 'value': 85},
+          {'label': '취미 공유', 'value': 72},
+          {'label': '일상 대화', 'value': 68},
+          {'label': '음식 이야기', 'value': 55},
+          {'label': '영화/드라마', 'value': 42},
+        ],
+      ),
 
-        // 인사이트 메시지
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.05),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                HugeIcons.strokeRoundedArrowUpRight02,
-                size: 18,
-                color: AppColors.primary,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  '카페 데이트 주제가 1위! 실제 데이트 제안을 해보세요',
-                  style: AppTextStyles.body2.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w500,
-                  ),
+      const SizedBox(height: 16),
+
+      // 인사이트 메시지
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            const Icon(
+              HugeIcons.strokeRoundedArrowUpRight02,
+              size: 18,
+              color: AppColors.primary,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                '카페 데이트 주제가 1위! 실제 데이트 제안을 해보세요',
+                style: AppTextStyles.body2.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 
   // 6. AI 추천 액션 플랜 콘텐츠
   Widget _buildActionPlanContent() {
@@ -1638,10 +1418,7 @@ class _MainScreenState extends State<MainScreen> {
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: AppColors.primary.withValues(alpha: 0.2),
-              width: 1,
-            ),
+            border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
           ),
           child: Column(
             children: [
@@ -1697,7 +1474,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-
   // 썸 지수 메시지 생성
   String _getSomeIndexMessage(int someIndex) {
     if (someIndex >= 80) {
@@ -1713,128 +1489,119 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-
   // 이벤트 마커 위젯
-  Widget _buildEventMarker(AnalysisKeyEvent event) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
+  Widget _buildEventMarker(AnalysisKeyEvent event) => Container(
+    margin: const EdgeInsets.only(bottom: 12),
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: event.isPositive
+          ? AppColors.primary.withValues(alpha: 0.1)
+          : AppColors.error.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(
         color: event.isPositive
-            ? AppColors.primary.withValues(alpha: 0.1)
-            : AppColors.error.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: event.isPositive
-              ? AppColors.primary.withValues(alpha: 0.3)
-              : AppColors.error.withValues(alpha: 0.3),
-          width: 1,
-        ),
+            ? AppColors.primary.withValues(alpha: 0.3)
+            : AppColors.error.withValues(alpha: 0.3),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                event.isPositive
-                    ? HugeIcons.strokeRoundedChartUp
-                    : HugeIcons.strokeRoundedChartDown,
-                size: 16,
-                color: event.isPositive ? AppColors.primary : AppColors.error,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                event.event,
-                style: AppTextStyles.body2.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                event.time,
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-          if (event.description.isNotEmpty) ...[
-            const SizedBox(height: 4),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              event.isPositive
+                  ? HugeIcons.strokeRoundedChartUp
+                  : HugeIcons.strokeRoundedChartDown,
+              size: 16,
+              color: event.isPositive ? AppColors.primary : AppColors.error,
+            ),
+            const SizedBox(width: 8),
             Text(
-              event.description,
+              event.event,
+              style: AppTextStyles.body2.copyWith(fontWeight: FontWeight.w500),
+            ),
+            const Spacer(),
+            Text(
+              event.time,
               style: AppTextStyles.caption.copyWith(
                 color: AppColors.textSecondary,
               ),
             ),
           ],
+        ),
+        if (event.description.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            event.description,
+            style: AppTextStyles.caption.copyWith(
+              color: AppColors.textSecondary,
+            ),
+          ),
         ],
-      ),
-    );
-  }
+      ],
+    ),
+  );
 
   // 액션 섹션 위젯
   Widget _buildActionSection({
     required String title,
     required List<String> items,
     required IconData icon,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 20, color: AppColors.primary),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: AppTextStyles.body1.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.primary,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        ...items.map(
-          (item) => Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 6,
-                  height: 6,
-                  margin: const EdgeInsets.only(top: 6),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    item,
-                    style: AppTextStyles.body2.copyWith(height: 1.4),
-                  ),
-                ),
-              ],
+  }) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Icon(icon, size: 20, color: AppColors.primary),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: AppTextStyles.body1.copyWith(
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary,
             ),
           ),
+        ],
+      ),
+      const SizedBox(height: 12),
+      ...items.map(
+        (item) => Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 6,
+                height: 6,
+                margin: const EdgeInsets.only(top: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  item,
+                  style: AppTextStyles.body2.copyWith(height: 1.4),
+                ),
+              ),
+            ],
+          ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 
   // 새로운 분석 버튼
-  Widget _buildNewAnalysisButton() {
-    return SecondaryButton(text: '새로운 대화 분석하기', onPressed: _startNewAnalysis);
-  }
+  Widget _buildNewAnalysisButton() =>
+      SecondaryButton(text: '새로운 대화 분석하기', onPressed: _startNewAnalysis);
 
   // 파일 업로드 핸들러
   void _handleFileUpload() {
@@ -1847,7 +1614,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   // 분석 시작 핸들러
-  void _startAnalysis() async {
+  Future<void> _startAnalysis() async {
     if (_conversationController.text.trim().isEmpty) return;
 
     setState(() {
@@ -1905,66 +1672,56 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   // 라인 차트용 메시지 빈도 데이터 생성
-  List<Map<String, dynamic>> _generateMessageFrequencyData() {
-    return [
-      {
-        'name': '내 메시지',
-        'data': List.generate(24, (hour) {
-          // 시간대별 내 메시지 개수 시뮬레이션
-          double myMessages = 0;
-          if (hour >= 7 && hour <= 9) {
-            myMessages = 3 + (hour - 7) * 2; // 아침 시간 증가
-          } else if (hour >= 12 && hour <= 14) {
-            myMessages = 5 + (hour - 12) * 1.5; // 점심 시간
-          } else if (hour >= 18 && hour <= 22) {
-            myMessages = 8 + (hour - 18) * 2; // 저녁 시간 활발
-          } else if (hour >= 23 || hour <= 1) {
-            myMessages = 2; // 늦은 밤
-          } else {
-            myMessages = 1; // 기본값
-          }
-          
-          return {
-            'label': '$hour시',
-            'value': myMessages,
-          };
-        }),
-        'color': AppColors.primary.toARGB32(),
-      },
-      {
-        'name': '상대 메시지',
-        'data': List.generate(24, (hour) {
-          // 시간대별 상대방 메시지 개수 시뮬레이션
-          double partnerMessages = 0;
-          if (hour >= 8 && hour <= 10) {
-            partnerMessages = 2 + (hour - 8) * 1.5; // 아침 시간
-          } else if (hour >= 13 && hour <= 15) {
-            partnerMessages = 4 + (hour - 13) * 1; // 점심 시간
-          } else if (hour >= 19 && hour <= 21) {
-            partnerMessages = 6 + (hour - 19) * 2.5; // 저녁 시간
-          } else if (hour >= 22 || hour <= 2) {
-            partnerMessages = 1.5; // 늦은 밤
-          } else {
-            partnerMessages = 0.5; // 기본값
-          }
-          
-          return {
-            'label': '$hour시',
-            'value': partnerMessages,
-          };
-        }),
-        'color': AppColors.accent.toARGB32(),
-      },
-    ];
-  }
+  List<Map<String, dynamic>> _generateMessageFrequencyData() => [
+    {
+      'name': '내 메시지',
+      'data': List.generate(24, (hour) {
+        // 시간대별 내 메시지 개수 시뮬레이션
+        double myMessages = 0;
+        if (hour >= 7 && hour <= 9) {
+          myMessages = 3 + (hour - 7) * 2; // 아침 시간 증가
+        } else if (hour >= 12 && hour <= 14) {
+          myMessages = 5 + (hour - 12) * 1.5; // 점심 시간
+        } else if (hour >= 18 && hour <= 22) {
+          myMessages = 8 + (hour - 18) * 2; // 저녁 시간 활발
+        } else if (hour >= 23 || hour <= 1) {
+          myMessages = 2; // 늦은 밤
+        } else {
+          myMessages = 1; // 기본값
+        }
+
+        return {'label': '$hour시', 'value': myMessages};
+      }),
+      'color': AppColors.primary.toARGB32(),
+    },
+    {
+      'name': '상대 메시지',
+      'data': List.generate(24, (hour) {
+        // 시간대별 상대방 메시지 개수 시뮬레이션
+        double partnerMessages = 0;
+        if (hour >= 8 && hour <= 10) {
+          partnerMessages = 2 + (hour - 8) * 1.5; // 아침 시간
+        } else if (hour >= 13 && hour <= 15) {
+          partnerMessages = 4 + (hour - 13) * 1; // 점심 시간
+        } else if (hour >= 19 && hour <= 21) {
+          partnerMessages = 6 + (hour - 19) * 2.5; // 저녁 시간
+        } else if (hour >= 22 || hour <= 2) {
+          partnerMessages = 1.5; // 늦은 밤
+        } else {
+          partnerMessages = 0.5; // 기본값
+        }
+
+        return {'label': '$hour시', 'value': partnerMessages};
+      }),
+      'color': AppColors.accent.toARGB32(),
+    },
+  ];
 }
 
 // 반 하트 클리퍼
 class HalfClipper extends CustomClipper<Rect> {
   @override
-  Rect getClip(Size size) {
-    return Rect.fromLTRB(0, 0, size.width / 2, size.height);
-  }
+  Rect getClip(Size size) => Rect.fromLTRB(0, 0, size.width / 2, size.height);
 
   @override
   bool shouldReclip(CustomClipper<Rect> oldClipper) => false;

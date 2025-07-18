@@ -2,11 +2,10 @@
 // 2025.07.16 11:41:15 생성 - 하단 네비게이션 고정을 위한 메인 레이아웃
 
 import 'package:flutter/material.dart';
-import 'package:lia/presentation/screens/chart_demo_screen.dart';
 
-import '../../core/app_colors.dart';
-import '../widgets/specific/navigation/bottom_navigation_bar.dart';
+import '../widgets/lia_widgets.dart';
 import 'analyzed_people_screen.dart';
+import 'chart_demo_screen.dart';
 import 'main_screen.dart';
 import 'my_screen.dart';
 
@@ -21,9 +20,8 @@ import 'my_screen.dart';
 /// - 올바른 인덱스 매핑 (0:홈, 1:코칭센터, 2:히스토리, 3:MY)
 /// - AI 버튼은 별도 처리
 class MainLayout extends StatefulWidget {
-  final int initialIndex;
-
   const MainLayout({super.key, this.initialIndex = 0});
+  final int initialIndex;
 
   @override
   State<MainLayout> createState() => _MainLayoutState();
@@ -55,21 +53,19 @@ class _MainLayoutState extends State<MainLayout> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: PageView(
-        controller: _pageController,
-        physics: const NeverScrollableScrollPhysics(), // 스와이프 비활성화
-        children: _screens,
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: _onNavTap,
-        onAITap: _onAITap,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: AppColors.background,
+    body: PageView(
+      controller: _pageController,
+      physics: const NeverScrollableScrollPhysics(), // 스와이프 비활성화
+      children: _screens,
+    ),
+    bottomNavigationBar: CustomBottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: _onNavTap,
+      onAITap: _onAITap,
+    ),
+  );
 
   /// 네비게이션 탭 처리
   void _onNavTap(int index) {
