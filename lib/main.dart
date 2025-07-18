@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lia/presentation/screens/chart_demo_screen.dart';
 
 import 'core/app_colors.dart';
+import 'presentation/screens/ai_message_screen.dart';
+import 'presentation/screens/chart_demo_screen.dart';
 import 'presentation/screens/design_guide_screen.dart';
 import 'presentation/screens/main_layout.dart';
 
@@ -25,8 +26,12 @@ void main() {
 /// - 커스텀 Chip 및 Slider 테마
 /// - 디버그 배너 비활성화
 ///
-/// 홈 화면으로 MainScreen을 설정하여
+/// 홈 화면으로 MainLayout을 설정하여
 /// 18세 서현 페르소나에 맞는 메인 화면을 제공합니다.
+///
+/// 2025.07.18 16:16:59 네비게이션 구조 정리:
+/// - 홈, 코칭센터, 히스토리, MY 순서로 변경
+/// - AI 메시지 화면을 독립 화면으로 분리
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -42,15 +47,13 @@ class MyApp extends StatelessWidget {
     );
 
     return MaterialApp(
-      title: 'LIA - AI 메시지 대필 서비스',
       theme: theme,
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const MainLayout(initialIndex: 0), // 홈 (MainScreen)
-        '/coaching': (context) => const MainLayout(initialIndex: 1), // 코칭센터
-        '/history': (context) => const MainLayout(initialIndex: 2), // 히스토리
-        '/my': (context) => const MainLayout(initialIndex: 3), // MY
-        '/ai-message': (context) => const ChartDemoScreen(), // AI 메시지 (독립 화면)
+        '/': (context) => const MainLayout(), // 메인 레이아웃 (홈, 코칭센터, 히스토리, MY)
+        '/ai-message': (context) => const AiMessageScreen(), // AI 메시지 (독립 화면)
+        '/chart-demo': (context) => const ChartDemoScreen(), // 차트 데모 (독립 화면)
         '/design-guide': (context) =>
             const DesignGuideScreen(), // 디자인 가이드 (독립 화면)
       },

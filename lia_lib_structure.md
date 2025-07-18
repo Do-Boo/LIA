@@ -21,7 +21,7 @@
         -   **`chart_demo_screen.dart`**: 모든 차트 위젯의 사용 예시를 보여주는 데모 화면입니다.
         -   **`coaching_center_screen.dart`**: 메시지 작성 가이드와 팁을 제공하는 코칭센터 화면입니다.
         -   **`design_guide_screen.dart`**: 앱의 모든 UI 컴포넌트를 보여주는 디자인 시스템 가이드 화면입니다.
-        -   **`history_screen.dart`**: 메시지 작성 기록과 성과 통계를 보여주는 히스토리 화면입니다.
+        -   **`analyzed_people_screen.dart`**: 분석된 사람들의 목록을 보여주고, 각 사람과 가상 채팅을 시작할 수 있는 화면입니다.
         -   **`main_layout.dart`**: 하단 네비게이션 바를 포함하는 앱의 기본 레이아웃 구조를 정의합니다.
         -   **`my_screen.dart`**: 프로필 및 앱 설정을 관리하는 'MY' 화면입니다.
 
@@ -46,6 +46,7 @@
                 -   **`pie_chart.dart`**: 파이 차트 위젯입니다.
                 -   **`radar_chart.dart`**: 레이더(방사형) 차트 위젯입니다.
                 -   **`semicircle_gauge_chart.dart`**: 반원 게이지 차트 위젯입니다.
+            -   **`virtual_chat_view.dart`**: 특정 분석된 사람과의 가상 채팅 UI와 로직을 담당하는 위젯입니다.
             -   **`feedback/`**: 사용자에게 상태나 피드백을 제공하는 위젯들입니다.
                 -   **`generating_progress.dart`**: AI 메시지 생성 진행 상태를 단계별로 보여줍니다.
                 -   **`heart_spinner.dart`**: 하트 모양의 로딩 스피너 애니메이션입니다.

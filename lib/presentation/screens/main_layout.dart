@@ -2,11 +2,11 @@
 // 2025.07.16 11:41:15 생성 - 하단 네비게이션 고정을 위한 메인 레이아웃
 
 import 'package:flutter/material.dart';
+import 'package:lia/presentation/screens/chart_demo_screen.dart';
 
 import '../../core/app_colors.dart';
 import '../widgets/specific/navigation/bottom_navigation_bar.dart';
-import 'coaching_center_screen.dart';
-import 'history_screen.dart';
+import 'analyzed_people_screen.dart';
 import 'main_screen.dart';
 import 'my_screen.dart';
 
@@ -36,8 +36,8 @@ class _MainLayoutState extends State<MainLayout> {
   // 네비게이션 화면들
   final List<Widget> _screens = [
     const MainScreen(), // 0: 홈
-    const CoachingCenterScreen(), // 1: 코칭센터
-    const HistoryScreen(), // 2: 히스토리
+    const AnalyzedPeopleScreen(), // 1: 코칭센터
+    const ChartDemoScreen(), // 2: 히스토리
     const MyScreen(), // 3: MY
   ];
 

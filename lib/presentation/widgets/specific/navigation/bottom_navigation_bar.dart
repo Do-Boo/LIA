@@ -10,7 +10,7 @@ import '../../../../core/app_colors.dart';
 /// 선택된 탭은 일정한 너비의 배경으로 강조되며, 부드러운 애니메이션 효과가 적용됩니다.
 ///
 /// 주요 기능:
-/// - 4개의 일반 탭 (홈, 코칭센터, 히스토리, MY) + 중앙 AI 메시지 버튼
+/// - 4개의 일반 탭 (홈, 가상 채팅, 가이드, MY) + 중앙 AI 메시지 버튼
 /// - 선택된 탭 강조 표시 (일정한 너비)
 /// - 부드러운 애니메이션 효과
 /// - 블러 효과가 적용된 반투명 배경
@@ -75,9 +75,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(0, HugeIcons.strokeRoundedHome01, '홈'),
-              _buildNavItem(1, HugeIcons.strokeRoundedBookOpen01, '코칭센터'),
+              _buildNavItem(
+                1,
+                HugeIcons.strokeRoundedMessageMultiple01,
+                '가상 채팅',
+              ),
               const SizedBox(width: 40), // AI 메시지 버튼 공간
-              _buildNavItem(2, HugeIcons.strokeRoundedClock01, '히스토리'),
+              _buildNavItem(2, HugeIcons.strokeRoundedBookOpen01, '가이드'),
               _buildNavItem(3, HugeIcons.strokeRoundedUserCircle, 'MY'),
             ],
           ),
@@ -129,10 +133,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
         selectedIcon = HugeIcons.strokeRoundedHome01;
         break;
       case 1:
-        selectedIcon = HugeIcons.strokeRoundedBookOpen01;
+        selectedIcon = HugeIcons.strokeRoundedMessageMultiple01;
         break;
       case 2:
-        selectedIcon = HugeIcons.strokeRoundedClock01;
+        selectedIcon = HugeIcons.strokeRoundedBookOpen01;
         break;
       case 3:
         selectedIcon = HugeIcons.strokeRoundedUserCircle;

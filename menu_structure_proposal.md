@@ -47,3 +47,18 @@ LIA 앱의 현재 메뉴 구성은 하단 네비게이션 바의 4개 탭(홈, �
 ## 3. 결론
 
 현재 LIA 앱의 메뉴 구성은 각 화면의 목적과 사용자 플로우를 잘 반영하고 있습니다. `MainScreen`을 홈으로 유지하고, 'AI 메시지 생성' 기능을 중앙 FAB로 배치하는 현재의 방식은 사용자가 앱의 핵심 기능을 직관적으로 이해하고 활용하는 데 최적화되어 있습니다. 이 구조를 유지하면서 각 화면의 콘텐츠를 더욱 풍부하게 발전시키는 데 집중하는 것을 권장합니다.
+
+## 4. 최근 변경 사항 반영
+
+최근 `lib` 폴더 내 파일들에 다음과 같은 중요한 변경 사항들이 적용되었습니다.
+
+*   **차트 위젯 리팩토링**:
+    *   모든 차트 파일(`bar_chart.dart`, `donut_chart.dart`, `gauge_chart.dart`, `heatmap_chart.dart`, `line_chart.dart`, `pie_chart.dart`, `radar_chart.dart`, `semicircle_gauge_chart.dart`)에서 `LegendPosition` enum이 `chart_common.dart` 파일로 분리되어 코드 중복이 제거되었습니다.
+    *   `LegendPosition`은 이제 `topLeft`, `topCenter`, `topRight`, `bottomLeft`, `bottomCenter`, `bottomRight`와 같이 더 세분화된 범례 위치를 지원합니다.
+    *   `line_chart.dart`의 X축 레이블 표시 버그가 수정되어 실제 데이터 레이블이 올바르게 표시됩니다.
+    *   `heatmap_chart.dart`의 레이아웃 문제가 해결되어, `height` 속성을 통해 명시적인 높이를 지정하면 `Expanded` 위젯이 안전하게 공간을 차지하도록 수정되었습니다.
+    *   `radar_chart.dart`에서 사용되지 않는 `RadarChartData` 및 `RadarDataSet` 모델이 제거되어 코드가 단순화되었습니다.
+
+*   **`main_screen.dart` 사용자 플로우 개선**:
+    *   앱 시작 시 분석 완료 화면 대신 분석 입력 화면이 먼저 표시되도록 `_hasAnalysisData`의 초기값이 `false`로 변경되었습니다.
+    *   '새로운 분석 시작' 버튼을 눌러도 기존에 로드된 분석 데이터(`_analysisData`)가 유지되도록 수정되어, 데이터가 사라지는 문제 없이 안정적인 사용자 경험을 제공합니다.
