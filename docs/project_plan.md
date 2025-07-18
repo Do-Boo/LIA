@@ -58,6 +58,48 @@ AI가 썸남·썸녀에게 보내는 메시지를 상대방의 성격, MBTI, 대
   ```
 - **결과**: 안정적인 레이아웃으로 오버플로우 없이 Y축 요일 레이블이 정상 표시됨
 
+#### 13:27 - 13:45: 모든 화면 main_screen.dart 스타일 통일 완료
+- **완료**: 코칭센터, 히스토리, MY, AI 메시지 화면을 main_screen.dart 스타일로 통일
+- **목표**: 일관된 사용자 경험 제공 및 디자인 시스템 통일
+- **주요 변경사항**:
+  1. **레이아웃 구조 통일**:
+     - flutter_staggered_animations 제거하고 단순한 세로 스크롤 적용
+     - ComponentCard를 Chart Demo 스타일 Container로 변경
+     - 번호 + 제목 + 설명 + 위젯 계층구조 통일
+  2. **디자인 시스템 통일**:
+     - 대시보드 헤더 스타일 통일 (그라데이션 배경, 그림자 효과)
+     - 일관된 간격(24px)과 패딩(16-20px) 적용
+     - 반응형 디자인 적용 (화면 크기에 따른 패딩 조정)
+  3. **아이콘 시스템 통일**:
+     - HugeIcon을 Icon으로 변경하여 일관성 확보
+     - 아이콘 크기 및 색상 통일
+- **화면별 특화 기능**:
+  - **코칭센터**: 카테고리별 팁, 상황별 템플릿, 빠른 가이드
+  - **히스토리**: 성과 차트, 통계 대시보드, 인사이트 & 추천
+  - **MY**: 프로필 관리, 환경설정, 알림 설정, 고객 지원
+  - **AI 메시지**: 톤/카테고리 선택, 상황 입력, 메시지 생성 & 편집
+- **기술적 구현**:
+  ```dart
+  // 통일된 섹션 빌더
+  Widget _buildChartDemoSection({
+    required String number,
+    required String title,  
+    required String description,
+    required Widget child,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(MediaQuery.of(context).size.width > 600 ? 20 : 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(MediaQuery.of(context).size.width > 600 ? 20 : 16),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 16)],
+      ),
+      child: Column(children: [/* 번호 + 제목 + 설명 + 콘텐츠 */]),
+    );
+  }
+  ```
+- **결과**: 모든 화면이 통일된 디자인 시스템을 따르게 되어 사용자 경험이 크게 향상됨
+
 #### 09:34 - 09:40: 작은 화면에서 Y축 요일 레이블 가시성 개선 완료
 - **완료**: 화면 너비가 작아질 때 Y축 요일 레이블이 안 보이는 문제 해결
 - **문제점**: 화면 너비가 작아지면 Y축 요일 레이블이 잘려서 보이지 않음
