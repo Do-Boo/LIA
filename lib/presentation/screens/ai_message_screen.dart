@@ -9,7 +9,6 @@ import '../../core/app_text_styles.dart';
 import '../widgets/common/primary_button.dart';
 import '../widgets/common/secondary_button.dart';
 import '../widgets/specific/feedback/toast_notification.dart';
-import '../widgets/specific/forms/custom_text_field.dart';
 
 /// AI 메시지 화면
 ///
@@ -50,7 +49,7 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
     ToneOption(
       title: '유머러스',
       description: '재미있고 유쾌한 톤',
-      icon: HugeIcons.strokeRoundedLaughingSquareEyes,
+      icon: HugeIcons.strokeRoundedSmile,
       color: AppColors.green,
     ),
     ToneOption(
@@ -78,7 +77,7 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
     CategoryOption(
       title: '사과 메시지',
       description: '진심 어린 사과',
-      icon: HugeIcons.strokeRoundedSorry,
+      icon: HugeIcons.strokeRoundedApple01,
       color: AppColors.accent,
     ),
     CategoryOption(
@@ -90,7 +89,7 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
     CategoryOption(
       title: '위로 메시지',
       description: '따뜻한 위로와 격려',
-      icon: HugeIcons.strokeRoundedHeart,
+      icon: HugeIcons.strokeRoundedHandPrayer,
       color: AppColors.error,
     ),
   ];
@@ -287,7 +286,7 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
         Expanded(
           child: _buildQuickActionButton(
             '빠른 생성',
-            HugeIcons.strokeRoundedFlash01,
+            HugeIcons.strokeRoundedFlash,
             () => _quickGenerate(),
           ),
         ),
@@ -295,7 +294,7 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
         Expanded(
           child: _buildQuickActionButton(
             '템플릿',
-            HugeIcons.strokeRoundedTemplate,
+            HugeIcons.strokeRoundedAlignBoxTopLeft,
             () => _showTemplates(),
           ),
         ),
@@ -303,7 +302,7 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
         Expanded(
           child: _buildQuickActionButton(
             '히스토리',
-            HugeIcons.strokeRoundedHistory01,
+            HugeIcons.strokeRoundedTimeQuarter02,
             () => _showHistory(),
           ),
         ),
@@ -606,7 +605,7 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
         Row(
           children: [
             const Icon(
-              HugeIcons.strokeRoundedCategory,
+              HugeIcons.strokeRoundedMenuSquare,
               color: AppColors.accent,
               size: 20,
             ),
@@ -682,10 +681,23 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
           style: AppTextStyles.body.copyWith(color: AppColors.secondaryText),
         ),
         const SizedBox(height: 12),
-        CustomTextField(
+        TextField(
           controller: _contextController,
-          hintText: '예: 어제 데이트 후 감사 인사를 하고 싶어요',
           maxLines: 3,
+          decoration: InputDecoration(
+            hintText: '예: 어제 데이트 후 감사 인사를 하고 싶어요',
+            hintStyle: AppTextStyles.body.copyWith(
+              color: AppColors.secondaryText.withValues(alpha: 0.7),
+            ),
+            filled: true,
+            fillColor: AppColors.surface,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: const EdgeInsets.all(16),
+          ),
+          style: AppTextStyles.body,
         ),
       ],
     );
