@@ -130,7 +130,7 @@ class _HeatmapChartState extends State<HeatmapChart>
 
           // 차트
           SizedBox(
-            height: widget.height - 160, // 150 → 160으로 조정하여 여백 확보
+            height: widget.height - 200, // 150 → 160으로 조정하여 여백 확보
             child: AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
@@ -239,8 +239,8 @@ class _HeatmapChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (data.isEmpty) return;
 
-    // 축 레이블을 위한 최소 여백 설정
-    const double leftMargin = 30;
+    // 축 레이블을 위한 여백 설정 - 왼쪽 여백을 늘려서 요일 레이블 공간 확보
+    const double leftMargin = 40; // 30 → 40으로 증가
     const double rightMargin = 10;
     const double topMargin = 5;
     const double bottomMargin = 20;
@@ -264,7 +264,7 @@ class _HeatmapChartPainter extends CustomPainter {
     }
 
     // 최소 셀 크기 설정하되 부모 위젯을 초과하지 않도록 제한
-    const double minCellSize = 12.0; // 16 → 12로 줄여서 오버플로우 방지
+    const double minCellSize = 10.0; // 12 → 10으로 줄여서 작은 화면에서도 표시 가능
     const double maxCellSize = 20.0; // 최대 셀 크기 제한 추가
 
     // 셀 크기 계산 - 최소/최대 크기 제한
@@ -367,18 +367,18 @@ class _HeatmapChartPainter extends CustomPainter {
         text: days[i],
         style: AppTextStyles.caption.copyWith(
           color: AppColors.secondaryText,
-          fontSize: 12, // 11 → 12로 증가
+          fontSize: 12,
         ),
       );
       textPainter.layout();
 
-      // 레이블 위치를 더 왼쪽으로 이동하여 확실히 보이도록
+      // 레이블 위치를 왼쪽 여백 증가에 맞춰 조정
       textPainter.paint(
         canvas,
         Offset(
-          28 - textPainter.width,
+          38 - textPainter.width,
           y - textPainter.height / 2,
-        ), // 25 → 28로 조정
+        ), // 28 → 38로 조정
       );
     }
   }
