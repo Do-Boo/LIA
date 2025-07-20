@@ -30,20 +30,30 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   late int _currentIndex;
   late PageController _pageController;
+  bool _isAnalyzing = false; // 분석 상태 추가
 
   // 네비게이션 화면들
-  final List<Widget> _screens = [
-    const MainScreen(), // 0: 홈
-    const AnalyzedPeopleScreen(), // 1: 코칭센터
-    const ChartDemoScreen(), // 2: 히스토리
-    const MyScreen(), // 3: MY
-  ];
+  late final List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
     _pageController = PageController(initialPage: _currentIndex);
+
+    // 화면들을 초기화 (MainScreen에 콜백 전달)
+    _screens = [
+      MainScreen(
+        onAnalyzingStateChanged: (isAnalyzing) {
+          setState(() {
+            _isAnalyzing = isAnalyzing;
+          });
+        },
+      ), // 0: 홈
+      const AnalyzedPeopleScreen(), // 1: 코칭센터
+      const ChartDemoScreen(), // 2: 히스토리
+      const MyScreen(), // 3: MY
+    ];
   }
 
   @override
@@ -60,11 +70,14 @@ class _MainLayoutState extends State<MainLayout> {
       physics: const NeverScrollableScrollPhysics(), // 스와이프 비활성화
       children: _screens,
     ),
-    bottomNavigationBar: CustomBottomNavigationBar(
-      currentIndex: _currentIndex,
-      onTap: _onNavTap,
-      onAITap: _onAITap,
-    ),
+    // 분석 중일 때만 네비게이션 숨김
+    bottomNavigationBar: _isAnalyzing
+        ? null
+        : CustomBottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: _onNavTap,
+            onAITap: _onAITap,
+          ),
   );
 
   /// 네비게이션 탭 처리

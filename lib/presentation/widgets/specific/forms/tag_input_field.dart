@@ -34,7 +34,7 @@ class TagInputField extends StatefulWidget {
 
 class _TagInputFieldState extends State<TagInputField> {
   /// 현재 추가된 태그들의 목록입니다.
-  final List<String> _tags = ["여행", "음식", "영화"];
+  final List<String> _tags = ['여행', '음식', '영화'];
   
   /// 텍스트 입력을 제어하는 컨트롤러입니다.
   final TextEditingController _controller = TextEditingController();
@@ -90,7 +90,7 @@ class _TagInputFieldState extends State<TagInputField> {
           child: TextField(
             controller: _controller,
             decoration: InputDecoration(
-              labelText: "관심사 뭐야?",
+              labelText: '관심사 뭐야?',
               labelStyle: TextStyle(color: Colors.grey.shade600),
               floatingLabelStyle: const TextStyle(color: AppColors.primary),
               border: OutlineInputBorder(

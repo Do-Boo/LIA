@@ -75,10 +75,11 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
               const SizedBox(height: 20),
               _buildDashboardHeader(),
               const SizedBox(height: 24),
-              _buildChartDemoSection(
+              SectionCard(
                 number: '1',
                 title: '가상 채팅',
                 description: '분석한 사람들과 가상 채팅을 통해 관계를 시뮬레이션해보세요',
+                icon: HugeIcons.strokeRoundedMessageMultiple01,
                 child: _buildPeopleList(),
               ),
               const SizedBox(height: 32),
@@ -296,104 +297,6 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
           style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
           textAlign: TextAlign.center,
         ),
-      ],
-    ),
-  );
-
-  // Chart Demo 스타일 섹션 빌더
-  Widget _buildChartDemoSection({
-    required String number,
-    required String title,
-    required String description,
-    required Widget child,
-  }) => Container(
-    width: double.infinity,
-    padding: EdgeInsets.all(MediaQuery.of(context).size.width > 600 ? 20 : 16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(
-        MediaQuery.of(context).size.width > 600 ? 20 : 16,
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.06),
-          blurRadius: 16,
-          offset: const Offset(0, 2),
-        ),
-      ],
-      border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 개선된 헤더
-        Row(
-          children: [
-            Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppColors.primary, AppColors.accent],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  number,
-                  style: AppTextStyles.body1.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: AppTextStyles.h3.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                      fontSize: MediaQuery.of(context).size.width > 600
-                          ? 18
-                          : 16,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    description,
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
-                      fontSize: MediaQuery.of(context).size.width > 600
-                          ? 13
-                          : 12,
-                      height: 1.3,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 16),
-
-        // 콘텐츠
-        child,
       ],
     ),
   );

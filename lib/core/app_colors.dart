@@ -16,9 +16,9 @@ import 'package:flutter/material.dart';
 /// - [primaryGradient]: 주요 그라데이션 효과
 /// - [accentGradient]: 보조 그라데이션 효과
 class AppColors {
-  // ============================================
-  // 🎨 브랜드 색상 (Brand Colors)
-  // ============================================
+  /// 앱의 기본 배경 색상입니다.
+  /// 연한 핑크톤으로 따뜻하고 친근한 느낌을 제공합니다.
+  static const Color background = Color(0xFFFFF8FB);
 
   /// 앱의 주요 브랜드 색상입니다.
   /// 사랑스러운 핑크 색상으로 주요 버튼과 강조 요소에 사용됩니다.
@@ -40,10 +40,6 @@ class AppColors {
   /// 성공 상태와 완료 표시에 사용됩니다.
   static const Color green = Color(0xFF70FFA6);
 
-  // ============================================
-  // 🎨 확장 색상 (Extended Colors)
-  // ============================================
-
   /// 우아하고 신비로운 보라색입니다.
   /// 차트와 데이터 시각화에 사용됩니다.
   static const Color purple = Color(0xFF9C27B0);
@@ -56,10 +52,7 @@ class AppColors {
   /// 차트와 UI 요소에 사용됩니다.
   static const Color pink = Color(0xFFE91E63);
 
-  // ============================================
-  // 📝 텍스트 색상 (Text Colors)
-  // ============================================
-
+  // ===== 텍스트 색상 =====
   /// 기본 텍스트 색상입니다.
   /// 진한 회색으로 가독성을 보장합니다.
   static const Color textPrimary = Color(0xFF333333);
@@ -68,25 +61,22 @@ class AppColors {
   /// 설명 텍스트와 부가 정보에 사용됩니다.
   static const Color textSecondary = Color(0xFF555555);
 
-  // ============================================
-  // 🎨 배경 및 표면 색상 (Background & Surface Colors)
-  // ============================================
+  // ===== 호환성을 위한 별칭 (Deprecated) =====
+  /// @deprecated textPrimary를 사용하세요
+  @Deprecated('Use textPrimary instead')
+  static const Color charcoal = textPrimary;
 
-  /// 앱의 기본 배경 색상입니다.
-  /// 연한 핑크톤으로 따뜻하고 친근한 느낌을 제공합니다.
-  static const Color background = Color(0xFFFFF8FB);
+  /// @deprecated textPrimary를 사용하세요
+  @Deprecated('Use textPrimary instead')
+  static const Color primaryText = textPrimary;
 
-  /// 카드와 컴포넌트의 배경색입니다.
-  /// 흰색 배경에 사용됩니다.
-  static const Color surface = Color(0xFFFFFFFF);
+  /// @deprecated textSecondary를 사용하세요
+  @Deprecated('Use textSecondary instead')
+  static const Color secondaryText = textSecondary;
 
-  /// 비활성화 상태와 배경에 사용되는 연한 회색입니다.
-  /// 버튼 비활성화 상태와 중성적인 배경에 사용됩니다.
-  static const Color lightGray = Color(0xFFF1F3F5);
-
-  // ============================================
-  // 🔲 테두리 색상 (Border Colors)
-  // ============================================
+  /// 접근성을 고려한 보조 텍스트 색상입니다.
+  /// 더 진한 회색으로 색상 대비를 개선합니다.
+  static const Color accessibleSecondaryText = Color(0xFF444444);
 
   /// 카드와 테두리에 사용되는 연한 핑크 색상입니다.
   /// 부드러운 구분선과 테두리 효과에 활용됩니다.
@@ -96,9 +86,13 @@ class AppColors {
   /// 일반적인 구분선과 테두리에 사용됩니다.
   static const Color border = Color(0xFFE0E0E0);
 
-  // ============================================
-  // 🚦 상태 색상 (Status Colors)
-  // ============================================
+  /// 비활성화 상태와 배경에 사용되는 연한 회색입니다.
+  /// 버튼 비활성화 상태와 중성적인 배경에 사용됩니다.
+  static const Color lightGray = Color(0xFFF1F3F5);
+
+  /// 카드와 컴포넌트의 배경색입니다.
+  /// 흰색 배경에 사용됩니다.
+  static const Color surface = Color(0xFFFFFFFF);
 
   /// 성공 상태를 나타내는 녹색입니다.
   /// 완료된 작업이나 성공 메시지에 사용됩니다.
@@ -115,10 +109,6 @@ class AppColors {
   /// 경고 상태를 나타내는 오렌지색입니다.
   /// 주의사항과 경고 메시지에 사용됩니다.
   static const Color warning = Color(0xFFFFC107);
-
-  // ============================================
-  // 🌈 그라데이션 (Gradients)
-  // ============================================
 
   /// 주요 그라데이션 효과입니다.
   /// 핑크에서 퍼플로 이어지는 브랜드 그라데이션으로
@@ -154,24 +144,4 @@ class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
-
-  // ============================================
-  // 📱 호환성 별칭 (Compatibility Aliases)
-  // ============================================
-
-  /// @deprecated textPrimary 사용을 권장합니다.
-  @Deprecated('Use textPrimary instead')
-  static const Color charcoal = textPrimary;
-
-  /// @deprecated textPrimary 사용을 권장합니다.
-  @Deprecated('Use textPrimary instead')
-  static const Color primaryText = textPrimary;
-
-  /// @deprecated textSecondary 사용을 권장합니다.
-  @Deprecated('Use textSecondary instead')
-  static const Color secondaryText = textSecondary;
-
-  /// @deprecated textSecondary 사용을 권장합니다.
-  @Deprecated('Use textSecondary instead')
-  static const Color accessibleSecondaryText = textSecondary;
 }

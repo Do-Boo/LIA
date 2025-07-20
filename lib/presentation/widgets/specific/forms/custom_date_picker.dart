@@ -89,7 +89,7 @@ class _CustomDatePickerState extends State<CustomDatePicker>
               surface: Colors.white,
               onSurface: AppColors.charcoal,
             ),
-            dialogTheme: DialogThemeData(backgroundColor: Colors.white),
+            dialogTheme: const DialogThemeData(backgroundColor: Colors.white),
           ),
           child: child!,
         );
@@ -177,7 +177,7 @@ class _CustomDatePickerState extends State<CustomDatePicker>
                   child: Text(
                     widget.selectedDate != null
                         ? _formatDate(widget.selectedDate!)
-                        : "날짜를 선택해주세요",
+                        : '날짜를 선택해주세요',
                     style: AppTextStyles.body.copyWith(
                       color: widget.enabled
                           ? Colors.white
@@ -229,15 +229,15 @@ class _CustomDatePickerState extends State<CustomDatePicker>
         .inDays;
 
     if (difference == 0) {
-      return "오늘이네! 완전 좋은데? 😊";
+      return '오늘이네! 완전 좋은데? 😊';
     } else if (difference == 1) {
-      return "내일이구나! 설레는데? 💕";
+      return '내일이구나! 설레는데? 💕';
     } else if (difference > 1 && difference <= 7) {
-      return "이번 주네! 기대돼 ✨";
+      return '이번 주네! 기대돼 ✨';
     } else if (difference > 7) {
-      return "아직 좀 남았네! 그때까지 기다려야지 😌";
+      return '아직 좀 남았네! 그때까지 기다려야지 😌';
     } else {
-      return "이미 지난 날짜네! 다른 날로 해볼까? 🤔";
+      return '이미 지난 날짜네! 다른 날로 해볼까? 🤔';
     }
   }
 }

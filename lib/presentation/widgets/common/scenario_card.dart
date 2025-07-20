@@ -88,7 +88,7 @@ class ScenarioCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.movie_creation,
                   color: AppColors.yellow,
                   size: 24,
@@ -243,7 +243,7 @@ class ScenarioCard extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.format_quote,
                             color: AppColors.primary,
                             size: 16,
@@ -275,7 +275,7 @@ class ScenarioCard extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.check_circle_outline,
                             color: AppColors.green,
                             size: 16,

@@ -18,7 +18,10 @@ import '../widgets/lia_widgets.dart';
 /// 5. SemicircleGaugeChart 적용
 /// 6. 파이 차트 크기 증가 및 범례 개선
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({super.key, this.onAnalyzingStateChanged});
+
+  /// 분석 상태 변경 시 호출되는 콜백 함수
+  final ValueChanged<bool>? onAnalyzingStateChanged;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -71,6 +74,8 @@ class _MainScreenState extends State<MainScreen> {
     backgroundColor: AppColors.background,
     body: _isLoading
         ? _buildLoadingScreen()
+        : _isAnalyzing
+        ? _buildFullScreenAnalyzingProgress() // 전체 화면 분석 로딩
         : _hasAnalysisData
         ? _buildAnalysisDashboard()
         : _buildStartScreen(),
@@ -507,7 +512,365 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // 분석 진행 상태 표시
+  // 전체 화면 분석 진행 상태 표시
+  Widget _buildFullScreenAnalyzingProgress() {
+    final List<String> steps = [
+      '대화 내용 분석 중...',
+      '감정 패턴 파악 중...',
+      '상대방 성향 분석 중...',
+      '관계 인사이트 생성 중...',
+      '맞춤 조언 준비 중...',
+    ];
+
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.primary.withValues(alpha: 0.05),
+            AppColors.accent.withValues(alpha: 0.02),
+            AppColors.background,
+          ],
+        ),
+      ),
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              const Spacer(),
+
+              // 상단 아이콘과 제목
+              Column(
+                children: [
+                  // 분석 아이콘 애니메이션
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(40),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.2),
+                          blurRadius: 20,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      HugeIcons.strokeRoundedBrain,
+                      size: 40,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // 제목
+                  Text(
+                    'AI가 관계를 분석하고 있어요',
+                    style: AppTextStyles.h2.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+
+                  // 부제목
+                  Text(
+                    '잠시만 기다려 주세요. 곧 놀라운 결과를 보여드릴게요!',
+                    style: AppTextStyles.body1.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+
+              const Spacer(),
+
+              // 진행 상태 표시
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    // 진행 바와 퍼센트
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '분석 진행도',
+                                    style: AppTextStyles.body1.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${_analysisStep >= steps.length ? 100 : ((_analysisStep / steps.length) * 100).toInt()}%',
+                                    style: AppTextStyles.h3.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: _analysisStep >= steps.length
+                                          ? AppColors.green
+                                          : AppColors.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+
+                              // 진행 바
+                              Container(
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: FractionallySizedBox(
+                                  alignment: Alignment.centerLeft,
+                                  widthFactor: _analysisStep >= steps.length
+                                      ? 1.0
+                                      : _analysisStep / steps.length,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: _analysisStep >= steps.length
+                                          ? LinearGradient(
+                                              colors: [
+                                                AppColors.green,
+                                                AppColors.green.withValues(
+                                                  alpha: 0.8,
+                                                ),
+                                              ],
+                                            )
+                                          : AppColors.primaryGradient,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // 현재 단계 표시
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: _analysisStep >= steps.length
+                            ? AppColors.green.withValues(alpha: 0.1)
+                            : AppColors.primary.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: _analysisStep >= steps.length
+                              ? AppColors.green.withValues(alpha: 0.3)
+                              : AppColors.primary.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          // 로딩 애니메이션 또는 완료 아이콘
+                          if (_analysisStep >= steps.length)
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: AppColors.green,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(
+                                HugeIcons.strokeRoundedCheckmarkCircle02,
+                                size: 14,
+                                color: Colors.white,
+                              ),
+                            )
+                          else
+                            const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          const SizedBox(width: 12),
+
+                          // 현재 단계 텍스트
+                          Expanded(
+                            child: Text(
+                              _analysisStep >= steps.length
+                                  ? '✨ 분석 완료! 결과 화면으로 이동 중...'
+                                  : _analysisStep > 0 &&
+                                        _analysisStep <= steps.length
+                                  ? steps[_analysisStep - 1]
+                                  : '분석 준비 중...',
+                              style: AppTextStyles.body1.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: _analysisStep >= steps.length
+                                    ? AppColors.green
+                                    : AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    // 단계별 체크리스트
+                    Column(
+                      children: steps.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final step = entry.value;
+                        final isCompleted = index < _analysisStep;
+                        final isCurrent = index == _analysisStep - 1;
+
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isCompleted
+                                ? AppColors.primary.withValues(alpha: 0.1)
+                                : isCurrent
+                                ? AppColors.accent.withValues(alpha: 0.1)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              // 상태 아이콘
+                              Container(
+                                width: 16,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  color: isCompleted
+                                      ? AppColors.primary
+                                      : isCurrent
+                                      ? AppColors.accent
+                                      : AppColors.surface,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: isCompleted
+                                    ? const Icon(
+                                        HugeIcons
+                                            .strokeRoundedCheckmarkCircle02,
+                                        size: 12,
+                                        color: Colors.white,
+                                      )
+                                    : isCurrent
+                                    ? const SizedBox(
+                                        width: 12,
+                                        height: 12,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 1.5,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                              const SizedBox(width: 12),
+
+                              // 단계 텍스트
+                              Expanded(
+                                child: Text(
+                                  step,
+                                  style: AppTextStyles.body2.copyWith(
+                                    color: isCompleted
+                                        ? AppColors.primary
+                                        : isCurrent
+                                        ? AppColors.accent
+                                        : AppColors.textSecondary,
+                                    fontWeight: isCurrent
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Spacer(),
+
+              // 하단 팁 메시지
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.accent.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.accent.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      HugeIcons.strokeRoundedInformationCircle,
+                      size: 20,
+                      color: AppColors.accent,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        '분석이 완료되면 자동으로 결과 화면으로 이동합니다',
+                        style: AppTextStyles.body2.copyWith(
+                          color: AppColors.accent,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 기존 분석 진행 상태 표시 (카드형) - 사용하지 않음
   Widget _buildAnalyzingProgress() {
     final List<String> steps = [
       '대화 내용 분석 중...',
@@ -583,6 +946,7 @@ class _MainScreenState extends State<MainScreen> {
               number: '1',
               title: '성격 호환성 분석',
               description: '두 분의 성격을 5가지 요소로 분석하여 호환성을 확인해보세요',
+              useNumberBadge: true,
               child: _buildPersonalityCompatibilityContent(),
             ),
 
@@ -593,6 +957,7 @@ class _MainScreenState extends State<MainScreen> {
               number: '2',
               title: '감정 흐름 분석',
               description: '시간에 따른 감정 변화와 주요 이벤트를 확인해보세요',
+              useNumberBadge: true,
               child: _buildEmotionalFlowContent(),
             ),
 
@@ -603,6 +968,7 @@ class _MainScreenState extends State<MainScreen> {
               number: '3',
               title: '메시지 시간대별 연락 빈도',
               description: '언제 가장 활발하게 대화하는지 패턴을 분석해보세요',
+              useNumberBadge: true,
               child: _buildMessageFrequencyContent(),
             ),
 
@@ -613,6 +979,7 @@ class _MainScreenState extends State<MainScreen> {
               number: '4',
               title: '대화 주제 분석',
               description: '어떤 주제로 주로 대화하는지 분포를 확인해보세요',
+              useNumberBadge: true,
               child: _buildConversationTopicsContent(),
             ),
 
@@ -623,6 +990,7 @@ class _MainScreenState extends State<MainScreen> {
               number: '5',
               title: 'AI 추천 액션 플랜',
               description: '관계 개선을 위한 구체적인 조언과 추천 전략을 확인해보세요',
+              useNumberBadge: true,
               child: _buildActionPlanContent(),
             ),
 
@@ -1622,6 +1990,9 @@ class _MainScreenState extends State<MainScreen> {
       _analysisStep = 0;
     });
 
+    // 상위 위젯에 분석 시작 알림
+    widget.onAnalyzingStateChanged?.call(true);
+
     // 분석 단계별 진행 시뮬레이션
     for (int i = 0; i < 5; i++) {
       await Future.delayed(const Duration(milliseconds: 800));
@@ -1632,18 +2003,31 @@ class _MainScreenState extends State<MainScreen> {
       }
     }
 
-    // 분석 완료
+    // 분석 완료 상태 표시 (잠시 완료 화면을 보여줌)
     if (mounted) {
       setState(() {
-        _isAnalyzing = false;
-        _hasAnalysisData = true;
+        _analysisStep = 5; // 모든 단계 완료 표시
       });
 
-      ToastNotification.show(
-        context: context,
-        message: '분석이 완료되었어요! 결과를 확인해보세요',
-        type: ToastType.success,
-      );
+      // 완료 상태를 1초간 보여준 후 결과 화면으로 전환
+      await Future.delayed(const Duration(milliseconds: 1000));
+
+      if (mounted) {
+        setState(() {
+          _isAnalyzing = false;
+          _hasAnalysisData = true;
+        });
+
+        // 상위 위젯에 분석 종료 알림
+        widget.onAnalyzingStateChanged?.call(false);
+
+        // 성공 토스트 메시지
+        ToastNotification.show(
+          context: context,
+          message: '🎉 분석이 완료되었어요! 결과를 확인해보세요',
+          type: ToastType.success,
+        );
+      }
     }
   }
 
@@ -1663,6 +2047,9 @@ class _MainScreenState extends State<MainScreen> {
       _hasAnalysisData = false;
       _conversationController.clear();
     });
+
+    // 상위 위젯에 분석 상태 초기화 알림
+    widget.onAnalyzingStateChanged?.call(false);
 
     ToastNotification.show(
       context: context,

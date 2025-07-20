@@ -15,6 +15,7 @@ import '../../../../core/app_colors.dart';
 /// - 부드러운 애니메이션 효과
 /// - 블러 효과가 적용된 반투명 배경
 /// - 브랜드 색상 적용
+/// - AI 버튼 심장 박동 애니메이션 및 인터랙션
 ///
 /// 사용 예시:
 /// ```dart
@@ -28,7 +29,14 @@ import '../../../../core/app_colors.dart';
 ///   },
 /// )
 /// ```
-class CustomBottomNavigationBar extends StatelessWidget {
+class CustomBottomNavigationBar extends StatefulWidget {
+  const CustomBottomNavigationBar({
+    required this.currentIndex,
+    required this.onTap,
+    super.key,
+    this.onAITap,
+  });
+
   /// 현재 선택된 탭의 인덱스입니다. (AI 버튼 제외)
   final int currentIndex;
 
@@ -38,85 +46,145 @@ class CustomBottomNavigationBar extends StatelessWidget {
   /// AI 버튼이 눌렸을 때 호출되는 콜백 함수입니다.
   final VoidCallback? onAITap;
 
-  const CustomBottomNavigationBar({
-    super.key,
-    required this.currentIndex,
-    required this.onTap,
-    this.onAITap,
-  });
+  @override
+  State<CustomBottomNavigationBar> createState() =>
+      _CustomBottomNavigationBarState();
+}
+
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
+    with TickerProviderStateMixin {
+  late AnimationController _heartbeatController;
+  late AnimationController _tapController;
+  late Animation<double> _heartbeatAnimation;
+  late Animation<double> _tapAnimation;
 
   @override
-  Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      clipBehavior: Clip.none,
-      children: [
-        // 메인 네비게이션 바
-        Container(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).padding.bottom,
-          ),
-          height: 65 + MediaQuery.of(context).padding.bottom,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.15),
-                blurRadius: 10,
-                offset: const Offset(0, -4),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(0, HugeIcons.strokeRoundedHome01, '홈'),
-              _buildNavItem(
-                1,
-                HugeIcons.strokeRoundedMessageMultiple01,
-                '가상 채팅',
-              ),
-              const SizedBox(width: 40), // AI 메시지 버튼 공간
-              _buildNavItem(2, HugeIcons.strokeRoundedBookOpen01, '가이드'),
-              _buildNavItem(3, HugeIcons.strokeRoundedUserCircle, 'MY'),
-            ],
-          ),
-        ),
-        // 중앙 AI 메시지 FloatingActionButton
-        Positioned(
-          top: -24, // -16에서 -10으로 변경하여 6px 더 아래로
-          child: GestureDetector(
-            onTap: onAITap,
-            child: Container(
-              height: 64, // 64에서 56으로 약간 작게
-              width: 64, // 64에서 56으로 약간 작게
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: AppColors.primaryGradient,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.primary,
-                    blurRadius: 12,
-                    spreadRadius: -1,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.auto_awesome,
-                color: Colors.white,
-                size: 26, // 28에서 26으로 약간 작게
-              ),
-            ),
-          ),
-        ),
-      ],
+  void initState() {
+    super.initState();
+
+    // 심장 박동 애니메이션 (지속적)
+    _heartbeatController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
     );
+
+    _heartbeatAnimation = Tween<double>(begin: 1, end: 1.08).animate(
+      CurvedAnimation(parent: _heartbeatController, curve: Curves.easeInOut),
+    );
+
+    // 탭 애니메이션 (인터랙션)
+    _tapController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+
+    _tapAnimation = Tween<double>(
+      begin: 1,
+      end: 0.92,
+    ).animate(CurvedAnimation(parent: _tapController, curve: Curves.easeInOut));
+
+    // 심장 박동 시작
+    _startHeartbeat();
   }
+
+  void _startHeartbeat() {
+    _heartbeatController.repeat(reverse: true);
+  }
+
+  void _onAIButtonTap() {
+    // 탭 애니메이션 실행
+    _tapController.forward().then((_) {
+      _tapController.reverse();
+    });
+
+    // 콜백 실행
+    widget.onAITap?.call();
+  }
+
+  @override
+  void dispose() {
+    _heartbeatController.dispose();
+    _tapController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Stack(
+    alignment: Alignment.bottomCenter,
+    clipBehavior: Clip.none,
+    children: [
+      // 메인 네비게이션 바
+      Container(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+        height: 65 + MediaQuery.of(context).padding.bottom,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.15),
+              blurRadius: 10,
+              offset: const Offset(0, -4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(0, HugeIcons.strokeRoundedHome01, '홈'),
+            _buildNavItem(1, HugeIcons.strokeRoundedMessageMultiple01, '가상 채팅'),
+            const SizedBox(width: 40), // AI 메시지 버튼 공간
+            _buildNavItem(2, HugeIcons.strokeRoundedBookOpen01, '가이드'),
+            _buildNavItem(3, HugeIcons.strokeRoundedUserCircle, 'MY'),
+          ],
+        ),
+      ),
+
+      // 중앙 AI 메시지 FloatingActionButton (심장 박동 + 인터랙션)
+      Positioned(
+        top: -16,
+        child: AnimatedBuilder(
+          animation: Listenable.merge([_heartbeatAnimation, _tapAnimation]),
+          builder: (context, child) => Transform.scale(
+            scale: _heartbeatAnimation.value * _tapAnimation.value,
+            child: GestureDetector(
+              onTap: _onAIButtonTap,
+              child: Container(
+                height: 64,
+                width: 64,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: AppColors.primaryGradient,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.4),
+                      blurRadius: 16,
+                      spreadRadius: _heartbeatAnimation.value * 2 - 1, // 맥박 효과
+                      offset: const Offset(0, 3),
+                    ),
+                    // 추가 글로우 효과
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.2),
+                      blurRadius: 24,
+                      spreadRadius: _heartbeatAnimation.value * 4 - 4,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.auto_awesome,
+                  color: Colors.white,
+                  size: 26,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
 
   /// 개별 네비게이션 아이템을 생성하는 메서드입니다.
   ///
@@ -124,7 +192,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   /// [icon]: 아이템의 아이콘
   /// [label]: 아이템의 라벨 텍스트
   Widget _buildNavItem(int index, IconData icon, String label) {
-    final bool isSelected = currentIndex == index;
+    final bool isSelected = widget.currentIndex == index;
 
     // 선택된 상태일 때 사용할 filled 아이콘들
     IconData selectedIcon;
@@ -146,7 +214,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () => onTap(index),
+      onTap: () => widget.onTap(index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,

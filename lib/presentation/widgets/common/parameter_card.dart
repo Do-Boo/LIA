@@ -73,7 +73,7 @@ class ParameterCard extends StatelessWidget {
             // 헤더 - 단순화
             Row(
               children: [
-                Icon(Icons.settings, color: AppColors.primary, size: 18),
+                const Icon(Icons.settings, color: AppColors.primary, size: 18),
                 const SizedBox(width: 8),
                 Text(
                   '$widgetName 파라미터',

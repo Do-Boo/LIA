@@ -58,7 +58,7 @@ class SecondaryButton extends StatelessWidget {
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Center(
               child: isLoading
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 18,
                       height: 18,
                       child: CircularProgressIndicator(

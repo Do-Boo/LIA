@@ -67,16 +67,16 @@ class CodeCopyCard extends StatelessWidget {
           // 헤더 (제목과 복사 버튼)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2D2D30),
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              color: Color(0xFF2D2D30),
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
               ),
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.code,
                   color: AppColors.primary,
                   size: 20,
@@ -156,7 +156,7 @@ class CodeCopyCard extends StatelessWidget {
         content: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
+            const Icon(
               Icons.check_circle,
               color: AppColors.green,
               size: 20,

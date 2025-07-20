@@ -53,7 +53,7 @@ Future<void> showCustomModal({
   required BuildContext context,
   required String title,
   required String content,
-  String confirmText = "확인",
+  String confirmText = '확인',
 }) async {
   return showDialog<void>(
     context: context,
@@ -174,8 +174,8 @@ Future<bool?> showCustomConfirmModal({
   required BuildContext context,
   required String title,
   required String content,
-  String confirmText = "네",
-  String cancelText = "아니요",
+  String confirmText = '네',
+  String cancelText = '아니요',
   VoidCallback? onConfirm,
   VoidCallback? onCancel,
 }) async {
@@ -307,7 +307,7 @@ Future<bool?> showMessageConfirmModal({
   String? recipientName,
   VoidCallback? onSend,
 }) async {
-  final displayName = recipientName ?? "그 사람";
+  final displayName = recipientName ?? '그 사람';
 
   return showDialog<bool>(
     context: context,
@@ -355,10 +355,10 @@ Future<bool?> showMessageConfirmModal({
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // 이모지와 제목
-                        const Text("💌", style: TextStyle(fontSize: 48)),
+                        const Text('💌', style: TextStyle(fontSize: 48)),
                         const SizedBox(height: 16),
                         Text(
-                          "메시지를 보낼까요?",
+                          '메시지를 보낼까요?',
                           style: AppTextStyles.h2.copyWith(
                             color: AppColors.primary,
                             fontSize: 20,
@@ -401,7 +401,7 @@ Future<bool?> showMessageConfirmModal({
 
                         // 주의사항
                         Text(
-                          "전송 후에는 수정할 수 없습니다",
+                          '전송 후에는 수정할 수 없습니다',
                           style: AppTextStyles.helper.copyWith(
                             color: AppColors.accent.withValues(alpha: 0.8),
                             fontSize: 13,
@@ -417,7 +417,7 @@ Future<bool?> showMessageConfirmModal({
                               child: SecondaryButton(
                                 onPressed: () =>
                                     Navigator.of(context).pop(false),
-                                text: "취소",
+                                text: '취소',
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -428,7 +428,7 @@ Future<bool?> showMessageConfirmModal({
                                   Navigator.of(context).pop(true);
                                   onSend?.call();
                                 },
-                                text: "보내기",
+                                text: '보내기',
                               ),
                             ),
                           ],

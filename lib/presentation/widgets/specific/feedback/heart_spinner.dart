@@ -130,7 +130,7 @@ class _HeartSpinnerState extends State<HeartSpinner>
                         ),
                       ],
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.favorite,
                       color: AppColors.primary,
                       size: 48,

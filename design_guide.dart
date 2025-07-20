@@ -146,7 +146,7 @@ class DesignGuideScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              "Design Guide",
+              'Design Guide',
               style: AppTextStyles.mainTitle,
               textAlign: TextAlign.center,
             ),
@@ -302,11 +302,11 @@ class TypographyCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("어떤 말을 보낼지 고민될 땐?", style: AppTextStyles.h1),
+          const Text('어떤 말을 보낼지 고민될 땐?', style: AppTextStyles.h1),
           const SizedBox(height: 8),
-          Text("AI 메시지 만들기", style: AppTextStyles.h2),
+          const Text('AI 메시지 만들기', style: AppTextStyles.h2),
           const SizedBox(height: 8),
-          Text("상황이랑 말투만 고르면 LIA가 알려줄게!", style: AppTextStyles.subtitle),
+          const Text('상황이랑 말투만 고르면 LIA가 알려줄게!', style: AppTextStyles.subtitle),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(12),
@@ -314,13 +314,13 @@ class TypographyCard extends StatelessWidget {
               color: AppColors.primary.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Text(
+            child: const Text(
               '"오빠 스토리 완전 힙하다! 농구천재 아니야?"',
               style: AppTextStyles.body,
             ),
           ),
           const SizedBox(height: 8),
-          Text("가장 맘에 드는 메시지를 골라봐", style: AppTextStyles.helper),
+          const Text('가장 맘에 드는 메시지를 골라봐', style: AppTextStyles.helper),
         ],
       ),
     );
@@ -332,13 +332,13 @@ class ColorPaletteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ComponentCard(
+    return const ComponentCard(
       title: 'COLOR PALETTE (테마 색상)',
       child: Wrap(
         alignment: WrapAlignment.spaceAround,
         spacing: 16,
         runSpacing: 16,
-        children: const [
+        children: [
           _ColorChip(
             gradient: AppColors.primaryGradient,
             name: 'Main Gradient',
@@ -413,7 +413,7 @@ class HeaderNavigationCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("앱 헤더", style: AppTextStyles.helper.copyWith(fontWeight: FontWeight.bold)),
+          Text('앱 헤더', style: AppTextStyles.helper.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(12),
@@ -422,14 +422,14 @@ class HeaderNavigationCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: AppColors.cardBorder),
             ),
-            child: Row(
+            child: const Row(
               children: [
                 // HTML의 이미지 플레이스홀더를 로컬 위젯으로 대체하여 안정성 확보
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 24,
                   backgroundColor: AppColors.primary,
                   child: Text(
-                    "LIA",
+                    'LIA',
                     style: TextStyle(
                       fontFamily: 'Gaegu',
                       color: Colors.white,
@@ -438,23 +438,23 @@ class HeaderNavigationCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
-                const Expanded(
+                SizedBox(width: 12),
+                Expanded(
                   child: Text(
-                    "서현(ENFP)님, 오늘은 어떤 썸을 도와줄까요?",
+                    '서현(ENFP)님, 오늘은 어떤 썸을 도와줄까요?',
                     style: TextStyle(
                         color: AppColors.accent,
                         fontWeight: FontWeight.bold,
                         fontSize: 15),
                   ),
                 ),
-                const Icon(Icons.notifications_none,
+                Icon(Icons.notifications_none,
                     color: AppColors.primary, size: 28),
               ],
             ),
           ),
           const SizedBox(height: 24),
-          Text("하단 내비게이션",
+          Text('하단 내비게이션',
               style: AppTextStyles.helper.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           const _BottomNavBarDemo(),
@@ -560,8 +560,8 @@ class DataVisualizationCard extends StatelessWidget {
         builder: (context, constraints) {
           // 화면 너비가 좁을 경우 세로로 배치
           if (constraints.maxWidth < 700) {
-            return Column(
-              children: const [
+            return const Column(
+              children: [
                 _GaugeChart(),
                 SizedBox(height: 24),
                 _DonutChart(),
@@ -571,10 +571,10 @@ class DataVisualizationCard extends StatelessWidget {
             );
           }
           // 넓은 화면에서는 가로로 배치
-          return Row(
+          return const Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
+            children: [
               Expanded(child: _GaugeChart()),
               SizedBox(width: 16),
               Expanded(child: _DonutChart()),
@@ -596,10 +596,10 @@ class _GaugeChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("훈남(ISTP)과의 호감도",
+        Text('훈남(ISTP)과의 호감도',
             style: AppTextStyles.helper.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        Text("📈 게이지 차트 - 진행률 시각화",
+        Text('📈 게이지 차트 - 진행률 시각화',
             style: AppTextStyles.helper.copyWith(color: Colors.grey.shade600)),
         const SizedBox(height: 16),
         SizedBox(
@@ -660,7 +660,7 @@ class _GaugeChart extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              "${(value * 100).toInt()}%",
+                              '${(value * 100).toInt()}%',
                               style: AppTextStyles.h2.copyWith(
                                 color: AppColors.primary,
                                 fontWeight: FontWeight.w900,
@@ -691,10 +691,10 @@ class _DonutChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("대화 주제 분석",
+        Text('대화 주제 분석',
             style: AppTextStyles.helper.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        Text("📊 도넛 차트 - 카테고리별 비율 표시",
+        Text('📊 도넛 차트 - 카테고리별 비율 표시',
             style: AppTextStyles.helper.copyWith(color: Colors.grey.shade600)),
         const SizedBox(height: 16),
         Container(
@@ -774,7 +774,7 @@ class _BarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("메시지 성공률",
+        Text('메시지 성공률',
             style: AppTextStyles.helper.copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 16),
         Container(
@@ -784,10 +784,10 @@ class _BarChart extends StatelessWidget {
             color: Colors.blue.withOpacity(0.05),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: const [
+            children: [
               _Bar(heightFactor: 0.6, label: '월'),
               _Bar(heightFactor: 0.75, label: '화'),
               _Bar(heightFactor: 0.95, label: '수', isHighlighted: true),
@@ -857,7 +857,7 @@ class _FormElementsCardState extends State<FormElementsCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("어떤 상황이야?",
+          Text('어떤 상황이야?',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Container(
@@ -886,7 +886,7 @@ class _FormElementsCardState extends State<FormElementsCard> {
             ),
           ),
           const SizedBox(height: 24),
-          Text("어떤 말투로 보낼까? (중복 선택 가능)",
+          Text('어떤 말투로 보낼까? (중복 선택 가능)',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Wrap(
@@ -919,7 +919,7 @@ class _FormElementsCardState extends State<FormElementsCard> {
             }).toList(),
           ),
           const SizedBox(height: 24),
-          Text("호감 표현은 이 정도로만!",
+          Text('호감 표현은 이 정도로만!',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           Slider(
             value: _sliderValue,
@@ -933,11 +933,11 @@ class _FormElementsCardState extends State<FormElementsCard> {
               });
             },
           ),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("친구처럼", style: AppTextStyles.helper),
-              Text("완전 티내기", style: AppTextStyles.helper),
+              Text('친구처럼', style: AppTextStyles.helper),
+              Text('완전 티내기', style: AppTextStyles.helper),
             ],
           ),
         ],
@@ -1066,7 +1066,7 @@ class _TextFieldsCardState extends State<TextFieldsCard> {
   void initState() {
     super.initState();
     _floatingController = TextEditingController();
-    _successController = TextEditingController(text: "박서준");
+    _successController = TextEditingController(text: '박서준');
   }
 
   @override
@@ -1084,12 +1084,12 @@ class _TextFieldsCardState extends State<TextFieldsCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 기본 상태
-          Text("기본 상태",
+          Text('기본 상태',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           const TextField(
             decoration: InputDecoration(
-              hintText: "썸남/썸녀의 이름을 입력해봐",
+              hintText: '썸남/썸녀의 이름을 입력해봐',
               filled: true,
               fillColor: Color(0xFFF9FAFB),
               border: OutlineInputBorder(
@@ -1108,24 +1108,24 @@ class _TextFieldsCardState extends State<TextFieldsCard> {
           ),
           const SizedBox(height: 24),
           // 입력 중 (Focus) - 커스텀 위젯 사용
-          Text("입력 중 (Focus)",
+          Text('입력 중 (Focus)',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           FloatingLabelTextField(
             controller: _floatingController,
-            hintText: "썸남/썸녀 이름",
-            labelText: "썸남/썸녀 이름",
+            hintText: '썸남/썸녀 이름',
+            labelText: '썸남/썸녀 이름',
           ),
           const SizedBox(height: 24),
           // 에러 상태
-          Text("에러 상태",
+          Text('에러 상태',
               style: AppTextStyles.body.copyWith(
                   fontWeight: FontWeight.bold, color: Colors.red)),
           const SizedBox(height: 8),
           const TextField(
             decoration: InputDecoration(
-              hintText: "잘못된 입력",
-              errorText: "이름을 꼭 입력해줘!",
+              hintText: '잘못된 입력',
+              errorText: '이름을 꼭 입력해줘!',
               filled: true,
               fillColor: Color(0xFFFFF0F0),
               border: OutlineInputBorder(
@@ -1152,7 +1152,7 @@ class _TextFieldsCardState extends State<TextFieldsCard> {
           ),
           const SizedBox(height: 24),
           // 성공 상태
-          Text("성공 상태",
+          Text('성공 상태',
               style: AppTextStyles.body.copyWith(
                   fontWeight: FontWeight.bold, color: AppColors.success)),
           const SizedBox(height: 8),
@@ -1209,20 +1209,20 @@ class _TextareaCardState extends State<TextareaCard> {
                     _charCount = value.length;
                   });
                 },
-                decoration: InputDecoration(
-                  hintText: "썸남/썸녀와의 대화 내용을 붙여넣기 해봐! LIA가 분석해줄게 👀",
-                  counterText: "", // 기본 카운터 숨기기
+                decoration: const InputDecoration(
+                  hintText: '썸남/썸녀와의 대화 내용을 붙여넣기 해봐! LIA가 분석해줄게 👀',
+                  counterText: '', // 기본 카운터 숨기기
                   filled: true,
-                  fillColor: const Color(0xFFF9FAFB),
-                  border: const OutlineInputBorder(
+                  fillColor: Color(0xFFF9FAFB),
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                     borderSide: BorderSide(color: AppColors.cardBorder, width: 2),
                   ),
-                  enabledBorder: const OutlineInputBorder(
+                  enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                     borderSide: BorderSide(color: AppColors.cardBorder, width: 2),
                   ),
-                  focusedBorder: const OutlineInputBorder(
+                  focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                     borderSide: BorderSide(color: AppColors.primary, width: 2),
                   ),
@@ -1232,7 +1232,7 @@ class _TextareaCardState extends State<TextareaCard> {
                 bottom: 12,
                 right: 12,
                 child: Text(
-                  "$_charCount / $_maxLength",
+                  '$_charCount / $_maxLength',
                   style: TextStyle(
                     color: _charCount > _maxLength
                         ? Colors.red
@@ -1266,7 +1266,7 @@ class InteractiveWidgetsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("토스트 알림 (Toast / Snackbar)",
+          Text('토스트 알림 (Toast / Snackbar)',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           SecondaryButton(
@@ -1274,7 +1274,7 @@ class InteractiveWidgetsCard extends StatelessWidget {
               // 머티리얼 느낌을 없앤 커스텀 스낵바
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: const Text("메시지가 복사되었어요! 📋",
+                  content: const Text('메시지가 복사되었어요! 📋',
                       style: TextStyle(
                           fontWeight: FontWeight.w600, color: Colors.white)),
                   backgroundColor: AppColors.charcoal.withOpacity(0.85),
@@ -1290,12 +1290,12 @@ class InteractiveWidgetsCard extends StatelessWidget {
             text: '"복사 완료!" 토스트 띄우기',
           ),
           const SizedBox(height: 24),
-          Text("태그 입력 (Tag Input Field)",
+          Text('태그 입력 (Tag Input Field)',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           const _TagInputField(),
           const SizedBox(height: 24),
-          Text("온보딩 코치마크 (Onboarding Coach Marks)",
+          Text('온보딩 코치마크 (Onboarding Coach Marks)',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           const _CoachMarkDemo(),
@@ -1393,7 +1393,7 @@ class __TagInputFieldState extends State<_TagInputField> {
               focusNode: _focusNode,
               onSubmitted: (_) => _addTag(),
               decoration: const InputDecoration(
-                hintText: "#고양이",
+                hintText: '#고양이',
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -1440,7 +1440,7 @@ class _CoachMarkDemo extends StatelessWidget {
                       ],
                     ),
                     child: const Text(
-                      "이 버튼을 누르면\n썸남/썸녀를 추가할 수 있어!",
+                      '이 버튼을 누르면\n썸남/썸녀를 추가할 수 있어!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
@@ -1556,7 +1556,7 @@ class _GamificationWidgetsCardState extends State<GamificationWidgetsCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 게임화 위젯
-          Text("게임화 위젯 (Gamification)",
+          Text('게임화 위젯 (Gamification)',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           _GamificationContainer(
@@ -1566,17 +1566,17 @@ class _GamificationWidgetsCardState extends State<GamificationWidgetsCard> {
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("오늘의 퀘스트 🎯",
+                    Text('오늘의 퀘스트 🎯',
                         style: TextStyle(
                             fontWeight: FontWeight.w900, fontSize: 16)),
-                    Text("+10 포텐",
+                    Text('+10 포텐',
                         style: TextStyle(
                             color: AppColors.yellow,
                             fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text("썸남에게 칭찬 한 번 하기!"),
+                const Text('썸남에게 칭찬 한 번 하기!'),
                 const SizedBox(height: 8),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
@@ -1592,14 +1592,14 @@ class _GamificationWidgetsCardState extends State<GamificationWidgetsCard> {
           ),
           const SizedBox(height: 16),
           // 7일 출석체크 위젯 (신규 추가)
-          _GamificationContainer(
+          const _GamificationContainer(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("7일 출석체크 🗓️",
+                Text('7일 출석체크 🗓️',
                     style:
                         TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -1617,21 +1617,21 @@ class _GamificationWidgetsCardState extends State<GamificationWidgetsCard> {
           ),
           const SizedBox(height: 24),
           // 커뮤니티 위젯
-          Text("커뮤니티 위젯 (Community)",
+          Text('커뮤니티 위젯 (Community)',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           _GamificationContainer(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("실시간 고민 투표 🤔",
+                const Text('실시간 고민 투표 🤔',
                     style:
                         TextStyle(fontWeight: FontWeight.w900, fontSize: 16)),
                 const SizedBox(height: 4),
                 const Text("썸남이 'ㅋㅋ'만 보냈을 때, 더 끌리는 답장은?"),
                 const SizedBox(height: 16),
                 _PollOption(
-                  text: "A. (사진) 나도 이거 완전 웃긴데 ㅋㅋ",
+                  text: 'A. (사진) 나도 이거 완전 웃긴데 ㅋㅋ',
                   percentage: 72,
                   isSelected: _selectedPollOption == 0,
                   showResult: _voted,
@@ -1639,16 +1639,16 @@ class _GamificationWidgetsCardState extends State<GamificationWidgetsCard> {
                 ),
                 const SizedBox(height: 8),
                 _PollOption(
-                  text: "B. 웃기만 하지 말고 말 좀 해봐 ㅋㅋ",
+                  text: 'B. 웃기만 하지 말고 말 좀 해봐 ㅋㅋ',
                   percentage: 28,
                   isSelected: _selectedPollOption == 1,
                   showResult: _voted,
                   onTap: () => _handleVote(1),
                 ),
                 const SizedBox(height: 8),
-                Align(
+                const Align(
                   alignment: Alignment.centerRight,
-                  child: Text("총 1,204명 참여", style: AppTextStyles.helper),
+                  child: Text('총 1,204명 참여', style: AppTextStyles.helper),
                 )
               ],
             ),
@@ -1668,8 +1668,8 @@ class _GamificationContainer extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.white, const Color(0xFFFFF5F7)],
+        gradient: const LinearGradient(
+          colors: [Colors.white, Color(0xFFFFF5F7)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -1799,7 +1799,7 @@ class _PollOption extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              "$percentage%",
+                              '$percentage%',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold, 
                                 color: Colors.white,
@@ -1857,13 +1857,13 @@ class _AnimatedMessageList extends StatelessWidget {
             _MessageItem(
               tag: '#밈활용',
               tagColor: Colors.purple,
-              message: "농구... 좋아하세요? 스토리 완전 멋있어ㅋㅋ",
+              message: '농구... 좋아하세요? 스토리 완전 멋있어ㅋㅋ',
             ),
             SizedBox(height: 8),
             _MessageItem(
               tag: '#직접칭찬',
               tagColor: Colors.pink,
-              message: "스토리 봤는데 농구 완전 잘한다! 경기 또 언제 해?",
+              message: '스토리 봤는데 농구 완전 잘한다! 경기 또 언제 해?',
             ),
           ],
         ),
@@ -1920,7 +1920,7 @@ class _MessageItemState extends State<_MessageItem>
       _animationController.forward(from: 0);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("보관함에 저장했어요! 💖",
+          content: Text('보관함에 저장했어요! 💖',
               style: TextStyle(fontWeight: FontWeight.bold)),
           backgroundColor: AppColors.charcoal,
           behavior: SnackBarBehavior.floating,
@@ -1984,7 +1984,7 @@ class StatusFeedbackCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("로딩중...",
+          Text('로딩중...',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           const Center(
@@ -1996,12 +1996,12 @@ class StatusFeedbackCard extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           // 스켈레톤 UI (신규 추가)
-          Text("메시지 생성 중 (스켈레톤 UI)",
+          Text('메시지 생성 중 (스켈레톤 UI)',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           const _SkeletonUI(),
           const SizedBox(height: 24),
-          Text("텅 비었을 때 (Empty State)",
+          Text('텅 비었을 때 (Empty State)',
               style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Container(
@@ -2016,15 +2016,15 @@ class StatusFeedbackCard extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const Text("💔", style: TextStyle(fontSize: 48)),
+                const Text('💔', style: TextStyle(fontSize: 48)),
                 const SizedBox(height: 8),
-                Text("아직 썸남/썸녀 정보가 없어요",
+                Text('아직 썸남/썸녀 정보가 없어요',
                     style: AppTextStyles.h2.copyWith(fontSize: 18)),
                 const SizedBox(height: 4),
-                Text("지금 바로 추가하고 LIA의 도움을 받아볼까요?",
+                const Text('지금 바로 추가하고 LIA의 도움을 받아볼까요?',
                     style: AppTextStyles.helper, textAlign: TextAlign.center),
                 const SizedBox(height: 16),
-                PrimaryButton(onPressed: () {}, text: "썸 상대 추가하기"),
+                PrimaryButton(onPressed: () {}, text: '썸 상대 추가하기'),
               ],
             ),
           ),
@@ -2177,7 +2177,7 @@ class ModalCard extends StatelessWidget {
               child: const _LiaModalDialog(),
             );
           },
-          text: "모달 열기",
+          text: '모달 열기',
         ),
       ),
     );
@@ -2210,9 +2210,9 @@ class _LiaModalDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("💌", style: TextStyle(fontSize: 48)),
+            const Text('💌', style: TextStyle(fontSize: 48)),
             const SizedBox(height: 16),
-            Text("이 메시지로 보낼까요?", style: AppTextStyles.h2),
+            const Text('이 메시지로 보낼까요?', style: AppTextStyles.h2),
             const SizedBox(height: 16),
             Container(
               width: double.infinity,
@@ -2224,21 +2224,21 @@ class _LiaModalDialog extends StatelessWidget {
               child: const Text('"농구... 좋아하세요? 스토리 완전 멋있어ㅋㅋ"'),
             ),
             const SizedBox(height: 8),
-            const Text("전송 후에는 수정할 수 없어요!", style: TextStyle(color: Colors.grey)),
+            const Text('전송 후에는 수정할 수 없어요!', style: TextStyle(color: Colors.grey)),
             const SizedBox(height: 24),
             Row(
               children: [
                 Expanded(
                   child: SecondaryButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    text: "다시 고를래요",
+                    text: '다시 고를래요',
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: PrimaryButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    text: "네, 보낼래요!",
+                    text: '네, 보낼래요!',
                   ),
                 ),
               ],

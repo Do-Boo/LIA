@@ -236,7 +236,7 @@ class TabContentWrapper extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: headerBackgroundColor ?? AppColors.surface,
-        border: Border(bottom: BorderSide(color: AppColors.border, width: 1)),
+        border: const Border(bottom: BorderSide(color: AppColors.border, width: 1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,23 +272,23 @@ class LiaTabContents {
   static List<Widget> getMessageCategoryContents() {
     return [
       const TabContentWrapper(
-        title: "스토리 답장",
-        description: "인스타 스토리에 완벽한 답장을 보내보세요",
+        title: '스토리 답장',
+        description: '인스타 스토리에 완벽한 답장을 보내보세요',
         child: _StoryReplyContent(),
       ),
       const TabContentWrapper(
-        title: "재접근",
-        description: "읽씹 당한 후 자연스럽게 재접근하는 메시지",
+        title: '재접근',
+        description: '읽씹 당한 후 자연스럽게 재접근하는 메시지',
         child: _ReapproachContent(),
       ),
       const TabContentWrapper(
-        title: "단답 대응",
-        description: "단답 답장에도 센스있게 대응하는 방법",
+        title: '단답 대응',
+        description: '단답 답장에도 센스있게 대응하는 방법',
         child: _ShortReplyContent(),
       ),
       const TabContentWrapper(
-        title: "첫 DM",
-        description: "첫 DM을 완벽하게 보내는 팁",
+        title: '첫 DM',
+        description: '첫 DM을 완벽하게 보내는 팁',
         child: _FirstDMContent(),
       ),
     ];
@@ -298,23 +298,23 @@ class LiaTabContents {
   static List<Widget> getAnalysisContents() {
     return [
       const TabContentWrapper(
-        title: "종합분석",
-        description: "전체적인 분석 결과를 확인하세요",
+        title: '종합분석',
+        description: '전체적인 분석 결과를 확인하세요',
         child: _AnalysisContent(),
       ),
       const TabContentWrapper(
-        title: "프로파일",
-        description: "상대방의 성격과 특성을 분석해보세요",
+        title: '프로파일',
+        description: '상대방의 성격과 특성을 분석해보세요',
         child: _ProfileContent(),
       ),
       const TabContentWrapper(
-        title: "감정흐름",
-        description: "대화의 감정 변화를 확인하세요",
+        title: '감정흐름',
+        description: '대화의 감정 변화를 확인하세요',
         child: _EmotionContent(),
       ),
       const TabContentWrapper(
-        title: "액션플랜",
-        description: "AI가 추천하는 다음 액션을 확인하세요",
+        title: '액션플랜',
+        description: 'AI가 추천하는 다음 액션을 확인하세요',
         child: _ActionPlanContent(),
       ),
     ];
@@ -329,7 +329,7 @@ class _StoryReplyContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        "인스타 스토리 답장 컨텐츠",
+        '인스타 스토리 답장 컨텐츠',
         style: TextStyle(color: AppColors.secondaryText),
       ),
     );
@@ -344,7 +344,7 @@ class _ReapproachContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        "읽씹 후 재접근 컨텐츠",
+        '읽씹 후 재접근 컨텐츠',
         style: TextStyle(color: AppColors.secondaryText),
       ),
     );
@@ -359,7 +359,7 @@ class _ShortReplyContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        "단답 답장 대응 컨텐츠",
+        '단답 답장 대응 컨텐츠',
         style: TextStyle(color: AppColors.secondaryText),
       ),
     );
@@ -374,7 +374,7 @@ class _FirstDMContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        "첫 DM 보내기 컨텐츠",
+        '첫 DM 보내기 컨텐츠',
         style: TextStyle(color: AppColors.secondaryText),
       ),
     );
@@ -389,7 +389,7 @@ class _AnalysisContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        "종합 분석 컨텐츠",
+        '종합 분석 컨텐츠',
         style: TextStyle(color: AppColors.secondaryText),
       ),
     );
@@ -404,7 +404,7 @@ class _ProfileContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        "프로파일 분석 컨텐츠",
+        '프로파일 분석 컨텐츠',
         style: TextStyle(color: AppColors.secondaryText),
       ),
     );
@@ -419,7 +419,7 @@ class _EmotionContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        "감정 흐름 분석 컨텐츠",
+        '감정 흐름 분석 컨텐츠',
         style: TextStyle(color: AppColors.secondaryText),
       ),
     );
@@ -434,7 +434,7 @@ class _ActionPlanContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Text(
-        "AI 추천 액션 플랜 컨텐츠",
+        'AI 추천 액션 플랜 컨텐츠',
         style: TextStyle(color: AppColors.secondaryText),
       ),
     );

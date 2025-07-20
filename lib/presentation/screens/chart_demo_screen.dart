@@ -61,7 +61,7 @@ class _ChartDemoScreenState extends State<ChartDemoScreen> {
               ),
               child: Row(
                 children: [
-                  HugeIcon(
+                  const HugeIcon(
                     icon: HugeIcons.strokeRoundedInformationCircle,
                     color: AppColors.accent,
                     size: 20,
@@ -330,7 +330,7 @@ class _ChartDemoScreenState extends State<ChartDemoScreen> {
         children: [
           Row(
             children: [
-              HugeIcon(
+              const HugeIcon(
                 icon: HugeIcons.strokeRoundedCode,
                 color: AppColors.primary,
                 size: 24,
@@ -414,7 +414,7 @@ class _ChartDemoScreenState extends State<ChartDemoScreen> {
         children: [
           Row(
             children: [
-              HugeIcon(
+              const HugeIcon(
                 icon: HugeIcons.strokeRoundedBookOpen01,
                 color: AppColors.accent,
                 size: 24,
@@ -459,7 +459,7 @@ class _ChartDemoScreenState extends State<ChartDemoScreen> {
             width: 6,
             height: 6,
             margin: const EdgeInsets.only(top: 6),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.accent,
               shape: BoxShape.circle,
             ),

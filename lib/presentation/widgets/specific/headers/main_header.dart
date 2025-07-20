@@ -62,7 +62,7 @@ class MainHeader extends StatelessWidget {
 
   const MainHeader({
     super.key,
-    this.userName = "서현",
+    this.userName = '서현',
     required this.userStats,
     this.onDesignGuidePressed,
     this.onProfilePressed,
@@ -100,7 +100,7 @@ class MainHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "안녕, $userName아!",
+                      '안녕, $userName아!',
                       style: AppTextStyles.h2.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -108,7 +108,7 @@ class MainHeader extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "오늘도 멋진 메시지 만들어보자!",
+                      '오늘도 멋진 메시지 만들어보자!',
                       style: AppTextStyles.body.copyWith(
                         color: Colors.white.withValues(alpha: 0.9),
                       ),
@@ -129,7 +129,7 @@ class MainHeader extends StatelessWidget {
                         color: Colors.white,
                         size: 24,
                       ),
-                      tooltip: "디자인 가이드",
+                      tooltip: '디자인 가이드',
                     ),
                   const SizedBox(width: 8),
                   // 실시간 상태 표시
@@ -162,11 +162,11 @@ class MainHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildStatItem(
-                "생성한 메시지",
+                '생성한 메시지',
                 "${userStats['messagesGenerated'] ?? 0}개",
               ),
-              _buildStatItem("성공률", "${userStats['successRate'] ?? 0}%"),
-              _buildStatItem("연속 사용", "${userStats['consecutiveDays'] ?? 0}일"),
+              _buildStatItem('성공률', "${userStats['successRate'] ?? 0}%"),
+              _buildStatItem('연속 사용', "${userStats['consecutiveDays'] ?? 0}일"),
             ],
           ),
         ],
