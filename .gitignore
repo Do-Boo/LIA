@@ -124,5 +124,6 @@ coverage/
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
 
-.claude/*
-.cursor/rules/*
+# User-specific directories
+.claude/
+.cursor/
