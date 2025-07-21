@@ -1,6 +1,7 @@
 // File: lib/presentation/screens/design_guide_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import '../widgets/lia_widgets.dart';
 import '../widgets/specific/forms/custom_date_picker.dart';
@@ -35,85 +36,119 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.background,
-    appBar: AppBar(
-      title: Text(
-        'LIA 디자인 가이드',
-        style: AppTextStyles.headlineSmall.copyWith(
-          color: AppColors.textPrimary,
-          fontWeight: FontWeight.bold,
+    body: SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
+          vertical: 12,
         ),
-      ),
-      backgroundColor: AppColors.surface,
-      elevation: 0,
-      centerTitle: true,
-    ),
-    body: SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 설명 텍스트
-          _buildIntroSection(),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 800),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AppSpacing.gapV24,
 
-          const SizedBox(height: 24),
+              // 대시보드 헤더
+              const DashboardHeader(
+                title: 'LIA 디자인 가이드',
+                subtitle: 'LIA 앱의 디자인 시스템을 체계적으로 정리한 종합 가이드',
+                icon: HugeIcons.strokeRoundedPaintBoard,
+              ),
 
-          // 1. LIA 위젯 가이드
-          _buildSectionTitle('1. LIA 위젯 가이드'),
-          _buildSectionDescription('LIA 위젯을 한 번에 import해서 사용하세요'),
-          _buildLiaWidgetGuide(),
+              AppSpacing.gapV24,
+              // 설명 텍스트
+              _buildIntroSection(),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 2. Typography
-          _buildSectionTitle('2. Typography (글꼴과 말투)'),
-          _buildSectionDescription('앱에서 사용하는 다양한 텍스트 스타일과 메시지 예시를 보여줍니다.'),
-          const TypographyCard(),
+              // 1. LIA 위젯 가이드
+              SectionCard(
+                number: '1',
+                title: 'LIA 위젯 가이드',
+                description: 'LIA 위젯을 한 번에 import해서 사용하세요',
+                useNumberBadge: true,
+                child: _buildLiaWidgetGuide(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 3. Color Palette
-          _buildSectionTitle('3. Color Palette (테마 색상)'),
-          _buildSectionDescription('앱에서 사용하는 주요 색상들과 그라데이션을 시각적으로 표시합니다.'),
-          const ColorPaletteCard(),
+              // 2. Typography
+              const SectionCard(
+                number: '2',
+                title: 'Typography (글꼴과 말투)',
+                description: '앱에서 사용하는 다양한 텍스트 스타일과 메시지 예시를 보여줍니다',
+                useNumberBadge: true,
+                child: TypographyCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 4. Generating Progress
-          _buildSectionTitle('4. Generating Progress (AI 생성 진행)'),
-          _buildSectionDescription('AI 메시지 생성 중 로딩 상태를 보여줍니다.'),
-          _buildGeneratingProgressDemo(),
+              // 3. Color Palette
+              const SectionCard(
+                number: '3',
+                title: 'Color Palette (테마 색상)',
+                description: '앱에서 사용하는 주요 색상들과 그라데이션을 시각적으로 표시합니다',
+                useNumberBadge: true,
+                child: ColorPaletteCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 5. Header Navigation
-          _buildSectionTitle('5. Header Navigation (상단 네비게이션)'),
-          _buildSectionDescription('앱의 상단 네비게이션과 새로운 상황 카테고리들을 시연합니다.'),
-          const HeaderNavigationCard(),
+              // 4. Generating Progress
+              SectionCard(
+                number: '4',
+                title: 'Generating Progress (AI 생성 진행)',
+                description: 'AI 메시지 생성 중 로딩 상태를 보여줍니다',
+                useNumberBadge: true,
+                child: _buildGeneratingProgressDemo(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 6. Main Header
-          _buildSectionTitle('6. Main Header (메인 헤더)'),
-          _buildSectionDescription('서현이의 개성이 담긴 메인 페이지 헤더예요!'),
-          const NewMainHeaderCard(),
+              // 5. Header Navigation
+              const SectionCard(
+                number: '5',
+                title: 'Header Navigation (상단 네비게이션)',
+                description: '앱의 상단 네비게이션과 새로운 상황 카테고리들을 시연합니다',
+                useNumberBadge: true,
+                child: HeaderNavigationCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 7. Bottom Navigation
-          _buildSectionTitle('7. Bottom Navigation (하단 네비게이션)'),
-          _buildSectionDescription(
-            'LIA 앱에서 사용하는 하단 네비게이션 바의 디자인과 상호작용을 보여줍니다.',
-          ),
-          const BottomNavigationCard(),
+              // 6. Main Header
+              const SectionCard(
+                number: '6',
+                title: 'Main Header (메인 헤더)',
+                description: '서현이의 개성이 담긴 메인 페이지 헤더예요!',
+                useNumberBadge: true,
+                child: NewMainHeaderCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 8. Tab Bar
-          _buildSectionTitle('8. Tab Bar (탭 네비게이션)'),
-          _buildSectionDescription('18세 서현 페르소나에 맞는 탭 네비게이션 시스템을 시연합니다.'),
-          const TabBarCard(),
+              // 7. Bottom Navigation
+              const SectionCard(
+                number: '7',
+                title: 'Bottom Navigation (하단 네비게이션)',
+                description: 'LIA 앱에서 사용하는 하단 네비게이션 바의 디자인과 상호작용을 보여줍니다',
+                useNumberBadge: true,
+                child: BottomNavigationCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
+
+              // 8. Tab Bar
+              const SectionCard(
+                number: '8',
+                title: 'Tab Bar (탭 네비게이션)',
+                description: '18세 서현 페르소나에 맞는 탭 네비게이션 시스템을 시연합니다',
+                useNumberBadge: true,
+                child: TabBarCard(),
+              ),
+
+              AppSpacing.gapV24,
 
           // 9. Data Visualization
           _buildSectionTitle('9. Data Visualization (차트)'),
@@ -201,14 +236,16 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
 
           const SizedBox(height: 32),
 
-          // 마무리 메시지
-          _buildCompletionMessage(),
+                // 마무리 메시지
+                _buildCompletionMessage(),
 
-          const SizedBox(height: 24),
-        ],
+                AppSpacing.gapV24,
+              ],
+            ),
+          ),
+        ),
       ),
-    ),
-  );
+    );
 
   Widget _buildSectionTitle(String title) => Padding(
     padding: const EdgeInsets.only(bottom: 8),
