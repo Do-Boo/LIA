@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/lia_widgets.dart';
 import 'analyzed_people_screen.dart';
-import 'chart_demo_screen.dart';
+import 'coaching_center_screen.dart';
 import 'main_screen.dart';
 import 'my_screen.dart';
 
@@ -50,8 +50,8 @@ class _MainLayoutState extends State<MainLayout> {
           });
         },
       ), // 0: 홈
-      const AnalyzedPeopleScreen(), // 1: 코칭센터
-      const ChartDemoScreen(), // 2: 히스토리
+      const CoachingCenterScreen(), // 1: 코칭센터
+      const AnalyzedPeopleScreen(), // 2: 히스토리
       const MyScreen(), // 3: MY
     ];
   }

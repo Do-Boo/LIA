@@ -258,7 +258,10 @@ class _BaseChartState extends State<BaseChart>
         Icon(widget.titleIcon, size: 20, color: AppColors.primary),
         const SizedBox(width: 8),
       ],
-      Text(widget.title!, style: AppTextStyles.chartTitle),
+      Text(
+        widget.title!,
+        style: AppTextStyles.cardTitle.copyWith(color: AppColors.primary),
+      ),
     ],
   );
 
@@ -353,10 +356,7 @@ class ChartLegend extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 6),
-        Text(
-          item.label,
-          style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
-        ),
+        Text(item.label, style: AppTextStyles.cardDescription),
       ],
     ),
   );

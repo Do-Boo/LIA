@@ -86,17 +86,15 @@ class DashboardHeader extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppTextStyles.h2.copyWith(
+                    style: AppTextStyles.dashboardTitle.copyWith(
                       color: AppColors.surface,
-                      fontWeight: FontWeight.w800,
                     ),
                   ),
                   AppSpacing.gapV4,
                   Text(
                     subtitle,
-                    style: AppTextStyles.body2.copyWith(
+                    style: AppTextStyles.dashboardSubtitle.copyWith(
                       color: AppColors.surface.withValues(alpha: 0.9),
-                      height: 1.4,
                     ),
                   ),
                 ],

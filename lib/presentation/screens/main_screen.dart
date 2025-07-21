@@ -277,7 +277,7 @@ class _MainScreenState extends State<MainScreen> {
                 hintText:
                     '서현: 오늘 날씨 정말 좋다!\n상대방: 맞아요~ 산책하기 딱 좋은 날씨네요\n서현: 혹시 시간 되시면 같이 산책 어떠세요?',
                 hintStyle: AppTextStyles.body2.copyWith(
-                  color: AppColors.textSecondary.withValues(alpha: 0.6),
+                  color: AppColors.textSecondary.withValues(alpha: 0.7),
                   fontSize: 14,
                 ),
                 border: InputBorder.none,
@@ -941,11 +941,11 @@ class _MainScreenState extends State<MainScreen> {
 
             AppSpacing.gapV24,
 
-            // 1. 성격 호환성 분석
+            // 1. 성격 관계성 분석
             SectionCard(
               number: '1',
-              title: '성격 호환성 분석',
-              description: '두 분의 성격을 5가지 요소로 분석하여 호환성을 확인해보세요',
+              title: '성격 관계성 분석',
+              description: '두 분의 성격을 5가지 요소로 분석하여 관계성을 확인해보세요',
               useNumberBadge: true,
               child: _buildPersonalityCompatibilityContent(),
             ),
@@ -1047,16 +1047,13 @@ class _MainScreenState extends State<MainScreen> {
                   children: [
                     Text(
                       '핵심 분석 결과',
-                      style: AppTextStyles.h3.copyWith(
-                        fontWeight: FontWeight.bold,
+                      style: AppTextStyles.sectionTitle.copyWith(
                         color: AppColors.primary,
                       ),
                     ),
-                    Text(
+                    const Text(
                       '가장 중요한 3가지 지표를 확인해보세요',
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
+                      style: AppTextStyles.sectionDescription,
                     ),
                   ],
                 ),
@@ -1078,11 +1075,11 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               const SizedBox(width: 12),
-              // 호환성 점수
+              // 관계성 점수
               Expanded(
                 child: _buildSummaryMetric(
                   icon: HugeIcons.strokeRoundedCheckList,
-                  title: '호환성',
+                  title: '관계성',
                   value: _analysisData!.personalityAnalysis != null
                       ? '${_analysisData!.personalityAnalysis!.compatibilityScore}%'
                       : '85%',
@@ -1120,11 +1117,10 @@ class _MainScreenState extends State<MainScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    '다음 단계: 성격 호환성을 확인하고 맞춤형 대화 주제를 준비해보세요!',
-                    style: AppTextStyles.body2.copyWith(
+                    '다음 단계: 성격 관계성을 확인하고 맞춤형 대화 주제를 준비해보세요!',
+                    style: AppTextStyles.cardDescription.copyWith(
                       color: AppColors.primary,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -1156,16 +1152,15 @@ class _MainScreenState extends State<MainScreen> {
         Text(
           value,
           style: AppTextStyles.h3.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
             color: color,
             fontSize: 18,
           ),
         ),
         Text(
           title,
-          style: AppTextStyles.caption.copyWith(
-            color: AppColors.textSecondary,
-            fontSize: 11,
+          style: AppTextStyles.cardDescription.copyWith(
+            fontWeight: FontWeight.w600,
           ),
           textAlign: TextAlign.center,
         ),
@@ -1173,7 +1168,7 @@ class _MainScreenState extends State<MainScreen> {
     ),
   );
 
-  // 1. 성격 호환성 분석 콘텐츠
+  // 1. 성격 관계성 분석 콘텐츠
   Widget _buildPersonalityCompatibilityContent() {
     if (_analysisData?.personalityAnalysis == null) {
       return _buildDefaultPersonalityContent();
@@ -1183,7 +1178,7 @@ class _MainScreenState extends State<MainScreen> {
 
     return Column(
       children: [
-        // 호환성 점수 표시
+        // 관계성 점수 표시
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -1214,13 +1209,7 @@ class _MainScreenState extends State<MainScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '호환성 점수',
-                      style: AppTextStyles.body1.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
+                    const Text('관계성 점수', style: AppTextStyles.cardTitle),
                     const SizedBox(height: 4),
                     Row(
                       children: [
@@ -1261,7 +1250,7 @@ class _MainScreenState extends State<MainScreen> {
 
         // 레이더 차트 - 성격 비교
         const RadarChart(
-          title: 'MBTI 성격 비교',
+          title: '성격 관계성 비교',
           titleIcon: HugeIcons.strokeRoundedUser,
           size: 280,
           data: [
@@ -1349,17 +1338,12 @@ class _MainScreenState extends State<MainScreen> {
       children: [
         Row(
           children: [
-            Icon(icon, size: 20, color: color), // 16 → 20으로 증가
-            const SizedBox(width: 8), // 6 → 8로 증가
+            Icon(icon, size: 20, color: color),
+            const SizedBox(width: 8),
             Expanded(
               child: Text(
                 title,
-                style: AppTextStyles.body1.copyWith(
-                  // body2 → body1로 변경
-                  fontWeight: FontWeight.w600,
-                  color: color,
-                  fontSize: 15, // 13 → 15로 증가
-                ),
+                style: AppTextStyles.cardTitle.copyWith(color: color),
               ),
             ),
           ],
@@ -1384,15 +1368,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     const SizedBox(width: 8), // 6 → 8로 증가
                     Expanded(
-                      child: Text(
-                        item,
-                        style: AppTextStyles.body2.copyWith(
-                          // caption → body2로 변경
-                          color: AppColors.textSecondary,
-                          fontSize: 13, // 11 → 13으로 증가
-                          height: 1.4, // 1.3 → 1.4로 조정
-                        ),
-                      ),
+                      child: Text(item, style: AppTextStyles.cardDescription),
                     ),
                   ],
                 ),
@@ -1402,7 +1378,7 @@ class _MainScreenState extends State<MainScreen> {
     ),
   );
 
-  // 호환성 점수 메시지
+  // 관계성 점수 메시지
   String _getCompatibilityMessage(int score) {
     if (score >= 80) return '환상적인 조합!';
     if (score >= 70) return '좋은 궁합이에요';
@@ -1495,8 +1471,7 @@ class _MainScreenState extends State<MainScreen> {
               const SizedBox(width: 8),
               Text(
                 '썸 지수',
-                style: AppTextStyles.body1.copyWith(
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.cardTitle.copyWith(
                   color: AppColors.primary,
                 ),
               ),
@@ -1511,7 +1486,7 @@ class _MainScreenState extends State<MainScreen> {
                 '$someIndex',
                 style: AppTextStyles.h1.copyWith(
                   fontSize: 48,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   color: AppColors.primary,
                 ),
               ),
@@ -1689,7 +1664,7 @@ class _MainScreenState extends State<MainScreen> {
                 '가장 활발한 시간대: 오후 7-9시 | 내가 더 많은 메시지를 보내는 시간대예요',
                 style: AppTextStyles.body2.copyWith(
                   color: AppColors.primary,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -1738,7 +1713,7 @@ class _MainScreenState extends State<MainScreen> {
                 '카페 데이트 주제가 1위! 실제 데이트 제안을 해보세요',
                 style: AppTextStyles.body2.copyWith(
                   color: AppColors.primary,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -1925,18 +1900,14 @@ class _MainScreenState extends State<MainScreen> {
           const SizedBox(width: 8),
           Text(
             title,
-            style: AppTextStyles.body1.copyWith(
-              fontWeight: FontWeight.w600,
-              color: AppColors.primary,
-            ),
+            style: AppTextStyles.cardTitle.copyWith(color: AppColors.primary),
           ),
         ],
       ),
       const SizedBox(height: 12),
       ...items.map(
         (item) => Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.all(12),
+          margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
             color: AppColors.surface,
             borderRadius: BorderRadius.circular(10),
@@ -1957,7 +1928,9 @@ class _MainScreenState extends State<MainScreen> {
               Expanded(
                 child: Text(
                   item,
-                  style: AppTextStyles.body2.copyWith(height: 1.4),
+                  style: AppTextStyles.cardDescription.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
             ],

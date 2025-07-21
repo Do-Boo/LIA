@@ -164,16 +164,13 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
                 children: [
                   Text(
                     '카테고리 선택',
-                    style: AppTextStyles.h3.copyWith(
-                      fontWeight: FontWeight.bold,
+                    style: AppTextStyles.sectionTitle.copyWith(
                       color: AppColors.primary,
                     ),
                   ),
-                  Text(
+                  const Text(
                     '원하는 메시지 유형을 선택해보세요',
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                    style: AppTextStyles.sectionDescription,
                   ),
                 ],
               ),
@@ -402,17 +399,9 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                tip.title,
-                style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
-              ),
+              Text(tip.title, style: AppTextStyles.cardTitle),
               const SizedBox(height: 4),
-              Text(
-                tip.description,
-                style: AppTextStyles.helper.copyWith(
-                  color: AppColors.secondaryText,
-                ),
-              ),
+              Text(tip.description, style: AppTextStyles.cardDescription),
             ],
           ),
         ),
@@ -509,18 +498,10 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
             children: [
               Text(
                 title,
-                style: AppTextStyles.body.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: color,
-                ),
+                style: AppTextStyles.cardTitle.copyWith(color: color),
               ),
               const SizedBox(height: 4),
-              Text(
-                description,
-                style: AppTextStyles.helper.copyWith(
-                  color: AppColors.secondaryText,
-                ),
-              ),
+              Text(description, style: AppTextStyles.cardDescription),
             ],
           ),
         ),
