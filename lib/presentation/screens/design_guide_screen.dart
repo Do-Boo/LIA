@@ -150,102 +150,148 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
 
               AppSpacing.gapV24,
 
-          // 9. Data Visualization
-          _buildSectionTitle('9. Data Visualization (차트)'),
-          _buildSectionDescription(
-            '게이지 차트, 도넛 차트, 막대 차트 등 다양한 차트 컴포넌트를 시연합니다.',
-          ),
-          const DataVisualizationCard(),
+              // 9. Data Visualization
+              const SectionCard(
+                number: '9',
+                title: 'Data Visualization (차트)',
+                description: '게이지 차트, 도넛 차트, 막대 차트 등 다양한 차트 컴포넌트를 시연합니다',
+                useNumberBadge: true,
+                child: DataVisualizationCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 10. New Charts
-          _buildSectionTitle('10. New Charts (새로운 차트)'),
-          _buildSectionDescription('새로 추가된 고급 차트 위젯들을 보여줍니다.'),
-          const NewChartsCard(),
+              // 10. New Charts
+              const SectionCard(
+                number: '10',
+                title: 'New Charts (새로운 차트)',
+                description: '새로 추가된 고급 차트 위젯들을 보여줍니다',
+                useNumberBadge: true,
+                child: NewChartsCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 11. Form Elements
-          _buildSectionTitle('11. Form Elements (폼 요소)'),
-          _buildSectionDescription('기본적인 버튼들과 폼 관련 UI 요소들을 시연합니다.'),
-          const FormElementsCard(),
+              // 11. Form Elements
+              const SectionCard(
+                number: '11',
+                title: 'Form Elements (폼 요소)',
+                description: '기본적인 버튼들과 폼 관련 UI 요소들을 시연합니다',
+                useNumberBadge: true,
+                child: FormElementsCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 12. New Form Elements
-          _buildSectionTitle('12. New Form Elements (새로운 폼 요소)'),
-          _buildSectionDescription('새로 추가된 폼 요소들을 보여줍니다.'),
-          const NewFormElementsCard(),
+              // 12. New Form Elements
+              const SectionCard(
+                number: '12',
+                title: 'New Form Elements (새로운 폼 요소)',
+                description: '새로 추가된 폼 요소들을 보여줍니다',
+                useNumberBadge: true,
+                child: NewFormElementsCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 13. Text Fields
-          _buildSectionTitle('13. Text Fields (텍스트 입력)'),
-          _buildSectionDescription('다양한 텍스트 입력 필드 스타일을 시연합니다.'),
-          const TextFieldsCard(),
+              // 13. Text Fields
+              const SectionCard(
+                number: '13',
+                title: 'Text Fields (텍스트 입력)',
+                description: '다양한 텍스트 입력 필드 스타일을 시연합니다',
+                useNumberBadge: true,
+                child: TextFieldsCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 14. Textarea
-          _buildSectionTitle('14. Textarea (긴 텍스트 입력)'),
-          _buildSectionDescription('멀티라인 텍스트 입력을 위한 텍스트 영역 컴포넌트를 시연합니다.'),
-          const TextareaCard(),
+              // 14. Textarea
+              const SectionCard(
+                number: '14',
+                title: 'Textarea (긴 텍스트 입력)',
+                description: '멀티라인 텍스트 입력을 위한 텍스트 영역 컴포넌트를 시연합니다',
+                useNumberBadge: true,
+                child: TextareaCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 15. Interactive Widgets
-          _buildSectionTitle('15. Interactive Widgets (상호작용 요소)'),
-          _buildSectionDescription('체크박스, 스위치 등 사용자 상호작용 요소들을 시연합니다.'),
-          const InteractiveWidgetsCard(),
+              // 15. Interactive Widgets
+              const SectionCard(
+                number: '15',
+                title: 'Interactive Widgets (상호작용 요소)',
+                description: '체크박스, 스위치 등 사용자 상호작용 요소들을 시연합니다',
+                useNumberBadge: true,
+                child: InteractiveWidgetsCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 16. Gamification Widgets
-          _buildSectionTitle('16. Gamification Widgets (게임화 요소)'),
-          _buildSectionDescription('포인트, 배지, 레벨 등 게임화 관련 UI 요소들을 시연합니다.'),
-          const GamificationWidgetsCard(),
+              // 16. Gamification Widgets
+              const SectionCard(
+                number: '16',
+                title: 'Gamification Widgets (게임화 요소)',
+                description: '포인트, 배지, 레벨 등 게임화 관련 UI 요소들을 시연합니다',
+                useNumberBadge: true,
+                child: GamificationWidgetsCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 17. Animation Interaction
-          _buildSectionTitle('17. Animation & Interaction (애니메이션)'),
-          _buildSectionDescription('다양한 애니메이션 효과와 인터랙티브 요소들을 시연합니다.'),
-          const AnimationInteractionCard(),
+              // 17. Animation Interaction
+              const SectionCard(
+                number: '17',
+                title: 'Animation & Interaction (애니메이션)',
+                description: '다양한 애니메이션 효과와 인터랙티브 요소들을 시연합니다',
+                useNumberBadge: true,
+                child: AnimationInteractionCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 18. Status Feedback
-          _buildSectionTitle('18. Status Feedback (상태 피드백)'),
-          _buildSectionDescription('로딩, 성공, 오류 등 다양한 상태를 나타내는 UI 요소들을 시연합니다.'),
-          const StatusFeedbackCard(),
+              // 18. Status Feedback
+              const SectionCard(
+                number: '18',
+                title: 'Status Feedback (상태 피드백)',
+                description: '로딩, 성공, 오류 등 다양한 상태를 나타내는 UI 요소들을 시연합니다',
+                useNumberBadge: true,
+                child: StatusFeedbackCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 19. New Feedback
-          _buildSectionTitle('19. New Feedback (새로운 피드백)'),
-          _buildSectionDescription('새로 추가된 피드백 위젯들을 보여줍니다.'),
-          const NewFeedbackCard(),
+              // 19. New Feedback
+              const SectionCard(
+                number: '19',
+                title: 'New Feedback (새로운 피드백)',
+                description: '새로 추가된 피드백 관련 UI 요소들을 보여줍니다',
+                useNumberBadge: true,
+                child: NewFeedbackCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-          // 20. Modal
-          _buildSectionTitle('20. Modal (모달 다이얼로그)'),
-          _buildSectionDescription('커스텀 모달의 사용법과 스타일을 시연합니다.'),
-          const ModalCard(),
+              // 20. Modal
+              const SectionCard(
+                number: '20',
+                title: 'Modal (모달 창)',
+                description: '다양한 모달 창과 팝업 UI를 시연합니다',
+                useNumberBadge: true,
+                child: ModalCard(),
+              ),
 
-          const SizedBox(height: 32),
+              AppSpacing.gapV24,
 
-                // 마무리 메시지
-                _buildCompletionMessage(),
+              // 마무리 메시지
+              _buildCompletionMessage(),
 
-                AppSpacing.gapV24,
-              ],
-            ),
+              AppSpacing.gapV24,
+            ],
           ),
         ),
       ),
-    );
+    ),
+  );
 
   Widget _buildSectionTitle(String title) => Padding(
     padding: const EdgeInsets.only(bottom: 8),
@@ -287,7 +333,7 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
         Text(
           'LIA 앱의 디자인 시스템을 체계적으로 정리하여 보여주는 가이드입니다. 각 컴포넌트의 사용법과 예시를 확인할 수 있습니다.',
           style: AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.secondaryText,
+            color: AppColors.textPrimary,
           ),
         ),
       ],

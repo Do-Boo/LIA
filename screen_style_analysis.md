@@ -275,4 +275,196 @@ Container(
 - `SectionCard` - 섹션 구조화  
 - `PrimaryButton/SecondaryButton` - 버튼 통일
 - `ToastNotification` - 피드백 메시지
-- `AppSpacing` - 간격 시스템 
+- `AppSpacing` - 간격 시스템
+
+---
+
+## 🚀 실제 수정 작업 시작
+
+### **작업 시작일**: 2025.07.21 15:22:12
+### **작업 순서**: Phase 1 → Phase 2 → Phase 3
+
+---
+
+## 📊 스크린별 상세 현황 및 작업 계획
+
+| 스크린 | 유형 | 상태 | 우선순위 | 예상 소요시간 | 주요 개선점 |
+|--------|------|------|----------|---------------|-------------|
+| **MainScreen** | 네비게이션 | ✅ 기준 | - | - | 다른 스크린의 참고 기준 |
+| **CoachingCenterScreen** | 네비게이션 | ⚠️ 개선 필요 | 1 | 2-3시간 | 카테고리 UI, 템플릿 카드 |
+| **MyScreen** | 네비게이션 | ⚠️ 개선 필요 | 2 | 2-3시간 | 프로필 카드, 통계 표시 |
+| **AiMessageScreen** | 독립 실행 | ❌ 개선 필요 | 3 | 3-4시간 | 톤 선택, 메시지 생성 UI |
+| **DesignGuideScreen** | 독립 실행 | ⚠️ 개선 필요 | 4 | 1-2시간 | SectionCard 구조화 |
+| **AnalyzedPeopleScreen** | 네비게이션 | ✅ 양호 | 5 | 1시간 | 빈 상태, 카드 스타일 |
+| **ChartDemoScreen** | 독립 실행 | ✅ 우수 | 6 | - | 현재 상태 유지 |
+
+### **총 예상 작업 시간**: 9-13시간
+
+---
+
+## 🎯 Phase 1 작업 상세 계획
+
+### **1-1. Coaching Center Screen 개선**
+
+#### **현재 문제점**
+```dart
+// 현재 커스텀 카테고리 선택 UI
+_buildCategorySection() {
+  // 메인 화면과 다른 독립적인 스타일
+  // 그라데이션, 박스섀도우 미적용
+}
+
+// 현재 템플릿 카드
+_buildTemplatesContent() {
+  // 일반 Container 사용
+  // 통일된 카드 디자인 미적용
+}
+```
+
+#### **개선 방향**
+```dart
+// 1. 카테고리 선택을 메인 화면의 핵심 요약 섹션 스타일로
+_buildCategorySection() → _buildSummarySection() 스타일 적용
+- 그라데이션 배경
+- 지표 카드 형태의 카테고리 선택
+- AppColors.primary 테마 적용
+
+// 2. 템플릿을 SectionCard 내부 그라데이션 카드로
+_buildTemplatesContent() → 각 템플릿을 개별 카드로 구성
+- 인사이트 메시지 스타일 적용
+- HugeIcons 아이콘 통일
+- 호버 효과 및 그림자 추가
+```
+
+### **1-2. My Screen 개선**
+
+#### **현재 문제점**
+```dart
+// 현재 프로필 정보
+_buildProfileContent() {
+  // 단순한 리스트 형태
+  // 시각적 임팩트 부족
+}
+
+// 현재 통계 표시
+// 메인 화면의 지표 카드 스타일 미활용
+```
+
+#### **개선 방향**
+```dart
+// 1. 프로필 정보를 요약 섹션 스타일로
+_buildProfileContent() → _buildSummarySection() 스타일 적용
+- 사용자 정보를 그라데이션 카드로 표시
+- 프로필 이미지 + 핵심 정보 강조
+- MBTI, 관심사 등을 지표 형태로 표시
+
+// 2. 사용 통계를 지표 카드로
+_buildStatsContent() → _buildSummaryMetric() 활용
+- 총 메시지 수, 성공률, 가입일 등을 지표 카드로
+- 각각 다른 색상 테마 적용 (primary, accent, green)
+- 아이콘과 함께 시각적 표현
+```
+
+---
+
+## 🔧 공통 스타일 컴포넌트 추출 계획
+
+### **추출할 공통 위젯들**
+
+#### **1. SummaryCard (요약 카드)**
+```dart
+class SummaryCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final List<Widget> metrics;
+  final Widget? actionWidget;
+  
+  // 메인 화면의 _buildSummarySection 스타일 적용
+}
+```
+
+#### **2. MetricCard (지표 카드)**
+```dart
+class MetricCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String value;
+  final Color color;
+  
+  // 메인 화면의 _buildSummaryMetric 스타일 적용
+}
+```
+
+#### **3. InsightCard (인사이트 카드)**
+```dart
+class InsightCard extends StatelessWidget {
+  final String message;
+  final IconData icon;
+  final VoidCallback? onTap;
+  
+  // 메인 화면의 다음 액션 제안 스타일 적용
+}
+```
+
+---
+
+## 📋 작업 진행 체크리스트
+
+### **Phase 1: 네비게이션 스크린 (완료 ✅)**
+- [x] **Coaching Center Screen 개선**
+  - [x] 카테고리 선택 UI → SummarySection 스타일 적용
+  - [x] 템플릿 카드 → 그라데이션 카드 적용
+  - [x] 빠른 팁 → InsightCard 스타일 적용
+  - [x] 테스트 및 검증
+- [x] **My Screen 개선**
+  - [x] 프로필 정보 → SummarySection 스타일 적용
+  - [x] 사용 통계 → MetricCard 활용
+  - [x] 설정 토글 → 통일된 디자인 적용 (기존 양호)
+  - [x] 테스트 및 검증
+
+### **Phase 2: 독립 스크린 (완료 ✅)**
+- [x] **AI Message Screen 개선**
+  - [x] 톤 선택 UI → 지표 카드 스타일 적용
+  - [x] 카테고리 선택 UI → 지표 카드 스타일 적용
+  - [x] 생성된 메시지 → 인사이트 메시지 스타일 적용
+  - [x] 그라데이션 + 박스섀도우 통일
+- [x] **Design Guide Screen 개선**
+  - [x] 모든 섹션을 SectionCard 구조로 통일
+  - [x] AppSpacing 간격 시스템 적용
+  - [x] useNumberBadge 옵션 활용
+
+### **Phase 3: 미세 조정**
+- [ ] Analyzed People Screen 세부 조정
+- [ ] 최종 검증 및 테스트
+
+---
+
+## 🎨 디자인 토큰 정의
+
+### **색상 매핑**
+```dart
+// 카테고리별 색상 테마
+const Map<String, Color> categoryColors = {
+  'primary': AppColors.primary,      // 메인 기능
+  'secondary': AppColors.accent,     // 부가 기능  
+  'success': AppColors.green,        // 성공/완료
+  'info': AppColors.blue,           // 정보/도움말
+  'warning': AppColors.orange,       // 주의/경고
+};
+```
+
+### **간격 시스템**
+```dart
+// 표준화된 간격 사용
+AppSpacing.gapV24  // 섹션 간 주요 간격
+AppSpacing.gapV16  // 카드 내부 요소 간격
+AppSpacing.gapV12  // 세부 요소 간격
+AppSpacing.gapV8   // 최소 간격
+```
+
+---
+
+## 🚀 작업 시작 선언
+
+**지금부터 Phase 1의 Coaching Center Screen 개선 작업을 시작합니다!** 🎯 

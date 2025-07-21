@@ -269,14 +269,12 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
         HugeIcons.strokeRoundedClock01,
         AppColors.accent,
       ),
-      const SizedBox(height: 12),
       _buildAdvancedTipCard(
         '감정 표현의 균형',
         '너무 급하지 않게, 그렇다고 너무 차갑지도 않게 적절한 선을 유지하세요.',
         Icons.balance,
         AppColors.green,
       ),
-      const SizedBox(height: 12),
       _buildAdvancedTipCard(
         '개인화된 메시지',
         '상대방의 관심사와 성격을 고려한 맞춤형 메시지를 작성하세요.',
@@ -375,135 +373,236 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
     ),
   );
 
-  // 팁 아이템
+  // 팁 아이템 - 깔끔한 리스트 스타일로 변경
   Widget _buildTipItem(CoachingTip tip) => Container(
-    margin: const EdgeInsets.only(bottom: 12),
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: AppColors.border),
-    ),
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
     child: Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(6),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: tip.color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
+            color: tip.color.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: HugeIcon(icon: tip.icon, color: tip.color, size: 18),
+          child: HugeIcon(icon: tip.icon, color: tip.color, size: 20),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(tip.title, style: AppTextStyles.cardTitle),
+              Text(
+                tip.title,
+                style: AppTextStyles.cardTitle.copyWith(
+                  color: tip.color,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(height: 4),
-              Text(tip.description, style: AppTextStyles.cardDescription),
+              Text(
+                tip.description,
+                style: AppTextStyles.cardDescription.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
             ],
           ),
+        ),
+        // 다음 액션 제안 스타일의 아이콘
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: tip.color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(HugeIcons.strokeRoundedIdea, size: 16, color: tip.color),
         ),
       ],
     ),
   );
 
-  // 템플릿 아이템
+  // 템플릿 아이템 - 메인 화면의 인사이트 메시지 스타일 적용
   Widget _buildTemplateItem(MessageTemplate template) => Container(
-    margin: const EdgeInsets.only(bottom: 12),
-    padding: const EdgeInsets.all(12),
+    margin: const EdgeInsets.only(bottom: 16),
+    padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: AppColors.border),
+      gradient: LinearGradient(
+        colors: [
+          AppColors.primary.withValues(alpha: 0.1),
+          AppColors.accent.withValues(alpha: 0.05),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.primary.withValues(alpha: 0.1),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ],
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // 상단 헤더
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
+                color: AppColors.primary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Text(
-                template.situation,
-                style: AppTextStyles.helper.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: const Icon(
+                HugeIcons.strokeRoundedMessage01,
+                size: 20,
+                color: AppColors.primary,
               ),
             ),
-            const Spacer(),
-            GestureDetector(
-              onTap: () => _useTemplate(template),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  '사용하기',
-                  style: AppTextStyles.helper.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    template.situation,
+                    style: AppTextStyles.cardTitle.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
+                  Text(
+                    '검증된 템플릿',
+                    style: AppTextStyles.cardDescription.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+
+        const SizedBox(height: 16),
+
+        // 메시지 내용 - 인사이트 카드 스타일
         Container(
-          padding: const EdgeInsets.all(10),
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.background,
-            borderRadius: BorderRadius.circular(8),
+            color: Colors.white.withValues(alpha: 0.8),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
           ),
-          child: Text(template.message, style: AppTextStyles.body),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    HugeIcons.strokeRoundedMessage01,
+                    size: 16,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '메시지 예시',
+                    style: AppTextStyles.cardDescription.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                template.message,
+                style: AppTextStyles.body1.copyWith(
+                  color: AppColors.textPrimary,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 8),
+
+        const SizedBox(height: 12),
+
+        // 설명
         Text(
           template.explanation,
-          style: AppTextStyles.helper.copyWith(color: AppColors.secondaryText),
+          style: AppTextStyles.cardDescription.copyWith(
+            color: AppColors.textSecondary,
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // 사용하기 버튼
+        SizedBox(
+          width: double.infinity,
+          child: PrimaryButton(
+            text: '✨ 이 템플릿 사용하기',
+            onPressed: () => _useTemplate(template),
+          ),
         ),
       ],
     ),
   );
 
-  // 고급 팁 카드
+  // 고급 팁 카드 - 깔끔한 리스트 스타일로 변경
   Widget _buildAdvancedTipCard(
     String title,
     String description,
     IconData icon,
     Color color,
   ) => Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.05),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: color.withValues(alpha: 0.2)),
-    ),
+    margin: const EdgeInsets.only(bottom: 8),
+    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
     child: Row(
       children: [
-        HugeIcon(icon: icon, color: color, size: 20),
-        const SizedBox(width: 12),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: HugeIcon(icon: icon, color: color, size: 20),
+        ),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style: AppTextStyles.cardTitle.copyWith(color: color),
+                style: AppTextStyles.cardTitle.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(height: 4),
-              Text(description, style: AppTextStyles.cardDescription),
+              Text(
+                description,
+                style: AppTextStyles.cardDescription.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
             ],
           ),
+        ),
+        // 다음 액션 제안 스타일의 아이콘
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(HugeIcons.strokeRoundedIdea, size: 16, color: color),
         ),
       ],
     ),

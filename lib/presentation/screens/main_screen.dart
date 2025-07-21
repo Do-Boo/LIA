@@ -1906,12 +1906,8 @@ class _MainScreenState extends State<MainScreen> {
       ),
       const SizedBox(height: 12),
       ...items.map(
-        (item) => Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(10),
-          ),
+        (item) => Padding(
+          padding: const EdgeInsets.only(bottom: 8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

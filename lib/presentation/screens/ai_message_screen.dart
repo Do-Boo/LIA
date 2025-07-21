@@ -197,199 +197,486 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
     ],
   );
 
-  // 생성된 메시지 컨텐츠
+  // 생성된 메시지 컨텐츠 - 메인 화면의 인사이트 메시지 스타일 적용
   Widget _buildGeneratedMessageContent() => Column(
     children: [
       Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
+          gradient: LinearGradient(
+            colors: [
+              AppColors.green.withValues(alpha: 0.1),
+              AppColors.primary.withValues(alpha: 0.05),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.green.withValues(alpha: 0.2)),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.green.withValues(alpha: 0.1),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 헤더
             Row(
               children: [
-                const Icon(
-                  Icons.auto_awesome,
-                  color: AppColors.primary,
-                  size: 20,
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.green.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.auto_awesome,
+                    color: AppColors.green,
+                    size: 20,
+                  ),
                 ),
-                const SizedBox(width: 8),
-                Text(
-                  'AI 생성 메시지',
-                  style: AppTextStyles.body.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'AI 생성 메시지',
+                        style: AppTextStyles.sectionTitle.copyWith(
+                          color: AppColors.green,
+                        ),
+                      ),
+                      Text(
+                        '상황에 맞게 최적화된 메시지입니다',
+                        style: AppTextStyles.sectionDescription.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            Text(
-              _generatedMessage,
-              style: AppTextStyles.body.copyWith(height: 1.5),
+
+            const SizedBox(height: 20),
+
+            // 메시지 내용 - 인사이트 카드 스타일
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.8),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppColors.green.withValues(alpha: 0.1),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        HugeIcons.strokeRoundedMessage01,
+                        size: 16,
+                        color: AppColors.green,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '완성된 메시지',
+                        style: AppTextStyles.cardDescription.copyWith(
+                          color: AppColors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    _generatedMessage,
+                    style: AppTextStyles.body1.copyWith(
+                      height: 1.6,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
-      const SizedBox(height: 16),
+
+      const SizedBox(height: 20),
+
+      // 액션 버튼들
       Row(
         children: [
           Expanded(
             child: SecondaryButton(
               onPressed: _regenerateMessage,
-              text: '다시 생성',
+              text: '🔄 다시 생성',
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: SecondaryButton(onPressed: _editMessage, text: '직접 수정'),
+            child: SecondaryButton(onPressed: _editMessage, text: '✏️ 직접 수정'),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: PrimaryButton(onPressed: _copyMessage, text: '복사하기'),
+            child: PrimaryButton(onPressed: _copyMessage, text: '📋 복사하기'),
           ),
         ],
       ),
     ],
   );
 
-  // 톤 선택기
-  Widget _buildToneSelector() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        children: [
-          const Icon(
-            HugeIcons.strokeRoundedVoice,
-            color: AppColors.primary,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '메시지 톤',
-            style: AppTextStyles.body.copyWith(
-              fontWeight: FontWeight.w600,
-              color: AppColors.primary,
-            ),
-          ),
+  // 톤 선택기 - 메인 화면의 지표 카드 스타일 적용
+  Widget _buildToneSelector() => Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          AppColors.primary.withValues(alpha: 0.1),
+          AppColors.accent.withValues(alpha: 0.05),
         ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
-      const SizedBox(height: 12),
-      Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: _toneOptions.asMap().entries.map((entry) {
-          final int index = entry.key;
-          final ToneOption option = entry.value;
-          final bool isSelected = index == _selectedTone;
-
-          return GestureDetector(
-            onTap: () => setState(() => _selectedTone = index),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.primary.withValues(alpha: 0.1),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 헤더
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isSelected ? option.color : AppColors.surface,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected ? option.color : AppColors.border,
-                ),
+                color: AppColors.primary.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: const Icon(
+                HugeIcons.strokeRoundedVoice,
+                color: AppColors.primary,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    option.icon,
-                    color: isSelected ? Colors.white : option.color,
-                    size: 20,
-                  ),
-                  const SizedBox(height: 4),
                   Text(
-                    option.title,
-                    style: AppTextStyles.helper.copyWith(
-                      color: isSelected ? Colors.white : AppColors.primaryText,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.normal,
+                    '메시지 톤 선택',
+                    style: AppTextStyles.sectionTitle.copyWith(
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  Text(
+                    '상황에 맞는 톤을 선택해주세요',
+                    style: AppTextStyles.sectionDescription.copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
-          );
-        }).toList(),
-      ),
-    ],
+          ],
+        ),
+
+        const SizedBox(height: 20),
+
+        // 톤 옵션들 - 지표 카드 스타일
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 1.2,
+          children: _toneOptions.asMap().entries.map((entry) {
+            final int index = entry.key;
+            final ToneOption option = entry.value;
+            final bool isSelected = index == _selectedTone;
+
+            return GestureDetector(
+              onTap: () => setState(() => _selectedTone = index),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  gradient: isSelected
+                      ? LinearGradient(
+                          colors: [
+                            option.color,
+                            option.color.withValues(alpha: 0.8),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : LinearGradient(
+                          colors: [
+                            Colors.white.withValues(alpha: 0.9),
+                            Colors.white.withValues(alpha: 0.7),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isSelected
+                        ? option.color
+                        : option.color.withValues(alpha: 0.3),
+                    width: isSelected ? 2 : 1,
+                  ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: option.color.withValues(alpha: 0.3),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ]
+                      : [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? Colors.white.withValues(alpha: 0.2)
+                            : option.color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        option.icon,
+                        color: isSelected ? Colors.white : option.color,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      option.title,
+                      style: AppTextStyles.cardTitle.copyWith(
+                        color: isSelected ? Colors.white : option.color,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      option.description,
+                      style: AppTextStyles.cardDescription.copyWith(
+                        color: isSelected
+                            ? Colors.white.withValues(alpha: 0.9)
+                            : AppColors.textSecondary,
+                        fontSize: 11,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    ),
   );
 
-  // 카테고리 선택기
-  Widget _buildCategorySelector() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        children: [
-          const Icon(
-            HugeIcons.strokeRoundedMenuSquare,
-            color: AppColors.accent,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '메시지 카테고리',
-            style: AppTextStyles.body.copyWith(
-              fontWeight: FontWeight.w600,
-              color: AppColors.accent,
-            ),
-          ),
+  // 카테고리 선택기 - 메인 화면의 지표 카드 스타일 적용
+  Widget _buildCategorySelector() => Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          AppColors.accent.withValues(alpha: 0.1),
+          AppColors.green.withValues(alpha: 0.05),
         ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
       ),
-      const SizedBox(height: 12),
-      Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: _categoryOptions.asMap().entries.map((entry) {
-          final int index = entry.key;
-          final CategoryOption option = entry.value;
-          final bool isSelected = index == _selectedCategory;
-
-          return GestureDetector(
-            onTap: () => setState(() => _selectedCategory = index),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.accent.withValues(alpha: 0.1),
+          blurRadius: 16,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 헤더
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isSelected ? option.color : AppColors.surface,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isSelected ? option.color : AppColors.border,
-                ),
+                color: AppColors.accent.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
               ),
+              child: const Icon(
+                HugeIcons.strokeRoundedMenuSquare,
+                color: AppColors.accent,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    option.icon,
-                    color: isSelected ? Colors.white : option.color,
-                    size: 20,
-                  ),
-                  const SizedBox(height: 4),
                   Text(
-                    option.title,
-                    style: AppTextStyles.helper.copyWith(
-                      color: isSelected ? Colors.white : AppColors.primaryText,
-                      fontWeight: isSelected
-                          ? FontWeight.w600
-                          : FontWeight.normal,
+                    '메시지 카테고리',
+                    style: AppTextStyles.sectionTitle.copyWith(
+                      color: AppColors.accent,
+                    ),
+                  ),
+                  Text(
+                    '메시지 목적에 맞는 카테고리를 선택해주세요',
+                    style: AppTextStyles.sectionDescription.copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
-          );
-        }).toList(),
-      ),
-    ],
+          ],
+        ),
+
+        const SizedBox(height: 20),
+
+        // 카테고리 옵션들 - 지표 카드 스타일 (세로 스크롤 가능)
+        SizedBox(
+          height: 180,
+          child: GridView.count(
+            scrollDirection: Axis.horizontal,
+            crossAxisCount: 1,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+            childAspectRatio: 1.1,
+            children: _categoryOptions.asMap().entries.map((entry) {
+              final int index = entry.key;
+              final CategoryOption option = entry.value;
+              final bool isSelected = index == _selectedCategory;
+
+              return GestureDetector(
+                onTap: () => setState(() => _selectedCategory = index),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: isSelected
+                        ? LinearGradient(
+                            colors: [
+                              option.color,
+                              option.color.withValues(alpha: 0.8),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          )
+                        : LinearGradient(
+                            colors: [
+                              Colors.white.withValues(alpha: 0.9),
+                              Colors.white.withValues(alpha: 0.7),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: isSelected
+                          ? option.color
+                          : option.color.withValues(alpha: 0.3),
+                      width: isSelected ? 2 : 1,
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: option.color.withValues(alpha: 0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ]
+                        : [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? Colors.white.withValues(alpha: 0.2)
+                              : option.color.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          option.icon,
+                          color: isSelected ? Colors.white : option.color,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        option.title,
+                        style: AppTextStyles.cardTitle.copyWith(
+                          color: isSelected ? Colors.white : option.color,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        option.description,
+                        style: AppTextStyles.cardDescription.copyWith(
+                          color: isSelected
+                              ? Colors.white.withValues(alpha: 0.9)
+                              : AppColors.textSecondary,
+                          fontSize: 10,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    ),
   );
 
   // 상황 입력 컨텐츠

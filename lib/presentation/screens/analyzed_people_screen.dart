@@ -20,7 +20,7 @@ class AnalyzedPerson {
   final String name;
   final String mbti;
   final String relationship;
-  final int chatCount;
+  final int chatCount; // 분석에 사용된 대화 표본 개수
   final String? lastChatDate;
 }
 
@@ -107,7 +107,7 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
     ),
   );
 
-  // 사람 목록 - 채팅앱 스타일 리스트로 변경
+  // 사람 목록 - 대시보드 카드 스타일로 변경 (사용자 편의성 최우선)
   Widget _buildPeopleList() {
     if (_analyzedPeople.isEmpty) {
       return _buildEmptyState();
@@ -117,268 +117,236 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
       children: _analyzedPeople
           .map(
             (person) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: _buildPersonCard(person),
+              padding: const EdgeInsets.only(bottom: 20),
+              child: _buildPersonDashboardCard(person),
             ),
           )
           .toList(),
     );
   }
 
-  // 분석 히스토리 스타일 사람 카드
-  Widget _buildPersonCard(AnalyzedPerson person) => GestureDetector(
-    onTap: () => _viewAnalysisResult(person),
-    child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.3)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 2),
-          ),
-        ],
+  // 심플한 사람 카드 - 정보는 유지하되 시각적 복잡성 최소화
+  Widget _buildPersonDashboardCard(AnalyzedPerson person) => Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: _getPersonGradient(person.id)[0].withValues(alpha: 0.15),
       ),
-      child: Row(
-        children: [
-          // 프로필 아바타 (더 큰 크기)
-          Stack(
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: _getPersonGradient(person.id),
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: _getPersonGradient(
-                        person.id,
-                      )[0].withValues(alpha: 0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.05),
+          blurRadius: 12,
+          offset: const Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 상단: 심플한 프로필 헤더
+        Row(
+          children: [
+            // 심플한 프로필 아바타
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: _getPersonGradient(person.id),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                child: Center(
-                  child: Text(
-                    person.name.isNotEmpty ? person.name[0] : '?',
-                    style: AppTextStyles.h2.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                borderRadius: BorderRadius.circular(30),
               ),
-              // 분석 완료 상태 표시 (체크 마크)
-              Positioned(
-                right: 2,
-                bottom: 2,
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    color: AppColors.green,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.white, width: 2),
-                  ),
-                  child: const Icon(
-                    HugeIcons.strokeRoundedCheckmarkCircle02,
-                    size: 8,
+              child: Center(
+                child: Text(
+                  person.name.isNotEmpty ? person.name[0] : '?',
+                  style: AppTextStyles.h2.copyWith(
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
 
-          const SizedBox(width: 16),
+            const SizedBox(width: 16),
 
-          // 메인 콘텐츠 영역
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 상단: 이름과 분석 날짜
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // 이름과 MBTI
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Text(
-                            person.name,
-                            style: AppTextStyles.cardTitle.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _getPersonGradient(
-                                person.id,
-                              )[0].withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              person.mbti,
-                              style: AppTextStyles.cardDescription.copyWith(
-                                color: _getPersonGradient(person.id)[0],
-                                fontWeight: FontWeight.w600,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // 분석 날짜
-                    Text(
-                      _formatAnalysisDate(person.lastChatDate),
-                      style: AppTextStyles.cardDescription.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 6),
-
-                // 하단: 분석 키워드와 점수
-                Row(
-                  children: [
-                    // 관계 및 분석 키워드
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // 관계
-                          Row(
-                            children: [
-                              const Icon(
-                                HugeIcons.strokeRoundedHeartAdd,
-                                size: 12,
-                                color: AppColors.textSecondary,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                person.relationship,
-                                style: AppTextStyles.cardDescription.copyWith(
-                                  color: AppColors.textSecondary,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 2),
-                          // 분석 키워드 표시
-                          Text(
-                            _getPreviewMessage(person),
-                            style: AppTextStyles.cardDescription.copyWith(
-                              color: AppColors.primary.withValues(alpha: 0.8),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    // 분석 점수 (썸 지수 대신)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _getScoreColor(
-                          person.chatCount,
-                        ).withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: _getScoreColor(
-                            person.chatCount,
-                          ).withValues(alpha: 0.3),
+            // 기본 정보 - 심플하게
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 이름
+                  Row(
+                    children: [
+                      Text(
+                        person.name,
+                        style: AppTextStyles.cardTitle.copyWith(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
                         ),
                       ),
-                      child: Text(
-                        '${_getAnalysisScore(person)}점',
+                      const SizedBox(width: 8),
+                      // 완료 상태를 작은 점으로 표시
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: AppColors.green,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  // MBTI와 관계 - 심플하게
+                  Row(
+                    children: [
+                      Text(
+                        person.mbti,
                         style: AppTextStyles.cardDescription.copyWith(
-                          color: _getScoreColor(person.chatCount),
+                          color: _getPersonGradient(person.id)[0],
                           fontWeight: FontWeight.w600,
-                          fontSize: 11,
+                          fontSize: 14,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        '·',
+                        style: AppTextStyles.cardDescription.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        person.relationship,
+                        style: AppTextStyles.cardDescription.copyWith(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            // 공유 버튼 - 우측 상단에 배치
+            GestureDetector(
+              onTap: () => _shareAnalysis(person),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.textSecondary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ],
+                child: const Icon(
+                  HugeIcons.strokeRoundedShare01,
+                  color: AppColors.textSecondary,
+                  size: 18,
+                ),
+              ),
             ),
-          ),
+          ],
+        ),
 
-          const SizedBox(width: 8),
+        const SizedBox(height: 16),
 
-          // 결과 보기 아이콘
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.accent.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              HugeIcons.strokeRoundedAnalytics01,
-              color: AppColors.accent,
-              size: 16,
-            ),
+        // 분석 키워드 - 심플하게
+        Text(
+          _getPreviewMessage(person),
+          style: AppTextStyles.body1.copyWith(
+            color: AppColors.primary,
+            fontSize: 15,
           ),
-        ],
-      ),
+        ),
+
+        const SizedBox(height: 16),
+
+        // 심플한 지표들
+        Row(
+          children: [
+            _buildSimpleMetric(
+              '표본 ${person.chatCount}개',
+              _getPersonGradient(person.id)[0],
+            ),
+            const SizedBox(width: 16),
+            _buildSimpleMetric(
+              '점수 ${_getAnalysisScore(person)}점',
+              _getScoreColor(person.chatCount),
+            ),
+            const Spacer(),
+            // 결과 보기 버튼
+            GestureDetector(
+              onTap: () => _viewAnalysisResult(person),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: _getPersonGradient(person.id)[0],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '결과 보기',
+                  style: AppTextStyles.cardDescription.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     ),
   );
 
-  // 빈 상태 - 분석 히스토리 스타일로 개선
+  // 심플한 지표 위젯
+  Widget _buildSimpleMetric(String text, Color color) => Row(
+    children: [
+      Container(
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+      const SizedBox(width: 8),
+      Text(
+        text,
+        style: AppTextStyles.cardDescription.copyWith(
+          color: AppColors.textSecondary,
+          fontSize: 13,
+        ),
+      ),
+    ],
+  );
+
+  // 빈 상태 - 심플하고 깔끔하게
   Widget _buildEmptyState() => Container(
-    padding: const EdgeInsets.all(32),
+    padding: const EdgeInsets.all(40),
     child: Column(
       children: [
-        // 상단 아이콘과 배경
+        // 심플한 아이콘
         Container(
-          width: 100,
-          height: 100,
+          width: 80,
+          height: 80,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.accent.withValues(alpha: 0.1),
-                AppColors.primary.withValues(alpha: 0.05),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(50),
-            border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
+            color: AppColors.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(40),
           ),
           child: const Icon(
             HugeIcons.strokeRoundedUserMultiple,
-            color: AppColors.accent,
-            size: 48,
+            color: AppColors.primary,
+            size: 40,
           ),
         ),
 
@@ -396,58 +364,29 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
         const SizedBox(height: 8),
 
         // 설명
-        const Text(
-          'AI 메시지 화면에서 대화를 분석하면\n여기에서 결과를 다시 확인할 수 있어요',
-          style: AppTextStyles.sectionDescription,
+        Text(
+          'AI 메시지에서 대화를 분석하면\n결과를 여기서 확인할 수 있어요',
+          style: AppTextStyles.body1.copyWith(
+            color: AppColors.textSecondary,
+            height: 1.5,
+          ),
           textAlign: TextAlign.center,
         ),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 32),
 
-        // 액션 버튼
+        // 심플한 액션 버튼
         Container(
-          width: double.infinity,
-          constraints: const BoxConstraints(maxWidth: 280),
+          constraints: const BoxConstraints(maxWidth: 200),
           child: PrimaryButton(
-            text: '🧠 첫 분석 시작하기',
+            text: '분석 시작하기',
             onPressed: () {
-              // 메인 화면으로 이동하는 로직
               ToastNotification.show(
                 context: context,
-                message: 'AI 메시지 화면에서 대화를 분석해보세요!',
+                message: 'AI 메시지에서 대화를 분석해보세요!',
                 type: ToastType.info,
               );
             },
-          ),
-        ),
-
-        const SizedBox(height: 16),
-
-        // 도움말 텍스트
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.blue.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.blue.withValues(alpha: 0.2)),
-          ),
-          child: Row(
-            children: [
-              const Icon(
-                HugeIcons.strokeRoundedInformationCircle,
-                size: 20,
-                color: AppColors.blue,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  '분석 완료된 결과는 자동으로 여기에 저장되어\n언제든지 다시 확인할 수 있어요',
-                  style: AppTextStyles.cardDescription.copyWith(
-                    color: AppColors.blue,
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ],
@@ -464,7 +403,7 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
           name: '김민수',
           mbti: 'ENFP',
           relationship: '친한 친구',
-          chatCount: 15,
+          chatCount: 15, // 분석 표본 15개
           lastChatDate: '2024-01-15',
         ),
         AnalyzedPerson(
@@ -472,7 +411,7 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
           name: '이지원',
           mbti: 'ISFJ',
           relationship: '직장 동료',
-          chatCount: 8,
+          chatCount: 8, // 분석 표본 8개
           lastChatDate: '2024-01-12',
         ),
         AnalyzedPerson(
@@ -480,7 +419,7 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
           name: '박서현',
           mbti: 'ENTJ',
           relationship: '대학 동기',
-          chatCount: 22,
+          chatCount: 22, // 분석 표본 22개
           lastChatDate: '2024-01-14',
         ),
       ];
@@ -491,6 +430,15 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => VirtualChatView(person: person)),
+    );
+  }
+
+  // 분석 결과 공유 기능
+  void _shareAnalysis(AnalyzedPerson person) {
+    ToastNotification.show(
+      context: context,
+      message: '${person.name}님의 분석 결과를 공유했습니다!',
+      type: ToastType.success,
     );
   }
 
@@ -537,31 +485,35 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
     return lastChatDate;
   }
 
-  // 분석 점수 계산 (예시)
+  // 분석 점수 계산 (표본 개수 기준)
   int _getAnalysisScore(AnalyzedPerson person) {
-    // 실제 분석 점수 계산 로직 구현
-    // 예: 채팅 횟수에 따라 점수 조정
+    // 분석 표본 개수를 기반으로 점수 계산
+    // 표본이 많을수록 더 정확한 분석이 가능
     if (person.chatCount > 20) {
-      return 90;
+      return 95; // 충분한 표본으로 높은 신뢰도
+    } else if (person.chatCount > 15) {
+      return 85; // 양호한 표본 수
     } else if (person.chatCount > 10) {
-      return 70;
+      return 75; // 적당한 표본 수
     } else if (person.chatCount > 5) {
-      return 50;
+      return 60; // 기본적인 분석 가능
     } else {
-      return 30;
+      return 40; // 표본 부족으로 낮은 신뢰도
     }
   }
 
-  // 분석 점수에 따른 색상 반환
-  Color _getScoreColor(int chatCount) {
-    if (chatCount > 20) {
-      return AppColors.primary;
-    } else if (chatCount > 10) {
-      return AppColors.accent;
-    } else if (chatCount > 5) {
-      return AppColors.blue;
+  // 표본 개수에 따른 색상 반환
+  Color _getScoreColor(int sampleCount) {
+    if (sampleCount > 20) {
+      return AppColors.primary; // 매우 좋음
+    } else if (sampleCount > 15) {
+      return AppColors.green; // 좋음
+    } else if (sampleCount > 10) {
+      return AppColors.accent; // 보통
+    } else if (sampleCount > 5) {
+      return AppColors.blue; // 기본
     } else {
-      return AppColors.textSecondary;
+      return AppColors.textSecondary; // 부족
     }
   }
 
