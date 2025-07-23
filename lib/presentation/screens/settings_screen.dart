@@ -58,182 +58,61 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               AppSpacing.gapV24,
 
+              // 대시보드 헤더
+              const DashboardHeader(
+                title: '설정',
+                subtitle: '앱 설정과 개인 정보를 관리하세요',
+                icon: HugeIcons.strokeRoundedSettings01,
+              ),
+
+              AppSpacing.gapV24,
+
               // 1. 알림 설정
-              SectionCard(
-                number: '1',
-                title: '알림 설정',
-                description: '원하는 알림만 받도록 설정하세요',
-                icon: HugeIcons.strokeRoundedNotification01,
-                iconColor: AppColors.primary,
-                child: Column(
-                  children: [
-                    _buildToggleItem(
-                      '전체 알림',
-                      '모든 알림을 받을지 설정합니다',
-                      HugeIcons.strokeRoundedNotification01,
-                      _notificationEnabled,
-                      (value) => setState(() => _notificationEnabled = value),
-                    ),
-                    _buildToggleItem(
-                      '푸시 알림',
-                      '앱에서 푸시 알림을 받을지 설정합니다',
-                      HugeIcons.strokeRoundedNotification01,
-                      _pushNotificationEnabled,
-                      (value) =>
-                          setState(() => _pushNotificationEnabled = value),
-                    ),
-                    _buildToggleItem(
-                      '이메일 알림',
-                      '이메일로 중요한 소식을 받을지 설정합니다',
-                      HugeIcons.strokeRoundedMail01,
-                      _emailNotificationEnabled,
-                      (value) =>
-                          setState(() => _emailNotificationEnabled = value),
-                    ),
-                  ],
-                ),
+              _buildSimpleSection(
+                '알림 설정',
+                '푸시 알림과 이메일 알림을 설정하세요',
+                HugeIcons.strokeRoundedNotification01,
+                _buildNotificationContent(),
               ),
 
               AppSpacing.gapV24,
 
               // 2. 앱 설정
-              SectionCard(
-                number: '2',
-                title: '앱 설정',
-                description: '앱 사용 환경을 개인화하세요',
-                icon: HugeIcons.strokeRoundedSettings01,
-                iconColor: AppColors.primary,
-                child: Column(
-                  children: [
-                    _buildToggleItem(
-                      '다크 모드',
-                      '어두운 테마를 사용합니다',
-                      HugeIcons.strokeRoundedMoon01,
-                      _darkModeEnabled,
-                      (value) => setState(() => _darkModeEnabled = value),
-                    ),
-                    _buildToggleItem(
-                      '분석 데이터 수집',
-                      '앱 개선을 위한 익명 데이터를 수집합니다',
-                      HugeIcons.strokeRoundedAnalytics01,
-                      _analyticsEnabled,
-                      (value) => setState(() => _analyticsEnabled = value),
-                    ),
-                    _buildActionItem(
-                      '언어 설정',
-                      '앱에서 사용할 언어를 선택하세요',
-                      HugeIcons.strokeRoundedLanguageCircle,
-                      _changeLanguage,
-                    ),
-                    _buildActionItem(
-                      '캐시 삭제',
-                      '저장된 임시 파일을 삭제하여 용량을 확보하세요',
-                      HugeIcons.strokeRoundedDelete01,
-                      _clearCache,
-                    ),
-                  ],
-                ),
+              _buildSimpleSection(
+                '앱 설정',
+                '다크모드, 분석 데이터 수집 등을 설정하세요',
+                HugeIcons.strokeRoundedSettings02,
+                _buildAppSettingsContent(),
               ),
 
               AppSpacing.gapV24,
 
-              // 3. 고객 지원
-              SectionCard(
-                number: '3',
-                title: '고객 지원',
-                description: '도움이 필요하시면 언제든 연락하세요',
-                icon: HugeIcons.strokeRoundedCustomerSupport,
-                iconColor: AppColors.primary,
-                child: Column(
-                  children: [
-                    _buildActionItem(
-                      '도움말',
-                      'LIA 사용법과 자주 묻는 질문을 확인하세요',
-                      HugeIcons.strokeRoundedHelpCircle,
-                      _showHelp,
-                    ),
-                    _buildActionItem(
-                      '문의하기',
-                      '궁금한 점이나 문제가 있으면 언제든 연락하세요',
-                      HugeIcons.strokeRoundedMail01,
-                      _contactSupport,
-                    ),
-                    _buildActionItem(
-                      '앱 평가하기',
-                      'LIA가 마음에 드신다면 평가를 남겨주세요',
-                      HugeIcons.strokeRoundedStar,
-                      _rateApp,
-                    ),
-                    _buildActionItem(
-                      '공지사항',
-                      '새로운 소식과 업데이트를 확인하세요',
-                      HugeIcons.strokeRoundedNews,
-                      _showNotices,
-                    ),
-                  ],
-                ),
+              // 3. 지원
+              _buildSimpleSection(
+                '지원',
+                '도움말, 문의하기, 개인정보 처리방침을 확인하세요',
+                HugeIcons.strokeRoundedCustomerSupport,
+                _buildSupportContent(),
               ),
 
               AppSpacing.gapV24,
 
-              // 4. 계정 및 약관
-              SectionCard(
-                number: '4',
-                title: '계정 및 약관',
-                description: '계정 관리와 약관을 확인하세요',
-                icon: HugeIcons.strokeRoundedUserAccount,
-                iconColor: AppColors.primary,
-                child: Column(
-                  children: [
-                    _buildActionItem(
-                      'LIA 프리미엄',
-                      '더 많은 기능을 이용해보세요',
-                      HugeIcons.strokeRoundedCrown,
-                      _upgradePremium,
-                    ),
-                    _buildActionItem(
-                      '개인정보 처리방침',
-                      '개인정보 보호 정책을 확인하세요',
-                      HugeIcons.strokeRoundedShield01,
-                      _showPrivacyPolicy,
-                    ),
-                    _buildActionItem(
-                      '서비스 이용 약관',
-                      '서비스 이용 약관을 확인하세요',
-                      HugeIcons.strokeRoundedFile01,
-                      _showTerms,
-                    ),
-                  ],
-                ),
+              // 4. 계정
+              _buildSimpleSection(
+                '계정',
+                '계정 정보와 로그아웃 관련 설정입니다',
+                HugeIcons.strokeRoundedUser,
+                _buildAccountContent(),
               ),
 
               AppSpacing.gapV24,
 
               // 5. 위험 구역
-              SectionCard(
-                number: '5',
-                title: '위험 구역',
-                description: '신중하게 선택해주세요',
-                icon: HugeIcons.strokeRoundedAlert01,
-                iconColor: AppColors.primary,
-                child: Column(
-                  children: [
-                    _buildDangerActionItem(
-                      '로그아웃',
-                      '현재 계정에서 로그아웃합니다',
-                      HugeIcons.strokeRoundedLogout01,
-                      AppColors.orange,
-                      _logout,
-                    ),
-                    _buildDangerActionItem(
-                      '계정 삭제',
-                      '모든 데이터가 영구적으로 삭제됩니다',
-                      HugeIcons.strokeRoundedUserRemove01,
-                      AppColors.pink,
-                      _deleteAccount,
-                    ),
-                  ],
-                ),
+              _buildSimpleSection(
+                '위험 구역',
+                '계정 삭제 등 주의가 필요한 작업입니다',
+                HugeIcons.strokeRoundedAlert02,
+                _buildDangerZoneContent(),
               ),
 
               AppSpacing.gapV40,
@@ -541,6 +420,180 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ],
       ),
     ),
+  );
+
+  // 심플한 섹션 위젯
+  Widget _buildSimpleSection(
+    String title,
+    String description,
+    IconData icon,
+    Widget content,
+  ) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Icon(icon, color: AppColors.primary, size: 24),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyles.cardTitle.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: AppTextStyles.cardDescription.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 16),
+      content,
+    ],
+  );
+
+  // 알림 설정 컨텐츠
+  Widget _buildNotificationContent() => Column(
+    children: [
+      _buildToggleItem(
+        '전체 알림',
+        '모든 알림을 받을지 설정합니다',
+        HugeIcons.strokeRoundedNotification01,
+        _notificationEnabled,
+        (value) => setState(() => _notificationEnabled = value),
+      ),
+      _buildToggleItem(
+        '푸시 알림',
+        '앱에서 푸시 알림을 받을지 설정합니다',
+        HugeIcons.strokeRoundedNotification01,
+        _pushNotificationEnabled,
+        (value) => setState(() => _pushNotificationEnabled = value),
+      ),
+      _buildToggleItem(
+        '이메일 알림',
+        '이메일로 중요한 소식을 받을지 설정합니다',
+        HugeIcons.strokeRoundedMail01,
+        _emailNotificationEnabled,
+        (value) => setState(() => _emailNotificationEnabled = value),
+      ),
+    ],
+  );
+
+  // 앱 설정 컨텐츠
+  Widget _buildAppSettingsContent() => Column(
+    children: [
+      _buildToggleItem(
+        '다크 모드',
+        '어두운 테마를 사용합니다',
+        HugeIcons.strokeRoundedMoon01,
+        _darkModeEnabled,
+        (value) => setState(() => _darkModeEnabled = value),
+      ),
+      _buildToggleItem(
+        '분석 데이터 수집',
+        '앱 개선을 위한 익명 데이터를 수집합니다',
+        HugeIcons.strokeRoundedAnalytics01,
+        _analyticsEnabled,
+        (value) => setState(() => _analyticsEnabled = value),
+      ),
+      _buildActionItem(
+        '언어 설정',
+        '앱에서 사용할 언어를 선택하세요',
+        HugeIcons.strokeRoundedLanguageCircle,
+        _changeLanguage,
+      ),
+      _buildActionItem(
+        '캐시 삭제',
+        '저장된 임시 파일을 삭제하여 용량을 확보하세요',
+        HugeIcons.strokeRoundedDelete01,
+        _clearCache,
+      ),
+    ],
+  );
+
+  // 지원 컨텐츠
+  Widget _buildSupportContent() => Column(
+    children: [
+      _buildActionItem(
+        '도움말',
+        'LIA 사용법과 자주 묻는 질문을 확인하세요',
+        HugeIcons.strokeRoundedHelpCircle,
+        _showHelp,
+      ),
+      _buildActionItem(
+        '문의하기',
+        '궁금한 점이나 문제가 있으면 언제든 연락하세요',
+        HugeIcons.strokeRoundedMail01,
+        _contactSupport,
+      ),
+      _buildActionItem(
+        '앱 평가하기',
+        'LIA가 마음에 드신다면 평가를 남겨주세요',
+        HugeIcons.strokeRoundedStar,
+        _rateApp,
+      ),
+      _buildActionItem(
+        '공지사항',
+        '새로운 소식과 업데이트를 확인하세요',
+        HugeIcons.strokeRoundedNews,
+        _showNotices,
+      ),
+    ],
+  );
+
+  // 계정 컨텐츠
+  Widget _buildAccountContent() => Column(
+    children: [
+      _buildActionItem(
+        'LIA 프리미엄',
+        '더 많은 기능을 이용해보세요',
+        HugeIcons.strokeRoundedCrown,
+        _upgradePremium,
+      ),
+      _buildActionItem(
+        '개인정보 처리방침',
+        '개인정보 보호 정책을 확인하세요',
+        HugeIcons.strokeRoundedShield01,
+        _showPrivacyPolicy,
+      ),
+      _buildActionItem(
+        '서비스 이용 약관',
+        '서비스 이용 약관을 확인하세요',
+        HugeIcons.strokeRoundedFile01,
+        _showTerms,
+      ),
+    ],
+  );
+
+  // 위험 구역 컨텐츠
+  Widget _buildDangerZoneContent() => Column(
+    children: [
+      _buildDangerActionItem(
+        '로그아웃',
+        '현재 계정에서 로그아웃합니다',
+        HugeIcons.strokeRoundedLogout01,
+        AppColors.orange,
+        _logout,
+      ),
+      _buildDangerActionItem(
+        '계정 삭제',
+        '모든 데이터가 영구적으로 삭제됩니다',
+        HugeIcons.strokeRoundedUserRemove01,
+        AppColors.pink,
+        _deleteAccount,
+      ),
+    ],
   );
 
   // === 액션 메서드들 ===

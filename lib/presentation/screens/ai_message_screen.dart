@@ -100,113 +100,78 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.background,
-    body: SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
-          vertical: 12,
-        ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppSpacing.gapV24,
+    body: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
+        vertical: 12,
+      ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AppSpacing.gapV16,
 
-              // 대시보드 헤더
-              DashboardHeader(
-                title: 'AI 메시지 생성',
-                subtitle: '상황에 맞는 완벽한 메시지를 AI가 만들어드려요',
-                icon: HugeIcons.strokeRoundedMessage01,
-                actions: [
-                  DashboardAction(
-                    title: '빠른 생성',
-                    icon: HugeIcons.strokeRoundedFlash,
-                    onTap: _quickGenerate,
-                  ),
-                  DashboardAction(
-                    title: '템플릿',
-                    icon: HugeIcons.strokeRoundedAlignBoxTopLeft,
-                    onTap: _showTemplates,
-                  ),
-                  DashboardAction(
-                    title: '히스토리',
-                    icon: HugeIcons.strokeRoundedTimeQuarter02,
-                    onTap: _showHistory,
-                  ),
-                ],
+            // 1. 메시지 톤 선택
+            _buildSimpleSection(
+              '메시지 톤',
+              '상황에 맞는 톤을 선택하세요',
+              HugeIcons.strokeRoundedVoice,
+              _buildToneSelector(),
+            ),
+
+            AppSpacing.gapV16,
+
+            // 2. 메시지 카테고리
+            _buildSimpleSection(
+              '메시지 카테고리',
+              '어떤 종류의 메시지를 작성할까요?',
+              HugeIcons.strokeRoundedMessage01,
+              _buildCategorySelector(),
+            ),
+
+            AppSpacing.gapV16,
+
+            // 3. 상황 및 맥락 입력
+            _buildSimpleSection(
+              '상황 및 맥락',
+              '구체적인 상황을 알려주시면 더 좋은 메시지를 만들어드려요',
+              HugeIcons.strokeRoundedEdit01,
+              _buildContextInputContent(),
+            ),
+
+            AppSpacing.gapV16,
+
+            // 4. 메시지 생성
+            _buildSimpleSection(
+              'AI 생성 메시지',
+              '입력하신 정보를 바탕으로 최적의 메시지를 생성합니다',
+              Icons.auto_awesome,
+              _buildMessageGenerationContent(),
+            ),
+
+            AppSpacing.gapV24,
+
+            // 5. 생성된 메시지 표시 (조건부)
+            if (_generatedMessage.isNotEmpty) ...[
+              _buildSimpleSection(
+                '생성된 메시지',
+                '생성된 메시지를 확인하고 수정하세요',
+                HugeIcons.strokeRoundedMessage01,
+                _buildGeneratedMessageDisplay(),
               ),
-
               AppSpacing.gapV24,
-
-              // 1. 메시지 설정
-              SectionCard(
-                number: '1',
-                title: '메시지 설정',
-                description: '메시지 톤과 카테고리를 선택하세요',
-                icon: HugeIcons.strokeRoundedSettings01,
-                iconColor: AppColors.primary,
-                child: _buildMessageSettingsContent(),
-              ),
-
-              AppSpacing.gapV24,
-
-              // 2. 상황 설명
-              SectionCard(
-                number: '2',
-                title: '상황 설명',
-                description: '메시지를 보내는 상황을 자세히 설명해주세요',
-                icon: HugeIcons.strokeRoundedEdit01,
-                iconColor: AppColors.primary,
-                child: _buildContextInputContent(),
-              ),
-
-              AppSpacing.gapV24,
-
-              // 3. 메시지 생성 & 편집
-              SectionCard(
-                number: '3',
-                title: 'AI 메시지 생성',
-                description: 'AI가 상황에 맞는 완벽한 메시지를 생성해드립니다',
-                icon: HugeIcons.strokeRoundedMagicWand01,
-                iconColor: AppColors.primary,
-                child: _buildMessageGenerationContent(),
-              ),
-
-              AppSpacing.gapV24,
-
-              // 4. 생성된 메시지 & 편집
-              if (_generatedMessage.isNotEmpty)
-                SectionCard(
-                  number: '4',
-                  title: '생성된 메시지',
-                  description: '메시지를 확인하고 필요시 수정하세요',
-                  icon: HugeIcons.strokeRoundedCheckmarkCircle02,
-                  iconColor: AppColors.green,
-                  child: _buildGeneratedMessageContent(),
-                ),
-
-              AppSpacing.gapV40,
             ],
-          ),
+
+            AppSpacing.gapV40,
+          ],
         ),
       ),
     ),
   );
 
-  // 메시지 설정 컨텐츠
-  Widget _buildMessageSettingsContent() => Column(
-    children: [
-      // 톤 선택
-      _buildToneSelector(),
-      const SizedBox(height: 20),
-      // 카테고리 선택
-      _buildCategorySelector(),
-    ],
-  );
-
-  // 생성된 메시지 컨텐츠 - 심플한 스타일로 변경
-  Widget _buildGeneratedMessageContent() => Column(
+  // 생성된 메시지 표시 컨텐츠 - 심플한 스타일로 변경
+  Widget _buildGeneratedMessageDisplay() => Column(
     children: [
       // 생성된 메시지 표시
       Container(
@@ -470,20 +435,9 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
     ],
   );
 
-  // 메시지 생성 컨텐츠 - 심플하게
-  Widget _buildMessageGenerationContent() => Column(
-    children: [
-      // 생성 버튼
-      SizedBox(
-        width: double.infinity,
-        child: PrimaryButton(
-          onPressed: _canGenerate() ? _generateMessage : null,
-          text: _isGenerating ? '생성 중...' : 'AI 메시지 생성',
-          isLoading: _isGenerating,
-        ),
-      ),
-    ],
-  );
+  // 메시지 생성 컨텐츠
+  Widget _buildMessageGenerationContent() =>
+      PrimaryButton(onPressed: _generateMessage, text: '메시지 생성하기');
 
   // 생성 가능 여부 확인
   bool _canGenerate() => _contextController.text.trim().isNotEmpty;
@@ -584,6 +538,47 @@ class _AiMessageScreenState extends State<AiMessageScreen> {
       type: ToastType.info,
     );
   }
+
+  // 심플한 섹션 위젯
+  Widget _buildSimpleSection(
+    String title,
+    String description,
+    IconData icon,
+    Widget content,
+  ) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Icon(icon, color: AppColors.primary, size: 24),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyles.cardTitle.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: AppTextStyles.cardDescription.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 16),
+      content,
+    ],
+  );
 }
 
 // 톤 옵션 클래스

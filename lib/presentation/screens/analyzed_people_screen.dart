@@ -69,40 +69,28 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.background,
-    body: SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
-          vertical: 12,
-        ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppSpacing.gapV20,
+    body: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
+        vertical: 12,
+      ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AppSpacing.gapV16,
 
-              // DashboardHeader 사용으로 통일
-              const DashboardHeader(
-                title: '분석 히스토리',
-                subtitle: '이전에 분석한 사람들의 결과를 다시 확인해보세요',
-                icon: HugeIcons.strokeRoundedUserMultiple,
-              ),
+            // 분석 목록
+            _buildSimpleSection(
+              '분석 기록',
+              '${_analyzedPeople.length}명의 대화를 분석했습니다',
+              HugeIcons.strokeRoundedAnalytics01,
+              _analyzedPeople.isEmpty ? _buildEmptyState() : _buildPeopleList(),
+            ),
 
-              AppSpacing.gapV24,
-
-              SectionCard(
-                number: '1',
-                title: '분석 결과 히스토리',
-                description: '분석한 사람들의 결과를 다시 보고 인사이트를 확인하세요',
-                icon: HugeIcons.strokeRoundedUserMultiple,
-                iconColor: AppColors.primary,
-                child: _buildPeopleList(),
-              ),
-
-              AppSpacing.gapV32,
-            ],
-          ),
+            AppSpacing.gapV32,
+          ],
         ),
       ),
     ),
@@ -125,6 +113,47 @@ class _AnalyzedPeopleScreenState extends State<AnalyzedPeopleScreen> {
           .toList(),
     );
   }
+
+  // 심플한 섹션 위젯
+  Widget _buildSimpleSection(
+    String title,
+    String description,
+    IconData icon,
+    Widget content,
+  ) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Icon(icon, color: AppColors.primary, size: 24),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyles.cardTitle.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: AppTextStyles.cardDescription.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 16),
+      content,
+    ],
+  );
 
   // 심플한 사람 카드 - 더 깔끔하고 통일된 스타일
   Widget _buildPersonDashboardCard(AnalyzedPerson person) => Container(

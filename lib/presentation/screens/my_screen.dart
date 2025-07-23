@@ -38,381 +38,213 @@ class _MyScreenState extends State<MyScreen> {
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.background,
     body: SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
-          vertical: 12,
-        ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppSpacing.gapV20,
+      child: Column(
+        children: [
+          // 상단 프로필 영역
+          _buildProfileSection(),
 
-              // 심플한 헤더
-              const DashboardHeader(
-                title: '나의 프로필',
-                subtitle: '개인 정보와 사용 통계를 확인해보세요',
-                icon: HugeIcons.strokeRoundedUserCircle,
-              ),
+          // 통계 숫자 영역
+          _buildStatsSection(),
 
-              AppSpacing.gapV24,
-
-              // 1. 프로필 정보
-              SectionCard(
-                number: '1',
-                title: '프로필 정보',
-                description: '나의 기본 정보와 관심사를 확인하세요',
-                icon: HugeIcons.strokeRoundedUserCircle,
-                iconColor: AppColors.primary,
-                child: _buildProfileContent(),
-              ),
-
-              AppSpacing.gapV20,
-
-              // 2. 사용 통계
-              SectionCard(
-                number: '2',
-                title: '사용 통계',
-                description: 'LIA 앱 사용 현황과 성과를 확인해보세요',
-                icon: HugeIcons.strokeRoundedAnalytics01,
-                iconColor: AppColors.primary,
-                child: _buildStatsContent(),
-              ),
-
-              AppSpacing.gapV20,
-
-              // 3. 빠른 액션
-              SectionCard(
-                number: '3',
-                title: '빠른 액션',
-                description: '자주 사용하는 기능들에 빠르게 접근하세요',
-                icon: HugeIcons.strokeRoundedFlash,
-                iconColor: AppColors.primary,
-                child: _buildQuickActions(),
-              ),
-
-              AppSpacing.gapV40,
-            ],
-          ),
-        ),
+          // 메뉴 리스트 영역
+          Expanded(child: _buildMenuSection()),
+        ],
       ),
     ),
   );
 
-  // 프로필 콘텐츠 - SectionCard 내부용
-  Widget _buildProfileContent() => Column(
-    children: [
-      // 프로필 아바타
-      Container(
-        width: 100,
-        height: 100,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.primary, AppColors.accent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+  // 상단 프로필 섹션 (카카오톡 스타일)
+  Widget _buildProfileSection() => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(24),
+    color: Colors.white.withValues(alpha: 0),
+    child: Column(
+      children: [
+        // 프로필 이미지
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: AppColors.charcoal.withValues(alpha: 0.05),
           ),
-          borderRadius: BorderRadius.circular(50),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.3),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            _userInfo['name'][0],
-            style: AppTextStyles.h1.copyWith(
-              color: Colors.white,
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-      const SizedBox(height: 20),
-      // 이름
-      Text(
-        _userInfo['name'],
-        style: AppTextStyles.h2.copyWith(
-          color: AppColors.textPrimary,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 8),
-      // 이메일
-      Text(
-        _userInfo['email'],
-        style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary),
-      ),
-      const SizedBox(height: 16),
-      // MBTI와 레벨
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.2),
-              ),
-            ),
+          child: Center(
             child: Text(
-              _userInfo['mbti'],
-              style: AppTextStyles.cardTitle.copyWith(
-                color: AppColors.primary,
+              _userInfo['name'][0],
+              style: AppTextStyles.h1.copyWith(
+                color: Colors.white,
+                fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: AppColors.accent.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.accent.withValues(alpha: 0.2),
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  HugeIcons.strokeRoundedStar,
-                  size: 16,
-                  color: AppColors.accent,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  '${_userInfo['level']} 사용자',
-                  style: AppTextStyles.cardTitle.copyWith(
-                    color: AppColors.accent,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 20),
-      // 관심사 태그들
-      _buildSimpleInterests(),
-    ],
-  );
-
-  // 사용 통계 콘텐츠 - SectionCard 내부용
-  Widget _buildStatsContent() => Column(
-    children: [
-      // 지표들
-      Row(
-        children: [
-          Expanded(
-            child: _buildSimpleMetric(
-              '총 메시지',
-              '${_userInfo['totalMessages']}개',
-              AppColors.primary,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: _buildSimpleMetric(
-              '성공률',
-              '${_userInfo['successRate']}%',
-              AppColors.green,
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 16),
-      Row(
-        children: [
-          Expanded(
-            child: _buildSimpleMetric(
-              '분석 횟수',
-              '${_userInfo['analysisCount']}회',
-              AppColors.accent,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: _buildSimpleMetric(
-              '가입일',
-              _userInfo['joinDate'],
-              AppColors.blue,
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
-
-  // 심플한 관심사 표시
-  Widget _buildSimpleInterests() => Wrap(
-    spacing: 8,
-    runSpacing: 8,
-    alignment: WrapAlignment.center,
-    children: _userInfo['interests']
-        .map<Widget>(
-          (interest) => Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: AppColors.blue.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Text(
-              '#$interest',
-              style: AppTextStyles.cardDescription.copyWith(
-                color: AppColors.blue,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        )
-        .toList(),
-  );
-
-  // 심플한 지표 위젯
-  Widget _buildSimpleMetric(String title, String value, Color color) => Column(
-    children: [
-      Text(
-        value,
-        style: AppTextStyles.h2.copyWith(
-          color: color,
-          fontWeight: FontWeight.bold,
         ),
-      ),
-      const SizedBox(height: 4),
-      Text(
-        title,
-        style: AppTextStyles.cardDescription.copyWith(
-          color: AppColors.textSecondary,
+        const SizedBox(height: 16),
+
+        // 닉네임
+        Text(
+          _userInfo['name'],
+          style: AppTextStyles.h2.copyWith(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
-    ],
-  );
+        const SizedBox(height: 4),
 
-  // 빠른 액션 버튼들
-  Widget _buildQuickActions() => Column(
-    children: [
-      // 상단 액션들
-      Row(
-        children: [
-          Expanded(
-            child: _buildActionButton(
-              '프로필 수정',
-              HugeIcons.strokeRoundedEdit01,
-              AppColors.primary,
-              _editProfile,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _buildActionButton(
-              '설정',
-              HugeIcons.strokeRoundedSettings01,
-              AppColors.blue,
-              _openSettings,
-            ),
-          ),
-        ],
-      ),
-
-      const SizedBox(height: 12),
-
-      // 하단 액션들
-      Row(
-        children: [
-          Expanded(
-            child: _buildActionButton(
-              '도움말',
-              HugeIcons.strokeRoundedHelpCircle,
-              AppColors.green,
-              _showHelp,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _buildActionButton(
-              '로그아웃',
-              HugeIcons.strokeRoundedLogout01,
-              AppColors.orange,
-              _logout,
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
-
-  // 액션 버튼 - 심플하고 깔끔한 스타일
-  Widget _buildActionButton(
-    String title,
-    IconData icon,
-    Color color,
-    VoidCallback onTap,
-  ) => GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: AppTextStyles.cardDescription.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const Spacer(),
-          const Icon(
-            HugeIcons.strokeRoundedArrowRight01,
-            color: AppColors.textSecondary,
-            size: 16,
-          ),
-        ],
-      ),
+        // 상태 메시지
+        SecondaryButton(
+          onPressed: () {},
+          text: '내 정보 수정',
+          width: 120,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        ),
+      ],
     ),
   );
 
-  // 액션 메서드들
-  void _editProfile() {
+  // 통계 숫자 섹션
+  Widget _buildStatsSection() => Container(
+    color: Colors.white,
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+    child: Row(
+      children: [
+        Expanded(
+          child: _buildStatItem(
+            '친구 목록',
+            '${_userInfo['analysisCount']} 개',
+            () => _showToast('친구 목록 기능은 곧 추가될 예정이에요!'),
+          ),
+        ),
+        Container(
+          width: 1,
+          height: 40,
+          color: AppColors.textSecondary.withValues(alpha: 0.2),
+        ),
+        Expanded(
+          child: _buildStatItem(
+            '보유 코인',
+            '${_userInfo['totalMessages']} 🪙',
+            () => _showToast('코인 상점 기능은 곧 추가될 예정이에요!'),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  // 통계 아이템
+  Widget _buildStatItem(String title, String value, VoidCallback onTap) =>
+      GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyles.body2.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    value,
+                    style: AppTextStyles.cardTitle.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 8),
+              const Icon(
+                HugeIcons.strokeRoundedArrowRight01,
+                size: 16,
+                color: AppColors.textSecondary,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  // 메뉴 섹션
+  Widget _buildMenuSection() => ColoredBox(
+    color: AppColors.background,
+    child: ListView(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      children: [
+        _buildMenuItem(
+          HugeIcons.strokeRoundedMegaphone01,
+          '공지사항',
+          () => _showToast('공지사항 페이지로 이동합니다!'),
+        ),
+        _buildMenuItem(
+          HugeIcons.strokeRoundedCalendar03,
+          '이벤트',
+          () => _showToast('이벤트 페이지로 이동합니다!'),
+        ),
+        _buildMenuItem(
+          HugeIcons.strokeRoundedHelpCircle,
+          '자주 묻는 질문',
+          () => _showToast('FAQ 페이지로 이동합니다!'),
+        ),
+        _buildMenuItem(
+          HugeIcons.strokeRoundedCustomerSupport,
+          '문의하기',
+          () => _showToast('고객센터로 연결됩니다!'),
+        ),
+        const SizedBox(height: 16),
+        _buildMenuItem(HugeIcons.strokeRoundedSettings01, '설정', _openSettings),
+      ],
+    ),
+  );
+
+  // 메뉴 아이템
+  Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) =>
+      GestureDetector(
+        onTap: onTap,
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          margin: const EdgeInsets.only(bottom: 1),
+          child: Row(
+            children: [
+              Icon(icon, size: 24, color: AppColors.textSecondary),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTextStyles.body1.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+              const Icon(
+                HugeIcons.strokeRoundedArrowRight01,
+                size: 16,
+                color: AppColors.textSecondary,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  // 토스트 메시지 헬퍼
+  void _showToast(String message) {
     ToastNotification.show(
       context: context,
-      message: '프로필 수정 기능은 곧 추가될 예정이에요!',
+      message: message,
       type: ToastType.info,
     );
   }
 
+  // 액션 메서드들
   void _openSettings() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const SettingsScreen()),
-    );
-  }
-
-  void _showHelp() {
-    ToastNotification.show(
-      context: context,
-      message: '도움말 페이지로 이동합니다!',
-      type: ToastType.info,
-    );
-  }
-
-  void _logout() {
-    ToastNotification.show(
-      context: context,
-      message: '로그아웃 되었습니다!',
-      type: ToastType.success,
     );
   }
 }

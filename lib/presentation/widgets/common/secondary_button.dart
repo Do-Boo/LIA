@@ -12,6 +12,15 @@ import '../../../core/app_colors.dart';
 /// - 그림자 효과 간소화
 /// - 모바일 친화적 크기 조정
 class SecondaryButton extends StatelessWidget {
+  const SecondaryButton({
+    required this.onPressed,
+    required this.text,
+    super.key,
+    this.isLoading = false,
+    this.width,
+    this.height,
+    this.padding,
+  });
   final VoidCallback? onPressed;
   final String text;
   final bool isLoading;
@@ -19,67 +28,47 @@ class SecondaryButton extends StatelessWidget {
   final double? height;
   final EdgeInsetsGeometry? padding;
 
-  const SecondaryButton({
-    super.key,
-    required this.onPressed,
-    required this.text,
-    this.isLoading = false,
-    this.width,
-    this.height,
-    this.padding,
-  });
-
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F3F5),
+  Widget build(BuildContext context) => Container(
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+      color: AppColors.charcoal.withValues(alpha: 0.05),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: isLoading ? null : onPressed,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 6,
-            spreadRadius: 0,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: isLoading ? null : onPressed,
-          borderRadius: BorderRadius.circular(12),
-          hoverColor: const Color(0xFFE9ECEF),
-          child: Container(
-            padding:
-                padding ??
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            child: Center(
-              child: isLoading
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.secondaryText,
-                        ),
-                      ),
-                    )
-                  : Text(
-                      text,
-                      style: const TextStyle(
-                        color: AppColors.secondaryText,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
+        hoverColor: const Color(0xFFE9ECEF),
+        child: Container(
+          padding:
+              padding ??
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Center(
+            child: isLoading
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.secondaryText,
                       ),
                     ),
-            ),
+                  )
+                : Text(
+                    text,
+                    style: const TextStyle(
+                      color: AppColors.secondaryText,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }

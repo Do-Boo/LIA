@@ -24,77 +24,58 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.background,
-    body: SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
-          vertical: 12,
-        ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppSpacing.gapV24,
+    body: SingleChildScrollView(
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
+        vertical: 12,
+      ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 800),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AppSpacing.gapV16,
 
-              // 대시보드 헤더 - 분석 기반 코칭으로 변경
-              const DashboardHeader(
-                title: '나의 대화 분석',
-                subtitle: '내 대화 패턴을 분석하고 개선점을 찾아보세요',
-                icon: HugeIcons.strokeRoundedBookOpen01,
-              ),
+            // 1. 내 대화 분석 결과
+            _buildSimpleSection(
+              '내 대화 분석 결과',
+              '12개의 대화를 분석하여 당신의 대화 스타일을 분석했습니다',
+              HugeIcons.strokeRoundedAnalytics01,
+              _buildAnalysisInsightContent(),
+            ),
 
-              AppSpacing.gapV24,
+            AppSpacing.gapV24,
 
-              // 분석 기반 인사이트 섹션을 SectionCard로 변경
-              SectionCard(
-                number: '1',
-                title: '내 대화 분석 결과',
-                description: '12개의 대화를 분석하여 당신의 대화 스타일을 분석했습니다',
-                icon: HugeIcons.strokeRoundedAnalytics01,
-                iconColor: AppColors.primary,
-                child: _buildAnalysisInsightContent(),
-              ),
+            // 2. 대화 스타일 진단
+            _buildSimpleSection(
+              '대화 스타일 진단',
+              '당신의 대화 유형과 특성을 자세히 알아보세요',
+              HugeIcons.strokeRoundedUserCheck01,
+              _buildConversationStyleContent(),
+            ),
 
-              AppSpacing.gapV24,
+            AppSpacing.gapV24,
 
-              // 2. 대화 스타일 진단
-              SectionCard(
-                number: '2',
-                title: '대화 스타일 진단',
-                description: '당신의 대화 유형과 특성을 자세히 알아보세요',
-                icon: HugeIcons.strokeRoundedUserCheck01,
-                iconColor: AppColors.primary,
-                child: _buildConversationStyleContent(),
-              ),
+            // 3. 감정 표현 분석
+            _buildSimpleSection(
+              '감정 표현 분석',
+              '메시지에서 감정을 어떻게 표현하는지 분석합니다',
+              HugeIcons.strokeRoundedHeartAdd,
+              _buildEmotionAnalysisContent(),
+            ),
 
-              AppSpacing.gapV24,
+            AppSpacing.gapV24,
 
-              // 3. 감정 표현 분석
-              SectionCard(
-                number: '3',
-                title: '감정 표현 분석',
-                description: '메시지에서 감정을 어떻게 표현하는지 분석합니다',
-                icon: HugeIcons.strokeRoundedHeartAdd,
-                iconColor: AppColors.primary,
-                child: _buildEmotionAnalysisContent(),
-              ),
+            // 4. 개선 포인트
+            _buildSimpleSection(
+              '개선 포인트',
+              '더 효과적인 소통을 위한 구체적인 개선 방안을 제시합니다',
+              HugeIcons.strokeRoundedTarget01,
+              _buildImprovementPointsContent(),
+            ),
 
-              AppSpacing.gapV24,
-
-              // 4. 개선 포인트
-              SectionCard(
-                number: '4',
-                title: '개선 포인트',
-                description: '더 효과적인 소통을 위한 구체적인 개선 방안을 제시합니다',
-                icon: HugeIcons.strokeRoundedTarget01,
-                iconColor: AppColors.primary,
-                child: _buildImprovementPointsContent(),
-              ),
-
-              AppSpacing.gapV40,
-            ],
-          ),
+            AppSpacing.gapV40,
+          ],
         ),
       ),
     ),
@@ -609,4 +590,45 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
       type: ToastType.info,
     );
   }
+
+  // 간단한 섹션 위젯
+  Widget _buildSimpleSection(
+    String title,
+    String description,
+    IconData icon,
+    Widget content,
+  ) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      AppSpacing.gapV8,
+      Row(
+        children: [
+          Icon(icon, color: AppColors.primary, size: 24),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyles.cardTitle.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  description,
+                  style: AppTextStyles.cardDescription.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      AppSpacing.gapV16,
+      content,
+    ],
+  );
 }
