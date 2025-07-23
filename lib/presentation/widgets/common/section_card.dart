@@ -84,9 +84,9 @@ class SectionCard extends StatelessWidget {
         boxShadow: showShadow
             ? [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 16,
-                  offset: const Offset(0, 2),
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 8,
+                  offset: const Offset(0, 1),
                 ),
               ]
             : null,
@@ -123,11 +123,16 @@ class SectionCard extends StatelessWidget {
             Text(
               title,
               style: AppTextStyles.sectionTitle.copyWith(
-                color: iconColor ?? AppColors.primary,
+                color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
-            Text(description, style: AppTextStyles.sectionDescription),
+            Text(
+              description,
+              style: AppTextStyles.sectionDescription.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
       ),

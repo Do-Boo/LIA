@@ -59,18 +59,39 @@ class _MyScreenState extends State<MyScreen> {
 
               AppSpacing.gapV24,
 
-              // 메인 프로필 카드
-              _buildProfileCard(),
+              // 1. 프로필 정보
+              SectionCard(
+                number: '1',
+                title: '프로필 정보',
+                description: '나의 기본 정보와 관심사를 확인하세요',
+                icon: HugeIcons.strokeRoundedUserCircle,
+                iconColor: AppColors.primary,
+                child: _buildProfileContent(),
+              ),
 
               AppSpacing.gapV20,
 
-              // 사용 통계 카드
-              _buildStatsCard(),
+              // 2. 사용 통계
+              SectionCard(
+                number: '2',
+                title: '사용 통계',
+                description: 'LIA 앱 사용 현황과 성과를 확인해보세요',
+                icon: HugeIcons.strokeRoundedAnalytics01,
+                iconColor: AppColors.primary,
+                child: _buildStatsContent(),
+              ),
 
               AppSpacing.gapV20,
 
-              // 빠른 액션 버튼들
-              _buildQuickActions(),
+              // 3. 빠른 액션
+              SectionCard(
+                number: '3',
+                title: '빠른 액션',
+                description: '자주 사용하는 기능들에 빠르게 접근하세요',
+                icon: HugeIcons.strokeRoundedFlash,
+                iconColor: AppColors.primary,
+                child: _buildQuickActions(),
+              ),
 
               AppSpacing.gapV40,
             ],
@@ -80,134 +101,157 @@ class _MyScreenState extends State<MyScreen> {
     ),
   );
 
-  // 심플한 프로필 카드
-  Widget _buildProfileCard() => Container(
-    padding: const EdgeInsets.all(24),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 16,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        // 프로필 아바타
-        Container(
-          width: 100,
-          height: 100,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [AppColors.primary, AppColors.accent],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(50),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.3),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
-              ),
-            ],
+  // 프로필 콘텐츠 - SectionCard 내부용
+  Widget _buildProfileContent() => Column(
+    children: [
+      // 프로필 아바타
+      Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColors.primary, AppColors.accent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          child: Center(
+          borderRadius: BorderRadius.circular(50),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.3),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            _userInfo['name'][0],
+            style: AppTextStyles.h1.copyWith(
+              color: Colors.white,
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(height: 20),
+      // 이름
+      Text(
+        _userInfo['name'],
+        style: AppTextStyles.h2.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const SizedBox(height: 8),
+      // 이메일
+      Text(
+        _userInfo['email'],
+        style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary),
+      ),
+      const SizedBox(height: 16),
+      // MBTI와 레벨
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.primary.withValues(alpha: 0.2),
+              ),
+            ),
             child: Text(
-              _userInfo['name'][0],
-              style: AppTextStyles.h1.copyWith(
-                color: Colors.white,
-                fontSize: 40,
+              _userInfo['mbti'],
+              style: AppTextStyles.cardTitle.copyWith(
+                color: AppColors.primary,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-        ),
-
-        const SizedBox(height: 20),
-
-        // 이름
-        Text(
-          _userInfo['name'],
-          style: AppTextStyles.h2.copyWith(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-        const SizedBox(height: 8),
-
-        // 이메일
-        Text(
-          _userInfo['email'],
-          style: AppTextStyles.body1.copyWith(color: AppColors.textSecondary),
-        ),
-
-        const SizedBox(height: 16),
-
-        // MBTI와 레벨
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.2),
-                ),
-              ),
-              child: Text(
-                _userInfo['mbti'],
-                style: AppTextStyles.cardTitle.copyWith(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
+          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.accent.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.accent.withValues(alpha: 0.2),
               ),
             ),
-            const SizedBox(width: 12),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.accent.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: AppColors.accent.withValues(alpha: 0.2),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  HugeIcons.strokeRoundedStar,
+                  size: 16,
+                  color: AppColors.accent,
                 ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    HugeIcons.strokeRoundedStar,
-                    size: 16,
+                const SizedBox(width: 4),
+                Text(
+                  '${_userInfo['level']} 사용자',
+                  style: AppTextStyles.cardTitle.copyWith(
                     color: AppColors.accent,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${_userInfo['level']} 사용자',
-                    style: AppTextStyles.cardTitle.copyWith(
-                      color: AppColors.accent,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 20),
+      // 관심사 태그들
+      _buildSimpleInterests(),
+    ],
+  );
 
-        const SizedBox(height: 20),
-
-        // 관심사 태그들
-        _buildSimpleInterests(),
-      ],
-    ),
+  // 사용 통계 콘텐츠 - SectionCard 내부용
+  Widget _buildStatsContent() => Column(
+    children: [
+      // 지표들
+      Row(
+        children: [
+          Expanded(
+            child: _buildSimpleMetric(
+              '총 메시지',
+              '${_userInfo['totalMessages']}개',
+              AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: _buildSimpleMetric(
+              '성공률',
+              '${_userInfo['successRate']}%',
+              AppColors.green,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 16),
+      Row(
+        children: [
+          Expanded(
+            child: _buildSimpleMetric(
+              '분석 횟수',
+              '${_userInfo['analysisCount']}회',
+              AppColors.accent,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: _buildSimpleMetric(
+              '가입일',
+              _userInfo['joinDate'],
+              AppColors.blue,
+            ),
+          ),
+        ],
+      ),
+    ],
   );
 
   // 심플한 관심사 표시
@@ -233,98 +277,6 @@ class _MyScreenState extends State<MyScreen> {
           ),
         )
         .toList(),
-  );
-
-  // 사용 통계 카드
-  Widget _buildStatsCard() => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: AppColors.green.withValues(alpha: 0.1)),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 12,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        // 헤더
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.green.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                HugeIcons.strokeRoundedAnalytics01,
-                size: 20,
-                color: AppColors.green,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              '나의 LIA 사용 통계',
-              style: AppTextStyles.cardTitle.copyWith(
-                color: AppColors.green,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 20),
-
-        // 지표들
-        Row(
-          children: [
-            Expanded(
-              child: _buildSimpleMetric(
-                '총 메시지',
-                '${_userInfo['totalMessages']}개',
-                AppColors.primary,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildSimpleMetric(
-                '성공률',
-                '${_userInfo['successRate']}%',
-                AppColors.green,
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 16),
-
-        Row(
-          children: [
-            Expanded(
-              child: _buildSimpleMetric(
-                '분석 횟수',
-                '${_userInfo['analysisCount']}회',
-                AppColors.accent,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildSimpleMetric(
-                '가입일',
-                _userInfo['joinDate'],
-                AppColors.blue,
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
   );
 
   // 심플한 지표 위젯
@@ -400,7 +352,7 @@ class _MyScreenState extends State<MyScreen> {
     ],
   );
 
-  // 액션 버튼
+  // 액션 버튼 - 심플하고 깔끔한 스타일
   Widget _buildActionButton(
     String title,
     IconData icon,
@@ -409,23 +361,23 @@ class _MyScreenState extends State<MyScreen> {
   ) => GestureDetector(
     onTap: onTap,
     child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
-      ),
-      child: Column(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+      child: Row(
         children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
+          Icon(icon, color: color, size: 20),
+          const SizedBox(width: 12),
           Text(
             title,
             style: AppTextStyles.cardDescription.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w500,
             ),
-            textAlign: TextAlign.center,
+          ),
+          const Spacer(),
+          const Icon(
+            HugeIcons.strokeRoundedArrowRight01,
+            color: AppColors.textSecondary,
+            size: 16,
           ),
         ],
       ),

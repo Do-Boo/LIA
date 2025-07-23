@@ -947,6 +947,7 @@ class _MainScreenState extends State<MainScreen> {
               title: '성격 관계성 분석',
               description: '두 분의 성격을 5가지 요소로 분석하여 관계성을 확인해보세요',
               useNumberBadge: true,
+              iconColor: AppColors.primary,
               child: _buildPersonalityCompatibilityContent(),
             ),
 
@@ -958,6 +959,7 @@ class _MainScreenState extends State<MainScreen> {
               title: '감정 흐름 분석',
               description: '시간에 따른 감정 변화와 주요 이벤트를 확인해보세요',
               useNumberBadge: true,
+              iconColor: AppColors.primary,
               child: _buildEmotionalFlowContent(),
             ),
 
@@ -967,8 +969,9 @@ class _MainScreenState extends State<MainScreen> {
             SectionCard(
               number: '3',
               title: '메시지 시간대별 연락 빈도',
-              description: '언제 가장 활발하게 대화하는지 패턴을 분석해보세요',
+              description: '시간대별 메시지 패턴을 분석하여 소통 스타일을 파악하세요',
               useNumberBadge: true,
+              iconColor: AppColors.primary,
               child: _buildMessageFrequencyContent(),
             ),
 
@@ -978,20 +981,22 @@ class _MainScreenState extends State<MainScreen> {
             SectionCard(
               number: '4',
               title: '대화 주제 분석',
-              description: '어떤 주제로 주로 대화하는지 분포를 확인해보세요',
+              description: '자주 나누는 대화 주제와 관심사를 시각화하여 보여드립니다',
               useNumberBadge: true,
-              child: _buildConversationTopicsContent(),
+              iconColor: AppColors.primary,
+              child: _buildTopicAnalysisContent(),
             ),
 
             AppSpacing.gapV24,
 
-            // 5. AI 추천 액션 플랜
+            // 5. AI 추천 액션
             SectionCard(
               number: '5',
-              title: 'AI 추천 액션 플랜',
-              description: '관계 개선을 위한 구체적인 조언과 추천 전략을 확인해보세요',
+              title: 'AI 추천 액션',
+              description: '분석 결과를 바탕으로 관계 개선을 위한 맞춤 액션을 제안합니다',
               useNumberBadge: true,
-              child: _buildActionPlanContent(),
+              iconColor: AppColors.primary,
+              child: _buildAIRecommendationContent(),
             ),
 
             AppSpacing.gapV32,
@@ -1675,7 +1680,7 @@ class _MainScreenState extends State<MainScreen> {
   );
 
   // 4. 대화 주제 분석 콘텐츠 (막대 차트로 상위 5개 주제 순위 표시)
-  Widget _buildConversationTopicsContent() => Column(
+  Widget _buildTopicAnalysisContent() => Column(
     children: [
       // 막대 차트 - 상위 5개 대화 주제 순위
       const BarChart(
@@ -1724,7 +1729,7 @@ class _MainScreenState extends State<MainScreen> {
   );
 
   // 6. AI 추천 액션 플랜 콘텐츠
-  Widget _buildActionPlanContent() {
+  Widget _buildAIRecommendationContent() {
     if (_analysisData == null) return const SizedBox.shrink();
 
     return Column(
@@ -1886,7 +1891,7 @@ class _MainScreenState extends State<MainScreen> {
     ),
   );
 
-  // 액션 섹션 위젯
+  // 액션 섹션 위젯 - 심플하고 깔끔한 스타일
   Widget _buildActionSection({
     required String title,
     required List<String> items,
@@ -1894,33 +1899,31 @@ class _MainScreenState extends State<MainScreen> {
   }) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Row(
-        children: [
-          Icon(icon, size: 20, color: AppColors.primary),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: AppTextStyles.cardTitle.copyWith(color: AppColors.primary),
-          ),
-        ],
+      Text(
+        title,
+        style: AppTextStyles.cardTitle.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w600,
+        ),
       ),
       const SizedBox(height: 12),
       ...items.map(
-        (item) => Padding(
-          padding: const EdgeInsets.only(bottom: 8),
+        (item) => Container(
+          margin: const EdgeInsets.only(bottom: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 6,
-                height: 6,
+                width: 4,
+                height: 4,
                 margin: const EdgeInsets.only(top: 6),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(3),
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   item,

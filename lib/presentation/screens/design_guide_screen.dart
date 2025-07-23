@@ -68,6 +68,7 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
                 title: 'LIA 위젯 가이드',
                 description: 'LIA 위젯을 한 번에 import해서 사용하세요',
                 useNumberBadge: true,
+                iconColor: AppColors.primary,
                 child: _buildLiaWidgetGuide(),
               ),
 
@@ -79,6 +80,7 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
                 title: 'Typography (글꼴과 말투)',
                 description: '앱에서 사용하는 다양한 텍스트 스타일과 메시지 예시를 보여줍니다',
                 useNumberBadge: true,
+                iconColor: AppColors.primary,
                 child: TypographyCard(),
               ),
 
@@ -87,9 +89,10 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
               // 3. Color Palette
               const SectionCard(
                 number: '3',
-                title: 'Color Palette (테마 색상)',
-                description: '앱에서 사용하는 주요 색상들과 그라데이션을 시각적으로 표시합니다',
+                title: 'Color Palette (색상)',
+                description: '앱의 브랜드 컬러와 사용 가이드라인을 확인하세요',
                 useNumberBadge: true,
+                iconColor: AppColors.primary,
                 child: ColorPaletteCard(),
               ),
 
@@ -98,9 +101,10 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
               // 4. Generating Progress
               SectionCard(
                 number: '4',
-                title: 'Generating Progress (AI 생성 진행)',
-                description: 'AI 메시지 생성 중 로딩 상태를 보여줍니다',
+                title: 'Generating Progress (생성 진행)',
+                description: 'AI 메시지 생성 시 사용되는 프로그레스 인디케이터들',
                 useNumberBadge: true,
+                iconColor: AppColors.primary,
                 child: _buildGeneratingProgressDemo(),
               ),
 
@@ -112,6 +116,7 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
                 title: 'Header Navigation (상단 네비게이션)',
                 description: '앱의 상단 네비게이션과 새로운 상황 카테고리들을 시연합니다',
                 useNumberBadge: true,
+                iconColor: AppColors.purple,
                 child: HeaderNavigationCard(),
               ),
 
@@ -123,6 +128,7 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
                 title: 'Main Header (메인 헤더)',
                 description: '서현이의 개성이 담긴 메인 페이지 헤더예요!',
                 useNumberBadge: true,
+                iconColor: AppColors.yellow,
                 child: NewMainHeaderCard(),
               ),
 
@@ -134,6 +140,7 @@ class _DesignGuideScreenState extends State<DesignGuideScreen> {
                 title: 'Bottom Navigation (하단 네비게이션)',
                 description: 'LIA 앱에서 사용하는 하단 네비게이션 바의 디자인과 상호작용을 보여줍니다',
                 useNumberBadge: true,
+                iconColor: AppColors.orange,
                 child: BottomNavigationCard(),
               ),
 
@@ -1046,80 +1053,65 @@ class _BottomNavigationCardState extends State<BottomNavigationCard> {
   }
 }
 
-/// 데이터 시각화 차트들을 보여주는 카드입니다.
+/// 차트 시연을 위한 카드입니다.
 ///
 /// 게이지 차트, 도넛 차트, 막대 차트 등 다양한 차트 컴포넌트를 시연합니다.
 class DataVisualizationCard extends StatelessWidget {
   const DataVisualizationCard({super.key});
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: AppColors.cardBorder),
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.primary.withValues(alpha: 0.15),
-          blurRadius: 24,
-          offset: const Offset(0, 8),
-        ),
-      ],
-    ),
-    child: const Column(
-      children: [
-        // 차트 데모
-        Wrap(
-          alignment: WrapAlignment.spaceAround,
-          spacing: 24,
-          runSpacing: 24,
-          children: [
-            GaugeChart(
-              data: {
-                'value': 75,
-                'maxValue': 100,
-                'unit': '%',
-                'primaryColor': 0xFF6C5CE7,
-                'backgroundColor': 0xFFEEEEEE,
-              },
-            ),
-            DonutChart(),
-            BarChart(),
-          ],
-        ),
-        SizedBox(height: 20),
+  Widget build(BuildContext context) => const Column(
+    children: [
+      // 차트 데모
+      Wrap(
+        alignment: WrapAlignment.spaceAround,
+        spacing: 24,
+        runSpacing: 24,
+        children: [
+          GaugeChart(
+            data: {
+              'value': 75,
+              'maxValue': 100,
+              'unit': '%',
+              'primaryColor': 0xFF6C5CE7,
+              'backgroundColor': 0xFFEEEEEE,
+            },
+          ),
+          DonutChart(),
+          BarChart(),
+        ],
+      ),
+      SizedBox(height: 20),
 
-        // 실제 사용 시나리오 추가
-        ScenarioCard(
-          title: '📊 차트 활용 시나리오',
-          description: '서현이가 LIA 앱에서 차트를 보는 실제 상황들이에요!',
-          scenarios: [
-            ScenarioStep(
-              title: '호감도 확인하기',
-              description: '썸남과의 호감도를 게이지 차트로 확인해요',
-              widget: 'GaugeChart',
-              userQuote: '우리 호감도가 75%나 돼? 완전 좋은데!',
-              expectedResult: '호감도 수치를 직관적으로 파악',
-            ),
-            ScenarioStep(
-              title: '메시지 타입별 성공률 보기',
-              description: '어떤 스타일의 메시지가 가장 효과적인지 도넛 차트로 확인해요',
-              widget: 'DonutChart',
-              userQuote: '센스있는 메시지가 제일 성공률 높네! 이 스타일로 가야지',
-              expectedResult: '메시지 타입별 비율을 한눈에 파악',
-            ),
-            ScenarioStep(
-              title: '주간 활동 비교하기',
-              description: '이번 주와 지난 주 메시지 활동을 막대 차트로 비교해요',
-              widget: 'BarChart',
-              userQuote: '이번 주가 지난 주보다 메시지 많이 보냈네 ㅋㅋ',
-              expectedResult: '기간별 데이터를 쉽게 비교',
-            ),
-          ],
-        ),
-      ],
-    ),
+      // 실제 사용 시나리오 추가
+      ScenarioCard(
+        title: '📊 차트 사용 시나리오',
+        description: '서현이가 LIA 앱에서 차트를 보는 실제 상황들이에요!',
+        scenarios: [
+          ScenarioStep(
+            title: '관계 분석 결과 확인',
+            description: '분석이 완료되면 게이지 차트로 호감도를 한눈에 파악해요',
+            widget: 'GaugeChart',
+            userQuote: '우와 75%나 나왔네! 생각보다 높다~',
+            expectedResult: '관계 상태를 직관적으로 이해',
+          ),
+          ScenarioStep(
+            title: '대화 주제 분포 보기',
+            description: '도넛 차트로 어떤 주제로 주로 대화하는지 확인해요',
+            widget: 'DonutChart',
+            userQuote: '아 우리 일상 얘기를 제일 많이 하는구나!',
+            expectedResult: '대화 패턴 파악 및 개선점 발견',
+          ),
+          ScenarioStep(
+            title: '시간대별 메시지 패턴',
+            description: '막대 차트로 언제 가장 활발하게 대화하는지 봐요',
+            widget: 'BarChart',
+            userQuote: '저녁 시간에 진짜 많이 하네 ㅋㅋ',
+            expectedResult: '소통 패턴 인식 및 최적 시간대 파악',
+          ),
+        ],
+      ),
+    ],
   );
 }
 
@@ -1382,56 +1374,39 @@ class _TextFieldsCardState extends State<TextFieldsCard> {
   );
 }
 
-/// 텍스트 영역을 보여주는 카드입니다.
-///
-/// 멀티라인 텍스트 입력을 위한 텍스트 영역 컴포넌트를 시연합니다.
+/// 긴 텍스트 입력을 위한 텍스트 영역 컴포넌트를 시연합니다.
 class TextareaCard extends StatelessWidget {
   const TextareaCard({super.key});
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(20),
+  Widget build(BuildContext context) => DecoratedBox(
     decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: AppColors.cardBorder),
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
       boxShadow: [
         BoxShadow(
-          color: AppColors.primary.withValues(alpha: 0.15),
-          blurRadius: 24,
-          offset: const Offset(0, 8),
+          color: Colors.black.withValues(alpha: 0.05),
+          blurRadius: 10,
+          offset: const Offset(0, 2),
         ),
       ],
     ),
-    child: DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: TextField(
-        maxLines: 4,
-        decoration: InputDecoration(
-          hintText: '오늘 있었던 일을 자세히 적어주세요',
-          hintStyle: TextStyle(color: Colors.grey.shade600),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(color: AppColors.primary, width: 2),
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(20),
+    child: TextField(
+      maxLines: 4,
+      decoration: InputDecoration(
+        hintText: '오늘 있었던 일을 자세히 적어주세요',
+        hintStyle: TextStyle(color: Colors.grey.shade600),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide.none,
         ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        ),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.all(20),
       ),
     ),
   );
@@ -1452,31 +1427,16 @@ class _InteractiveWidgetsCardState extends State<InteractiveWidgetsCard> {
   bool _isLocationEnabled = false;
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: AppColors.cardBorder),
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.primary.withValues(alpha: 0.15),
-          blurRadius: 24,
-          offset: const Offset(0, 8),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        _buildSwitchRow('알림 설정', _isNotificationEnabled, (value) {
-          setState(() => _isNotificationEnabled = value);
-        }),
-        const SizedBox(height: 16),
-        _buildSwitchRow('위치 정보 사용', _isLocationEnabled, (value) {
-          setState(() => _isLocationEnabled = value);
-        }),
-      ],
-    ),
+  Widget build(BuildContext context) => Column(
+    children: [
+      _buildSwitchRow('알림 설정', _isNotificationEnabled, (value) {
+        setState(() => _isNotificationEnabled = value);
+      }),
+      const SizedBox(height: 16),
+      _buildSwitchRow('위치 정보 사용', _isLocationEnabled, (value) {
+        setState(() => _isLocationEnabled = value);
+      }),
+    ],
   );
 
   /// 스위치 행을 생성하는 메서드입니다.
@@ -1819,85 +1779,33 @@ class ModalCard extends StatelessWidget {
   const ModalCard({super.key});
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: AppColors.cardBorder),
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.primary.withValues(alpha: 0.15),
-          blurRadius: 24,
-          offset: const Offset(0, 8),
+  Widget build(BuildContext context) => Center(
+    child: Column(
+      children: [
+        PrimaryButton(
+          onPressed: () {
+            showCustomModal(
+              context: context,
+              title: '완료됐어! 🎉',
+              content: 'LIA 디자인 가이드 확인 완료! 이제 멋진 앱을 만들어봐 ㄱㄱ',
+              confirmText: '완전 좋아!',
+            );
+          },
+          text: '기본 모달',
+        ),
+        const SizedBox(height: 12),
+        SecondaryButton(
+          onPressed: () {
+            showCustomModal(
+              context: context,
+              title: '정말 삭제할까요?',
+              content: '삭제하면 복구할 수 없어요. 정말 괜찮나요?',
+              confirmText: '삭제하기',
+            );
+          },
+          text: '위험 모달',
         ),
       ],
-    ),
-    child: Center(
-      child: Column(
-        children: [
-          PrimaryButton(
-            onPressed: () {
-              showCustomModal(
-                context: context,
-                title: '완료됐어! 🎉',
-                content: 'LIA 디자인 가이드 확인 완료! 이제 멋진 앱을 만들어봐 ㄱㄱ',
-                confirmText: '완전 좋아!',
-              );
-            },
-            text: '기본 모달',
-          ),
-          const SizedBox(height: 12),
-          SecondaryButton(
-            onPressed: () {
-              showCustomConfirmModal(
-                context: context,
-                title: '정말 삭제할래? 🗑️',
-                content: '삭제하면 다시 복구할 수 없어! 정말 괜찮아?',
-                confirmText: '삭제할래',
-                cancelText: '아니야',
-                onConfirm: () {
-                  // 삭제 로직
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('삭제 완료! 🗑️'),
-                      backgroundColor: AppColors.primary,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            text: '확인 모달',
-          ),
-          const SizedBox(height: 12),
-          SecondaryButton(
-            onPressed: () {
-              showMessageConfirmModal(
-                context: context,
-                message: '농구... 좋아하세요? 스토리 완전 멋있어ㅋㅋ',
-                recipientName: '훈남',
-                onSend: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('메시지 전송 완료! 💌'),
-                      backgroundColor: AppColors.primary,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            text: '메시지 모달',
-          ),
-        ],
-      ),
     ),
   );
 }
@@ -1985,65 +1893,50 @@ class _NewFormElementsCardState extends State<NewFormElementsCard> {
   DateTimeRange? _selectedDateRange;
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: AppColors.surface,
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: AppColors.cardBorder),
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.primary.withValues(alpha: 0.15),
-          blurRadius: 24,
-          offset: const Offset(0, 8),
-        ),
-      ],
-    ),
-    child: Column(
-      children: [
-        // Date Picker
-        CustomDatePicker(
-          label: '언제 만날까? 💕',
-          selectedDate: _selectedDate,
-          onDateSelected: (date) {
-            setState(() => _selectedDate = date);
-          },
-        ),
-        const SizedBox(height: 20),
+  Widget build(BuildContext context) => Column(
+    children: [
+      // Date Picker
+      CustomDatePicker(
+        label: '언제 만날까? 💕',
+        selectedDate: _selectedDate,
+        onDateSelected: (date) {
+          setState(() => _selectedDate = date);
+        },
+      ),
+      const SizedBox(height: 20),
 
-        // Date Range Picker
-        CustomDateRangePicker(
-          label: '여행 기간을 정해볼까?',
-          selectedRange: _selectedDateRange,
-          onRangeSelected: (range) {
-            setState(() => _selectedDateRange = range);
-          },
-        ),
-        const SizedBox(height: 20),
+      // Date Range Picker
+      CustomDateRangePicker(
+        label: '여행 기간을 정해볼까?',
+        selectedRange: _selectedDateRange,
+        onRangeSelected: (range) {
+          setState(() => _selectedDateRange = range);
+        },
+      ),
+      const SizedBox(height: 20),
 
-        // 사용 시나리오
-        const ScenarioCard(
-          title: '📅 Date Picker 사용 시나리오',
-          description: '서현이가 데이트 날짜를 정하는 실제 상황들이에요!',
-          scenarios: [
-            ScenarioStep(
-              title: '데이트 날짜 정하기',
-              description: '썸남과 만날 날짜를 선택할 때 사용해요',
-              widget: 'CustomDatePicker',
-              userQuote: '이번 주 토요일 어때? 완전 좋을 것 같은데!',
-              expectedResult: '선택한 날짜에 대한 친근한 피드백 제공',
-            ),
-            ScenarioStep(
-              title: '여행 기간 계획하기',
-              description: '함께 갈 여행의 기간을 정할 때 사용해요',
-              widget: 'CustomDateRangePicker',
-              userQuote: '2박 3일로 제주도 가면 딱 좋겠다!',
-              expectedResult: '날짜 범위 선택과 기간 계산',
-            ),
-          ],
-        ),
-      ],
-    ),
+      // 사용 시나리오
+      const ScenarioCard(
+        title: '📅 새로운 폼 요소 시나리오',
+        description: '서현이가 실제로 사용하는 상황들이에요!',
+        scenarios: [
+          ScenarioStep(
+            title: '데이트 약속 잡기',
+            description: '썸남과 언제 만날지 날짜를 선택해요',
+            widget: 'CustomDatePicker',
+            userQuote: '이번 주 토요일 어때? 날씨도 좋을 것 같은데!',
+            expectedResult: '직관적인 날짜 선택으로 약속 확정',
+          ),
+          ScenarioStep(
+            title: '여행 계획 세우기',
+            description: '친구들과 여행 갈 기간을 정해요',
+            widget: 'CustomDateRangePicker',
+            userQuote: '2박 3일로 부산 여행 어떨까? 완전 기대돼!',
+            expectedResult: '기간 설정으로 여행 일정 구체화',
+          ),
+        ],
+      ),
+    ],
   );
 }
 

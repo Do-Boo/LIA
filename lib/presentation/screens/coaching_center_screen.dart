@@ -19,35 +19,7 @@ class CoachingCenterScreen extends StatefulWidget {
 }
 
 class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
-  int _selectedCategoryIndex = 0;
-
-  // 카테고리 리스트
-  final List<CoachingCategory> _categories = [
-    CoachingCategory(
-      id: 'basic',
-      title: '기본',
-      icon: HugeIcons.strokeRoundedMessage01,
-      description: '일상적인 대화 시작하기',
-    ),
-    CoachingCategory(
-      id: 'dating',
-      title: '데이트',
-      icon: HugeIcons.strokeRoundedCalendar01,
-      description: '자연스러운 만남 제안법',
-    ),
-    CoachingCategory(
-      id: 'reply',
-      title: '답장',
-      icon: Icons.reply,
-      description: '상황별 답장 가이드',
-    ),
-    CoachingCategory(
-      id: 'emotion',
-      title: '감정',
-      icon: HugeIcons.strokeRoundedHeartAdd,
-      description: '마음을 전하는 방법',
-    ),
-  ];
+  // 카테고리 선택 상태 제거 - 더 이상 필요 없음
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -65,56 +37,59 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
             children: [
               AppSpacing.gapV24,
 
-              // 대시보드 헤더
+              // 대시보드 헤더 - 분석 기반 코칭으로 변경
               const DashboardHeader(
-                title: '코칭센터',
-                subtitle: '완벽한 메시지 작성을 위한 전문가 가이드',
+                title: '나의 대화 분석',
+                subtitle: '내 대화 패턴을 분석하고 개선점을 찾아보세요',
                 icon: HugeIcons.strokeRoundedBookOpen01,
               ),
 
               AppSpacing.gapV24,
 
-              // 카테고리 선택 섹션
-              _buildCategorySection(),
-
-              AppSpacing.gapV24,
-
-              // 1. 빠른 팁
+              // 분석 기반 인사이트 섹션을 SectionCard로 변경
               SectionCard(
                 number: '1',
-                title: '빠른 팁',
-                description: '상황별 핵심 메시지 작성 팁을 확인해보세요',
-                child: _buildQuickTipsContent(),
+                title: '내 대화 분석 결과',
+                description: '12개의 대화를 분석하여 당신의 대화 스타일을 분석했습니다',
+                icon: HugeIcons.strokeRoundedAnalytics01,
+                iconColor: AppColors.primary,
+                child: _buildAnalysisInsightContent(),
               ),
 
               AppSpacing.gapV24,
 
-              // 2. 메시지 템플릿
+              // 2. 대화 스타일 진단
               SectionCard(
                 number: '2',
-                title: '메시지 템플릿',
-                description: '검증된 메시지 템플릿으로 완벽한 메시지를 작성하세요',
-                child: _buildTemplatesContent(),
+                title: '대화 스타일 진단',
+                description: '당신의 대화 유형과 특성을 자세히 알아보세요',
+                icon: HugeIcons.strokeRoundedUserCheck01,
+                iconColor: AppColors.primary,
+                child: _buildConversationStyleContent(),
               ),
 
               AppSpacing.gapV24,
 
-              // 3. 고급 팁
+              // 3. 감정 표현 분석
               SectionCard(
                 number: '3',
-                title: '고급 팁',
-                description: '더 효과적인 커뮤니케이션을 위한 전문가 조언',
-                child: _buildAdvancedTipsContent(),
+                title: '감정 표현 분석',
+                description: '메시지에서 감정을 어떻게 표현하는지 분석합니다',
+                icon: HugeIcons.strokeRoundedHeartAdd,
+                iconColor: AppColors.primary,
+                child: _buildEmotionAnalysisContent(),
               ),
 
               AppSpacing.gapV24,
 
-              // 4. 개인화된 조언
+              // 4. 개선 포인트
               SectionCard(
                 number: '4',
-                title: '서현이의 특별한 조언',
-                description: '실제 경험을 바탕으로 한 리얼한 연애 꿀팁',
-                child: _buildPersonalizedAdviceContent(),
+                title: '개선 포인트',
+                description: '더 효과적인 소통을 위한 구체적인 개선 방안을 제시합니다',
+                icon: HugeIcons.strokeRoundedTarget01,
+                iconColor: AppColors.primary,
+                child: _buildImprovementPointsContent(),
               ),
 
               AppSpacing.gapV40,
@@ -125,178 +100,371 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
     ),
   );
 
-  // 카테고리 선택 섹션
-  Widget _buildCategorySection() => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [
-          AppColors.primary.withValues(alpha: 0.1),
-          AppColors.accent.withValues(alpha: 0.05),
+  // 분석 기반 인사이트 컨텐츠 - SectionCard 내부용으로 변경
+  Widget _buildAnalysisInsightContent() => Column(
+    children: [
+      // 분석 결과 요약
+      Row(
+        children: [
+          Expanded(
+            child: _buildInsightMetric('대화 스타일', '신중형', AppColors.primary),
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: _buildInsightMetric('호감도', '78점', AppColors.green)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: _buildInsightMetric('개선 포인트', '감정 표현', AppColors.accent),
+          ),
         ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
       ),
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
-    ),
-    child: Column(
-      children: [
-        // 상단 제목
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(
-                HugeIcons.strokeRoundedMenuSquare,
-                size: 20,
-                color: AppColors.primary,
-              ),
+
+      const SizedBox(height: 16),
+      Text(
+        '💡 분석 결과, 당신은 신중하고 배려심 많은 대화를 나누지만, 감정 표현을 조금 더 적극적으로 해보시면 좋을 것 같아요!',
+        style: AppTextStyles.body1.copyWith(
+          color: AppColors.textPrimary,
+          height: 1.5,
+        ),
+      ),
+
+      const SizedBox(height: 16),
+      Row(
+        children: [
+          Expanded(
+            child: SecondaryButton(
+              onPressed: _showDetailedAnalysis,
+              text: '상세 분석 보기',
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: PrimaryButton(
+              onPressed: _startPersonalizedCoaching,
+              text: '맞춤 코칭 시작',
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
+
+  // 대화 스타일 진단 컨텐츠
+  Widget _buildConversationStyleContent() => Column(
+    children: [
+      _buildAnalysisCard(
+        '신중한 대화 스타일',
+        '메시지를 보내기 전에 충분히 고민하는 편이에요. 실수를 줄이고 상대방을 배려하려는 마음이 크답니다.',
+        HugeIcons.strokeRoundedIdea,
+        AppColors.primary,
+        '85%',
+      ),
+      const SizedBox(height: 12),
+      _buildAnalysisCard(
+        '질문형 대화 선호',
+        '상대방에게 관심을 보이며 질문을 많이 하는 편이에요. 대화를 이끌어가려는 적극성이 보여요.',
+        HugeIcons.strokeRoundedMessageQuestion,
+        AppColors.green,
+        '72%',
+      ),
+      const SizedBox(height: 12),
+      _buildAnalysisCard(
+        '감정 표현 절제',
+        '감정을 직접적으로 표현하기보다는 은근하게 전달하는 스타일이에요. 조금 더 솔직해도 좋을 것 같아요.',
+        HugeIcons.strokeRoundedHeartAdd,
+        AppColors.accent,
+        '58%',
+      ),
+    ],
+  );
+
+  // 감정 표현 분석 컨텐츠
+  Widget _buildEmotionAnalysisContent() => Column(
+    children: [
+      _buildEmotionChart(),
+      const SizedBox(height: 16),
+      Text(
+        '당신의 메시지에서 가장 많이 나타나는 감정은 "배려"와 "관심"이에요. 긍정적인 감정 표현을 조금 더 늘려보시면 어떨까요?',
+        style: AppTextStyles.body1.copyWith(
+          color: AppColors.textPrimary,
+          height: 1.5,
+        ),
+      ),
+    ],
+  );
+
+  // 개선 포인트 컨텐츠
+  Widget _buildImprovementPointsContent() => Column(
+    children: [
+      _buildImprovementCard(
+        '감정 표현 늘리기',
+        '좋은 감정을 더 적극적으로 표현해보세요',
+        '• "기뻐" → "정말 기뻐!" \n• "고마워" → "진짜 고마워 ❤️"',
+        AppColors.primary,
+        '우선순위 높음',
+      ),
+      const SizedBox(height: 12),
+      _buildImprovementCard(
+        '대화 주도권 갖기',
+        '질문만 하지 말고 자신의 이야기도 들려주세요',
+        '• 상대방 이야기에 공감한 후 본인 경험 공유\n• "나도 비슷한 경험이 있어" 같은 표현 사용',
+        AppColors.green,
+        '우선순위 중간',
+      ),
+      const SizedBox(height: 12),
+      _buildImprovementCard(
+        '타이밍 조절',
+        '답장 속도를 조금 더 빠르게 해보세요',
+        '• 2-3시간 내 답장하기\n• 바쁠 때는 "바빠서 나중에 답장할게" 미리 알리기',
+        AppColors.accent,
+        '우선순위 낮음',
+      ),
+    ],
+  );
+
+  // 분석 카드 위젯
+  Widget _buildAnalysisCard(
+    String title,
+    String description,
+    IconData icon,
+    Color color,
+    String percentage,
+  ) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.05),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color.withValues(alpha: 0.1)),
+    ),
+    child: Row(
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Icon(icon, color: color, size: 20),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
                   Text(
-                    '카테고리 선택',
-                    style: AppTextStyles.sectionTitle.copyWith(
-                      color: AppColors.primary,
+                    title,
+                    style: AppTextStyles.cardTitle.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const Text(
-                    '원하는 메시지 유형을 선택해보세요',
-                    style: AppTextStyles.sectionDescription,
+                  const Spacer(),
+                  Text(
+                    percentage,
+                    style: AppTextStyles.cardDescription.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-
-        // 카테고리 탭
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: _categories.asMap().entries.map((entry) {
-              final int index = entry.key;
-              final CoachingCategory category = entry.value;
-              final bool isSelected = index == _selectedCategoryIndex;
-
-              return GestureDetector(
-                onTap: () => _selectCategory(index),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.only(right: 12),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary : AppColors.surface,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isSelected ? AppColors.primary : AppColors.border,
-                    ),
-                    boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: AppColors.primary.withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      HugeIcon(
-                        icon: category.icon,
-                        color: isSelected
-                            ? Colors.white
-                            : AppColors.primaryText,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        category.title,
-                        style: AppTextStyles.body.copyWith(
-                          color: isSelected
-                              ? Colors.white
-                              : AppColors.primaryText,
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
+              const SizedBox(height: 4),
+              Text(
+                description,
+                style: AppTextStyles.cardDescription.copyWith(
+                  color: AppColors.textPrimary,
                 ),
-              );
-            }).toList(),
+              ),
+            ],
           ),
         ),
       ],
     ),
   );
 
-  // 빠른 팁 컨텐츠
-  Widget _buildQuickTipsContent() {
-    final tips = _getQuickTips();
+  // 감정 차트 위젯
+  Widget _buildEmotionChart() => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: AppColors.primary.withValues(alpha: 0.05),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+    ),
+    child: Column(
+      children: [
+        Text(
+          '감정 표현 분포',
+          style: AppTextStyles.cardTitle.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 16),
+        _buildEmotionBar('배려/관심', 85, AppColors.primary),
+        const SizedBox(height: 8),
+        _buildEmotionBar('기쁨/행복', 45, AppColors.green),
+        const SizedBox(height: 8),
+        _buildEmotionBar('걱정/불안', 30, AppColors.accent),
+        const SizedBox(height: 8),
+        _buildEmotionBar('사랑/애정', 25, Colors.pink),
+      ],
+    ),
+  );
 
-    return Column(children: tips.map(_buildTipItem).toList());
-  }
-
-  // 메시지 템플릿 컨텐츠
-  Widget _buildTemplatesContent() {
-    final templates = _getTemplates();
-
-    return Column(children: templates.map(_buildTemplateItem).toList());
-  }
-
-  // 고급 팁 컨텐츠
-  Widget _buildAdvancedTipsContent() => Column(
+  // 감정 바 위젯
+  Widget _buildEmotionBar(String emotion, int percentage, Color color) => Row(
     children: [
-      _buildAdvancedTipCard(
-        '타이밍이 중요해요',
-        '상대방의 활동 패턴을 파악하고 적절한 시간에 메시지를 보내세요.',
-        HugeIcons.strokeRoundedClock01,
-        AppColors.accent,
+      SizedBox(
+        width: 80,
+        child: Text(
+          emotion,
+          style: AppTextStyles.cardDescription.copyWith(
+            color: AppColors.textPrimary,
+            fontSize: 12,
+          ),
+        ),
       ),
-      _buildAdvancedTipCard(
-        '감정 표현의 균형',
-        '너무 급하지 않게, 그렇다고 너무 차갑지도 않게 적절한 선을 유지하세요.',
-        Icons.balance,
-        AppColors.green,
+      Expanded(
+        child: Container(
+          height: 8,
+          decoration: BoxDecoration(
+            color: AppColors.textSecondary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: FractionallySizedBox(
+            alignment: Alignment.centerLeft,
+            widthFactor: percentage / 100,
+            child: Container(
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
+        ),
       ),
-      _buildAdvancedTipCard(
-        '개인화된 메시지',
-        '상대방의 관심사와 성격을 고려한 맞춤형 메시지를 작성하세요.',
-        HugeIcons.strokeRoundedUserCircle,
-        AppColors.primary,
+      const SizedBox(width: 8),
+      Text(
+        '$percentage%',
+        style: AppTextStyles.cardDescription.copyWith(
+          color: color,
+          fontWeight: FontWeight.w600,
+          fontSize: 12,
+        ),
       ),
     ],
   );
 
-  // 개인화된 조언 컨텐츠
+  // 개선 포인트 카드 위젯
+  Widget _buildImprovementCard(
+    String title,
+    String description,
+    String examples,
+    Color color,
+    String priority,
+  ) => Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: 0.05),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: color.withValues(alpha: 0.1)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              title,
+              style: AppTextStyles.cardTitle.copyWith(
+                color: color,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Spacer(),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                priority,
+                style: AppTextStyles.cardDescription.copyWith(
+                  color: color,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          description,
+          style: AppTextStyles.cardDescription.copyWith(
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(
+            examples,
+            style: AppTextStyles.cardDescription.copyWith(
+              color: AppColors.textPrimary,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  // 인사이트 지표 위젯
+  Widget _buildInsightMetric(String title, String value, Color color) =>
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: AppTextStyles.cardTitle.copyWith(
+                color: color,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: AppTextStyles.cardDescription.copyWith(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+
+  // 개인화된 조언 컨텐츠 - 분석 기반 리얼 조언으로 변경
   Widget _buildPersonalizedAdviceContent() => Container(
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [
-          AppColors.primary.withValues(alpha: 0.1),
-          AppColors.accent.withValues(alpha: 0.1),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
+      color: AppColors.primary.withValues(alpha: 0.05),
       borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
     ),
     child: Column(
       children: [
@@ -326,157 +494,14 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '서현이의 연애 꿀팁',
-                    style: AppTextStyles.body.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  Text(
-                    '실제 경험을 바탕으로 한 리얼한 조언',
-                    style: AppTextStyles.helper.copyWith(
-                      color: AppColors.secondaryText,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Text(
-          '"솔직히 말하면, 너무 완벽한 메시지보다는 진짜 내 마음이 담긴 메시지가 더 좋아. 상대방도 사람이니까 진심을 알아봐. 그리고 답장 안 온다고 너무 스트레스 받지 마! 타이밍이 안 맞을 수도 있거든. 중요한 건 내가 먼저 마음을 여는 거야."',
-          style: AppTextStyles.body.copyWith(
-            fontStyle: FontStyle.italic,
-            color: AppColors.primaryText,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              child: SecondaryButton(
-                onPressed: _showMoreAdvice,
-                text: '더 많은 조언',
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: PrimaryButton(
-                onPressed: _startPersonalizedCoaching,
-                text: '1:1 코칭',
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-
-  // 팁 아이템 - 깔끔한 리스트 스타일로 변경
-  Widget _buildTipItem(CoachingTip tip) => Container(
-    margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-    child: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: tip.color.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: HugeIcon(icon: tip.icon, color: tip.color, size: 20),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                tip.title,
-                style: AppTextStyles.cardTitle.copyWith(
-                  color: tip.color,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                tip.description,
-                style: AppTextStyles.cardDescription.copyWith(
-                  color: AppColors.textPrimary,
-                ),
-              ),
-            ],
-          ),
-        ),
-        // 다음 액션 제안 스타일의 아이콘
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: tip.color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(HugeIcons.strokeRoundedIdea, size: 16, color: tip.color),
-        ),
-      ],
-    ),
-  );
-
-  // 템플릿 아이템 - 메인 화면의 인사이트 메시지 스타일 적용
-  Widget _buildTemplateItem(MessageTemplate template) => Container(
-    margin: const EdgeInsets.only(bottom: 16),
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [
-          AppColors.primary.withValues(alpha: 0.1),
-          AppColors.accent.withValues(alpha: 0.05),
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
-      boxShadow: [
-        BoxShadow(
-          color: AppColors.primary.withValues(alpha: 0.1),
-          blurRadius: 16,
-          offset: const Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 상단 헤더
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(
-                HugeIcons.strokeRoundedMessage01,
-                size: 20,
-                color: AppColors.primary,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    template.situation,
+                    '서현이의 리얼 조언',
                     style: AppTextStyles.cardTitle.copyWith(
-                      color: AppColors.primary,
                       fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
                     ),
                   ),
                   Text(
-                    '검증된 템플릿',
+                    '분석 결과를 바탕으로 한 맞춤형 조언',
                     style: AppTextStyles.cardDescription.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -486,17 +511,23 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
             ),
           ],
         ),
-
+        const SizedBox(height: 16),
+        Text(
+          '"분석해보니 너는 감정 표현을 조금 어려워하는 것 같아. 그런데 그게 나쁜 건 아니야! 오히려 신중한 편이라서 더 진짜 같은 느낌이 들어. 다만 조금만 더 솔직하게 표현해도 좋을 것 같아. 상대방도 너의 진심을 알고 싶어할 거야. 작은 것부터 시작해봐!"',
+          style: AppTextStyles.body1.copyWith(
+            fontStyle: FontStyle.italic,
+            color: AppColors.textPrimary,
+          ),
+        ),
         const SizedBox(height: 16),
 
-        // 메시지 내용 - 인사이트 카드 스타일
+        // 구체적인 액션 제안
         Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.8),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
+            color: AppColors.green.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: AppColors.green.withValues(alpha: 0.2)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,15 +535,15 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
               Row(
                 children: [
                   const Icon(
-                    HugeIcons.strokeRoundedMessage01,
+                    HugeIcons.strokeRoundedTarget01,
+                    color: AppColors.green,
                     size: 16,
-                    color: AppColors.primary,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Text(
-                    '메시지 예시',
+                    '오늘 당장 해볼 수 있는 것',
                     style: AppTextStyles.cardDescription.copyWith(
-                      color: AppColors.primary,
+                      color: AppColors.green,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -520,261 +551,37 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                template.message,
-                style: AppTextStyles.body1.copyWith(
+                '• "오늘 하루 어땠어?" 대신 "오늘 뭐가 제일 재밌었어?"로 물어보기\n• 답장할 때 이모티콘 하나씩 더 추가해보기\n• 상대방이 말한 내용에 대해 한 가지 더 질문하기',
+                style: AppTextStyles.cardDescription.copyWith(
                   color: AppColors.textPrimary,
-                  fontStyle: FontStyle.italic,
+                  height: 1.5,
                 ),
               ),
             ],
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        // 설명
-        Text(
-          template.explanation,
-          style: AppTextStyles.cardDescription.copyWith(
-            color: AppColors.textSecondary,
           ),
         ),
 
         const SizedBox(height: 16),
-
-        // 사용하기 버튼
-        SizedBox(
-          width: double.infinity,
-          child: PrimaryButton(
-            text: '✨ 이 템플릿 사용하기',
-            onPressed: () => _useTemplate(template),
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: SecondaryButton(
+                onPressed: _showMoreAdvice,
+                text: '더 자세한 분석',
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: PrimaryButton(
+                onPressed: _startPersonalizedCoaching,
+                text: '맞춤 코칭 받기',
+              ),
+            ),
+          ],
         ),
       ],
     ),
   );
-
-  // 고급 팁 카드 - 깔끔한 리스트 스타일로 변경
-  Widget _buildAdvancedTipCard(
-    String title,
-    String description,
-    IconData icon,
-    Color color,
-  ) => Container(
-    margin: const EdgeInsets.only(bottom: 8),
-    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-    child: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: HugeIcon(icon: icon, color: color, size: 20),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: AppTextStyles.cardTitle.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                description,
-                style: AppTextStyles.cardDescription.copyWith(
-                  color: AppColors.textPrimary,
-                ),
-              ),
-            ],
-          ),
-        ),
-        // 다음 액션 제안 스타일의 아이콘
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(HugeIcons.strokeRoundedIdea, size: 16, color: color),
-        ),
-      ],
-    ),
-  );
-
-  // 카테고리별 빠른 팁 데이터
-  List<CoachingTip> _getQuickTips() {
-    switch (_selectedCategoryIndex) {
-      case 0: // 기본 메시지
-        return [
-          CoachingTip(
-            title: '자연스러운 시작',
-            description: '안부 인사나 공통 관심사로 대화를 시작하세요',
-            icon: HugeIcons.strokeRoundedMessage01,
-            color: AppColors.primary,
-          ),
-          CoachingTip(
-            title: '적절한 길이',
-            description: '너무 길거나 짧지 않게, 2-3문장 정도가 적당해요',
-            icon: HugeIcons.strokeRoundedTextFont,
-            color: AppColors.accent,
-          ),
-          CoachingTip(
-            title: '이모지 활용',
-            description: '감정을 표현할 때 적절한 이모지를 사용하세요',
-            icon: HugeIcons.strokeRoundedHappy,
-            color: AppColors.green,
-          ),
-        ];
-      case 1: // 데이트 제안
-        return [
-          CoachingTip(
-            title: '구체적인 제안',
-            description: '언제, 어디서, 무엇을 할지 구체적으로 제안하세요',
-            icon: HugeIcons.strokeRoundedCalendar01,
-            color: AppColors.primary,
-          ),
-          CoachingTip(
-            title: '선택권 제공',
-            description: '여러 옵션을 제시해서 상대방이 선택할 수 있게 하세요',
-            icon: HugeIcons.strokeRoundedCheckList,
-            color: AppColors.accent,
-          ),
-          CoachingTip(
-            title: '부담 줄이기',
-            description: '처음에는 가벼운 만남부터 제안하세요',
-            icon: HugeIcons.strokeRoundedCoffee01,
-            color: AppColors.green,
-          ),
-        ];
-      case 2: // 답장 요령
-        return [
-          CoachingTip(
-            title: '빠른 응답',
-            description: '가능한 빨리 답장하되, 너무 즉답하지는 마세요',
-            icon: HugeIcons.strokeRoundedClock01,
-            color: AppColors.primary,
-          ),
-          CoachingTip(
-            title: '질문 이어가기',
-            description: '상대방의 말에 관심을 보이고 질문을 이어가세요',
-            icon: Icons.help_outline,
-            color: AppColors.accent,
-          ),
-          CoachingTip(
-            title: '감정 공감',
-            description: '상대방의 감정에 공감하는 답장을 보내세요',
-            icon: HugeIcons.strokeRoundedHeartAdd,
-            color: AppColors.green,
-          ),
-        ];
-      case 3: // 감정 표현
-        return [
-          CoachingTip(
-            title: '솔직한 표현',
-            description: '내 감정을 솔직하게 표현하되 부담스럽지 않게',
-            icon: Icons.favorite_outline,
-            color: AppColors.primary,
-          ),
-          CoachingTip(
-            title: '단계적 접근',
-            description: '감정 표현도 단계적으로, 천천히 깊어지게',
-            icon: HugeIcons.strokeRoundedStairs01,
-            color: AppColors.accent,
-          ),
-          CoachingTip(
-            title: '상황 고려',
-            description: '상대방의 상황과 기분을 고려해서 표현하세요',
-            icon: HugeIcons.strokeRoundedBrain,
-            color: AppColors.green,
-          ),
-        ];
-      default:
-        return [];
-    }
-  }
-
-  // 카테고리별 템플릿 데이터
-  List<MessageTemplate> _getTemplates() {
-    switch (_selectedCategoryIndex) {
-      case 0: // 기본 메시지
-        return [
-          MessageTemplate(
-            situation: '첫 인사',
-            message: '안녕하세요! 오늘 하루 어떻게 보내셨어요? 😊',
-            explanation: '친근하면서도 정중한 첫 인사. 상대방의 하루에 관심을 보여줍니다.',
-          ),
-          MessageTemplate(
-            situation: '안부 인사',
-            message: '요즘 어떻게 지내세요? 바쁘신 것 같던데 몸 조심하세요!',
-            explanation: '상대방을 걱정하는 마음을 담은 따뜻한 안부 인사입니다.',
-          ),
-        ];
-      case 1: // 데이트 제안
-        return [
-          MessageTemplate(
-            situation: '카페 데이트',
-            message: '이번 주말에 시간 되시면 새로 생긴 카페 가볼까요? 분위기 좋다고 하더라고요 ☕',
-            explanation: '부담스럽지 않은 카페 데이트 제안. 새로운 장소로 호기심을 유발합니다.',
-          ),
-          MessageTemplate(
-            situation: '영화 관람',
-            message: '○○ 영화 보고 싶었는데, 혹시 같이 볼 사람 있을까요? 😄',
-            explanation: '직접적이지 않으면서도 함께 하고 싶다는 의사를 전달합니다.',
-          ),
-        ];
-      case 2: // 답장 요령
-        return [
-          MessageTemplate(
-            situation: '늦은 답장',
-            message: '답장이 늦어서 죄송해요! 바빠서 못 봤어요 😅 지금 봤는데...',
-            explanation: '늦은 답장에 대한 사과와 함께 대화를 이어갑니다.',
-          ),
-          MessageTemplate(
-            situation: '공감 답장',
-            message: '정말 힘들었겠어요 ㅠㅠ 그런 일이 있었다니... 괜찮으세요?',
-            explanation: '상대방의 어려움에 공감하고 위로하는 답장입니다.',
-          ),
-        ];
-      case 3: // 감정 표현
-        return [
-          MessageTemplate(
-            situation: '고마움 표현',
-            message: '오늘 정말 고마웠어요! 덕분에 기분이 많이 좋아졌어요 💕',
-            explanation: '감사한 마음을 솔직하게 표현하면서 긍정적인 감정을 전달합니다.',
-          ),
-          MessageTemplate(
-            situation: '관심 표현',
-            message: '○○님과 이야기하는 시간이 정말 즐거워요. 더 많은 이야기 나누고 싶어요 😊',
-            explanation: '상대방에 대한 관심과 호감을 자연스럽게 표현합니다.',
-          ),
-        ];
-      default:
-        return [];
-    }
-  }
-
-  // 카테고리 선택
-  void _selectCategory(int index) {
-    setState(() {
-      _selectedCategoryIndex = index;
-    });
-  }
-
-  // 템플릿 사용
-  void _useTemplate(MessageTemplate template) {
-    ToastNotification.show(
-      context: context,
-      message: '템플릿이 적용되었어요! AI 메시지 화면에서 확인하세요',
-      type: ToastType.success,
-    );
-  }
 
   // 더 많은 조언 보기
   void _showMoreAdvice() {
@@ -785,52 +592,21 @@ class _CoachingCenterScreenState extends State<CoachingCenterScreen> {
     );
   }
 
-  // 개인화된 코칭 시작
-  void _startPersonalizedCoaching() {
+  // 상세 분석 보기
+  void _showDetailedAnalysis() {
     ToastNotification.show(
       context: context,
-      message: '1:1 코칭 기능은 곧 추가될 예정이에요!',
+      message: '상세 분석 기능은 곧 추가될 예정이에요!',
       type: ToastType.info,
     );
   }
-}
 
-// 코칭 카테고리 모델
-class CoachingCategory {
-  CoachingCategory({
-    required this.id,
-    required this.title,
-    required this.icon,
-    required this.description,
-  });
-  final String id;
-  final String title;
-  final IconData icon;
-  final String description;
-}
-
-// 코칭 팁 모델
-class CoachingTip {
-  CoachingTip({
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.color,
-  });
-  final String title;
-  final String description;
-  final IconData icon;
-  final Color color;
-}
-
-// 메시지 템플릿 모델
-class MessageTemplate {
-  MessageTemplate({
-    required this.situation,
-    required this.message,
-    required this.explanation,
-  });
-  final String situation;
-  final String message;
-  final String explanation;
+  // 맞춤 코칭 시작
+  void _startPersonalizedCoaching() {
+    ToastNotification.show(
+      context: context,
+      message: '맞춤 코칭 기능은 곧 추가될 예정이에요!',
+      type: ToastType.info,
+    );
+  }
 }
