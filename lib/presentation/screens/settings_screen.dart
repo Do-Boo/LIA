@@ -8,9 +8,8 @@ import '../widgets/lia_widgets.dart';
 
 /// 설정 화면
 ///
-/// 앱의 모든 설정 기능을 체계적으로 관리하는 전용 화면
-/// MY 화면에서 분리하여 각 기능의 목적을 명확히 구분
-/// 심플하고 직관적인 인터페이스로 사용자 편의성 최우선
+/// 앱의 모든 설정 기능을 카카오톡 스타일로 관리하는 화면
+/// MY 화면과 동일한 심플하고 직관적인 인터페이스
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -41,197 +40,240 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       title: Text(
         '설정',
-        style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
+        style: AppTextStyles.h3.copyWith(
+          color: AppColors.textPrimary,
+          fontWeight: FontWeight.w400,
+        ),
       ),
       centerTitle: true,
     ),
     body: SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width > 600 ? 32.0 : 16.0,
-          vertical: 12,
-        ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppSpacing.gapV24,
+      child: Column(
+        children: [
+          // 상단 설정 요약 영역
+          _buildSettingSummarySection(),
 
-              // 대시보드 헤더
-              const DashboardHeader(
-                title: '설정',
-                subtitle: '앱 설정과 개인 정보를 관리하세요',
-                icon: HugeIcons.strokeRoundedSettings01,
-              ),
-
-              AppSpacing.gapV24,
-
-              // 1. 알림 설정
-              _buildSimpleSection(
-                '알림 설정',
-                '푸시 알림과 이메일 알림을 설정하세요',
-                HugeIcons.strokeRoundedNotification01,
-                _buildNotificationContent(),
-              ),
-
-              AppSpacing.gapV24,
-
-              // 2. 앱 설정
-              _buildSimpleSection(
-                '앱 설정',
-                '다크모드, 분석 데이터 수집 등을 설정하세요',
-                HugeIcons.strokeRoundedSettings02,
-                _buildAppSettingsContent(),
-              ),
-
-              AppSpacing.gapV24,
-
-              // 3. 지원
-              _buildSimpleSection(
-                '지원',
-                '도움말, 문의하기, 개인정보 처리방침을 확인하세요',
-                HugeIcons.strokeRoundedCustomerSupport,
-                _buildSupportContent(),
-              ),
-
-              AppSpacing.gapV24,
-
-              // 4. 계정
-              _buildSimpleSection(
-                '계정',
-                '계정 정보와 로그아웃 관련 설정입니다',
-                HugeIcons.strokeRoundedUser,
-                _buildAccountContent(),
-              ),
-
-              AppSpacing.gapV24,
-
-              // 5. 위험 구역
-              _buildSimpleSection(
-                '위험 구역',
-                '계정 삭제 등 주의가 필요한 작업입니다',
-                HugeIcons.strokeRoundedAlert02,
-                _buildDangerZoneContent(),
-              ),
-
-              AppSpacing.gapV40,
-            ],
-          ),
-        ),
+          // 메뉴 리스트 영역
+          Expanded(child: _buildSettingsMenuSection()),
+        ],
       ),
     ),
   );
 
-  // 설정 그룹 위젯
-  Widget _buildSettingsGroup(
-    String title,
-    String description,
-    IconData groupIcon,
-    Color color,
-    List<Widget> items,
-  ) => DecoratedBox(
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: color.withValues(alpha: 0.1)),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 12,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
+  // 상단 설정 요약 섹션
+  Widget _buildSettingSummarySection() => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(24),
+    color: Colors.white,
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 그룹 헤더
+        // 설정 아이콘
         Container(
-          padding: const EdgeInsets.all(20),
+          width: 60,
+          height: 60,
           decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.05),
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
+            color: AppColors.primary.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(30),
           ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(groupIcon, color: color, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: AppTextStyles.cardTitle.copyWith(
-                        color: color,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      description,
-                      style: AppTextStyles.cardDescription.copyWith(
-                        color: AppColors.textSecondary,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          child: const Icon(
+            HugeIcons.strokeRoundedSettings01,
+            size: 28,
+            color: AppColors.primary,
           ),
         ),
+        const SizedBox(height: 12),
 
-        // 설정 아이템들
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: items
-                .map(
-                  (item) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: item,
-                  ),
-                )
-                .toList(),
+        // 설정 제목
+        Text(
+          '앱 설정',
+          style: AppTextStyles.h3.copyWith(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+        const SizedBox(height: 4),
+
+        // 설정 상태 요약
+        Text(
+          '알림 ${_notificationEnabled ? "켜짐" : "꺼짐"} • 다크모드 ${_darkModeEnabled ? "켜짐" : "꺼짐"}',
+          style: AppTextStyles.body2.copyWith(color: AppColors.textSecondary),
         ),
       ],
     ),
   );
 
-  // 토글 설정 아이템
-  Widget _buildToggleItem(
-    String title,
-    String description,
+  // 설정 메뉴 섹션
+  Widget _buildSettingsMenuSection() => ColoredBox(
+    color: AppColors.background,
+    child: ListView(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      children: [
+        // 알림 설정 그룹
+        _buildMenuGroup('알림 설정'),
+        _buildToggleMenuItem(
+          HugeIcons.strokeRoundedNotification01,
+          '전체 알림',
+          '모든 알림을 받을지 설정합니다',
+          _notificationEnabled,
+          (value) => setState(() => _notificationEnabled = value),
+        ),
+        _buildToggleMenuItem(
+          HugeIcons.strokeRoundedNotification01,
+          '푸시 알림',
+          '앱에서 푸시 알림을 받을지 설정합니다',
+          _pushNotificationEnabled,
+          (value) => setState(() => _pushNotificationEnabled = value),
+        ),
+        _buildToggleMenuItem(
+          HugeIcons.strokeRoundedMail01,
+          '이메일 알림',
+          '이메일로 중요한 소식을 받을지 설정합니다',
+          _emailNotificationEnabled,
+          (value) => setState(() => _emailNotificationEnabled = value),
+        ),
+
+        const SizedBox(height: 16),
+
+        // 앱 설정 그룹
+        _buildMenuGroup('앱 설정'),
+        _buildToggleMenuItem(
+          HugeIcons.strokeRoundedMoon01,
+          '다크 모드',
+          '어두운 테마를 사용합니다',
+          _darkModeEnabled,
+          (value) => setState(() => _darkModeEnabled = value),
+        ),
+        _buildToggleMenuItem(
+          HugeIcons.strokeRoundedAnalytics01,
+          '분석 데이터 수집',
+          '앱 개선을 위한 익명 데이터를 수집합니다',
+          _analyticsEnabled,
+          (value) => setState(() => _analyticsEnabled = value),
+        ),
+        _buildActionMenuItem(
+          HugeIcons.strokeRoundedLanguageCircle,
+          '언어 설정',
+          '앱에서 사용할 언어를 선택하세요',
+          _changeLanguage,
+        ),
+        _buildActionMenuItem(
+          HugeIcons.strokeRoundedDelete01,
+          '캐시 삭제',
+          '저장된 임시 파일을 삭제하여 용량을 확보하세요',
+          _clearCache,
+        ),
+
+        const SizedBox(height: 16),
+
+        // 지원 그룹
+        _buildMenuGroup('지원'),
+        _buildActionMenuItem(
+          HugeIcons.strokeRoundedHelpCircle,
+          '도움말',
+          'LIA 사용법과 자주 묻는 질문을 확인하세요',
+          _showHelp,
+        ),
+        _buildActionMenuItem(
+          HugeIcons.strokeRoundedMail01,
+          '문의하기',
+          '궁금한 점이나 문제가 있으면 언제든 연락하세요',
+          _contactSupport,
+        ),
+        _buildActionMenuItem(
+          HugeIcons.strokeRoundedStar,
+          '앱 평가하기',
+          'LIA가 마음에 드신다면 평가를 남겨주세요',
+          _rateApp,
+        ),
+
+        const SizedBox(height: 16),
+
+        // 계정 그룹
+        _buildMenuGroup('계정'),
+        _buildActionMenuItem(
+          HugeIcons.strokeRoundedCrown,
+          'LIA 프리미엄',
+          '더 많은 기능을 이용해보세요',
+          _upgradePremium,
+        ),
+        _buildActionMenuItem(
+          HugeIcons.strokeRoundedShield01,
+          '개인정보 처리방침',
+          '개인정보 보호 정책을 확인하세요',
+          _showPrivacyPolicy,
+        ),
+        _buildActionMenuItem(
+          HugeIcons.strokeRoundedFile01,
+          '서비스 이용 약관',
+          '서비스 이용 약관을 확인하세요',
+          _showTerms,
+        ),
+
+        const SizedBox(height: 24),
+
+        // 위험 구역
+        _buildMenuGroup('계정 관리'),
+        _buildDangerMenuItem(
+          HugeIcons.strokeRoundedLogout01,
+          '로그아웃',
+          '현재 계정에서 로그아웃합니다',
+          AppColors.orange,
+          _logout,
+        ),
+        _buildDangerMenuItem(
+          HugeIcons.strokeRoundedUserRemove01,
+          '계정 삭제',
+          '모든 데이터가 영구적으로 삭제됩니다',
+          AppColors.pink,
+          _deleteAccount,
+        ),
+      ],
+    ),
+  );
+
+  // 메뉴 그룹 헤더
+  Widget _buildMenuGroup(String title) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+    child: Text(
+      title,
+      style: AppTextStyles.body2.copyWith(
+        color: AppColors.textSecondary,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  );
+
+  // 토글 메뉴 아이템
+  Widget _buildToggleMenuItem(
     IconData icon,
+    String title,
+    String subtitle,
     bool value,
     ValueChanged<bool> onChanged,
   ) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+    color: Colors.white,
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    margin: const EdgeInsets.only(bottom: 1),
     child: Row(
       children: [
-        Icon(icon, color: AppColors.textSecondary, size: 20),
-        const SizedBox(width: 12),
+        Icon(icon, size: 24, color: AppColors.textSecondary),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: AppTextStyles.cardTitle),
-              const SizedBox(height: 2),
-              Text(description, style: AppTextStyles.cardDescription),
+              Text(
+                title,
+                style: AppTextStyles.body1.copyWith(
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              Text(
+                subtitle,
+                style: AppTextStyles.caption.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
             ],
           ),
         ),
@@ -240,67 +282,76 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ),
   );
 
-  // 액션 설정 아이템
-  Widget _buildActionItem(
+  // 액션 메뉴 아이템
+  Widget _buildActionMenuItem(
+    IconData icon,
     String title,
     String subtitle,
-    IconData icon,
     VoidCallback onTap,
   ) => GestureDetector(
     onTap: onTap,
     child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 1),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.textSecondary, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: AppTextStyles.cardTitle),
-                const SizedBox(height: 2),
-                Text(subtitle, style: AppTextStyles.cardDescription),
-              ],
-            ),
-          ),
-          const Icon(
-            HugeIcons.strokeRoundedArrowRight01,
-            color: AppColors.textSecondary,
-            size: 16,
-          ),
-        ],
-      ),
-    ),
-  );
-
-  // 위험 액션 아이템 (로그아웃, 계정 삭제용)
-  Widget _buildDangerActionItem(
-    String title,
-    String description,
-    IconData icon,
-    Color color,
-    VoidCallback onTap,
-  ) => GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(width: 12),
+          Icon(icon, size: 24, color: AppColors.textSecondary),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: AppTextStyles.cardTitle.copyWith(color: color),
+                  style: AppTextStyles.body1.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                 ),
-                const SizedBox(height: 2),
                 Text(
-                  description,
-                  style: AppTextStyles.cardDescription.copyWith(
+                  subtitle,
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Icon(
+            HugeIcons.strokeRoundedArrowRight01,
+            size: 16,
+            color: AppColors.textSecondary,
+          ),
+        ],
+      ),
+    ),
+  );
+
+  // 위험 액션 메뉴 아이템
+  Widget _buildDangerMenuItem(
+    IconData icon,
+    String title,
+    String subtitle,
+    Color color,
+    VoidCallback onTap,
+  ) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 1),
+      child: Row(
+        children: [
+          Icon(icon, size: 24, color: color),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: AppTextStyles.body1.copyWith(color: color)),
+                Text(
+                  subtitle,
+                  style: AppTextStyles.caption.copyWith(
                     color: color.withValues(alpha: 0.7),
                   ),
                 ),
@@ -309,291 +360,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Icon(
             HugeIcons.strokeRoundedArrowRight01,
-            color: color.withValues(alpha: 0.7),
             size: 16,
+            color: color.withValues(alpha: 0.7),
           ),
         ],
       ),
     ),
-  );
-
-  // 위험 구역 (계정 삭제, 로그아웃)
-  Widget _buildDangerZone() => Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: AppColors.pink.withValues(alpha: 0.2)),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.05),
-          blurRadius: 12,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 위험 구역 헤더
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: AppColors.pink.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                HugeIcons.strokeRoundedAlert01,
-                color: AppColors.pink,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              '계정 관리',
-              style: AppTextStyles.cardTitle.copyWith(
-                color: AppColors.pink,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 16),
-
-        // 위험한 액션들
-        Row(
-          children: [
-            Expanded(
-              child: _buildDangerButton(
-                '로그아웃',
-                HugeIcons.strokeRoundedLogout01,
-                AppColors.orange,
-                _logout,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildDangerButton(
-                '계정 삭제',
-                HugeIcons.strokeRoundedUserRemove01,
-                AppColors.pink,
-                _deleteAccount,
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-
-  // 위험한 액션 버튼
-  Widget _buildDangerButton(
-    String title,
-    IconData icon,
-    Color color,
-    VoidCallback onTap,
-  ) => GestureDetector(
-    onTap: onTap,
-    child: Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: AppTextStyles.cardDescription.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    ),
-  );
-
-  // 심플한 섹션 위젯
-  Widget _buildSimpleSection(
-    String title,
-    String description,
-    IconData icon,
-    Widget content,
-  ) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Row(
-        children: [
-          Icon(icon, color: AppColors.primary, size: 24),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTextStyles.cardTitle.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: AppTextStyles.cardDescription.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      const SizedBox(height: 16),
-      content,
-    ],
-  );
-
-  // 알림 설정 컨텐츠
-  Widget _buildNotificationContent() => Column(
-    children: [
-      _buildToggleItem(
-        '전체 알림',
-        '모든 알림을 받을지 설정합니다',
-        HugeIcons.strokeRoundedNotification01,
-        _notificationEnabled,
-        (value) => setState(() => _notificationEnabled = value),
-      ),
-      _buildToggleItem(
-        '푸시 알림',
-        '앱에서 푸시 알림을 받을지 설정합니다',
-        HugeIcons.strokeRoundedNotification01,
-        _pushNotificationEnabled,
-        (value) => setState(() => _pushNotificationEnabled = value),
-      ),
-      _buildToggleItem(
-        '이메일 알림',
-        '이메일로 중요한 소식을 받을지 설정합니다',
-        HugeIcons.strokeRoundedMail01,
-        _emailNotificationEnabled,
-        (value) => setState(() => _emailNotificationEnabled = value),
-      ),
-    ],
-  );
-
-  // 앱 설정 컨텐츠
-  Widget _buildAppSettingsContent() => Column(
-    children: [
-      _buildToggleItem(
-        '다크 모드',
-        '어두운 테마를 사용합니다',
-        HugeIcons.strokeRoundedMoon01,
-        _darkModeEnabled,
-        (value) => setState(() => _darkModeEnabled = value),
-      ),
-      _buildToggleItem(
-        '분석 데이터 수집',
-        '앱 개선을 위한 익명 데이터를 수집합니다',
-        HugeIcons.strokeRoundedAnalytics01,
-        _analyticsEnabled,
-        (value) => setState(() => _analyticsEnabled = value),
-      ),
-      _buildActionItem(
-        '언어 설정',
-        '앱에서 사용할 언어를 선택하세요',
-        HugeIcons.strokeRoundedLanguageCircle,
-        _changeLanguage,
-      ),
-      _buildActionItem(
-        '캐시 삭제',
-        '저장된 임시 파일을 삭제하여 용량을 확보하세요',
-        HugeIcons.strokeRoundedDelete01,
-        _clearCache,
-      ),
-    ],
-  );
-
-  // 지원 컨텐츠
-  Widget _buildSupportContent() => Column(
-    children: [
-      _buildActionItem(
-        '도움말',
-        'LIA 사용법과 자주 묻는 질문을 확인하세요',
-        HugeIcons.strokeRoundedHelpCircle,
-        _showHelp,
-      ),
-      _buildActionItem(
-        '문의하기',
-        '궁금한 점이나 문제가 있으면 언제든 연락하세요',
-        HugeIcons.strokeRoundedMail01,
-        _contactSupport,
-      ),
-      _buildActionItem(
-        '앱 평가하기',
-        'LIA가 마음에 드신다면 평가를 남겨주세요',
-        HugeIcons.strokeRoundedStar,
-        _rateApp,
-      ),
-      _buildActionItem(
-        '공지사항',
-        '새로운 소식과 업데이트를 확인하세요',
-        HugeIcons.strokeRoundedNews,
-        _showNotices,
-      ),
-    ],
-  );
-
-  // 계정 컨텐츠
-  Widget _buildAccountContent() => Column(
-    children: [
-      _buildActionItem(
-        'LIA 프리미엄',
-        '더 많은 기능을 이용해보세요',
-        HugeIcons.strokeRoundedCrown,
-        _upgradePremium,
-      ),
-      _buildActionItem(
-        '개인정보 처리방침',
-        '개인정보 보호 정책을 확인하세요',
-        HugeIcons.strokeRoundedShield01,
-        _showPrivacyPolicy,
-      ),
-      _buildActionItem(
-        '서비스 이용 약관',
-        '서비스 이용 약관을 확인하세요',
-        HugeIcons.strokeRoundedFile01,
-        _showTerms,
-      ),
-    ],
-  );
-
-  // 위험 구역 컨텐츠
-  Widget _buildDangerZoneContent() => Column(
-    children: [
-      _buildDangerActionItem(
-        '로그아웃',
-        '현재 계정에서 로그아웃합니다',
-        HugeIcons.strokeRoundedLogout01,
-        AppColors.orange,
-        _logout,
-      ),
-      _buildDangerActionItem(
-        '계정 삭제',
-        '모든 데이터가 영구적으로 삭제됩니다',
-        HugeIcons.strokeRoundedUserRemove01,
-        AppColors.pink,
-        _deleteAccount,
-      ),
-    ],
   );
 
   // === 액션 메서드들 ===
@@ -639,15 +411,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ToastNotification.show(
       context: context,
       message: '앱스토어로 이동합니다!',
-      type: ToastType.info,
-    );
-  }
-
-  // 공지사항 보기
-  void _showNotices() {
-    ToastNotification.show(
-      context: context,
-      message: '공지사항 페이지로 이동합니다!',
       type: ToastType.info,
     );
   }
