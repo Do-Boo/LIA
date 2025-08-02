@@ -38,16 +38,16 @@ class _MyScreenState extends State<MyScreen> {
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppColors.background,
     body: SafeArea(
-      child: Column(
-        children: [
+      child: CustomScrollView(
+        slivers: [
           // 상단 프로필 영역
-          _buildProfileSection(),
+          SliverToBoxAdapter(child: _buildProfileSection()),
 
           // 통계 숫자 영역
-          _buildStatsSection(),
+          SliverToBoxAdapter(child: _buildStatsSection()),
 
           // 메뉴 리스트 영역
-          Expanded(child: _buildMenuSection()),
+          SliverToBoxAdapter(child: _buildMenuContent()),
         ],
       ),
     ),
@@ -169,67 +169,43 @@ class _MyScreenState extends State<MyScreen> {
         ),
       );
 
-  // 메뉴 섹션
-  Widget _buildMenuSection() => ColoredBox(
-    color: AppColors.background,
-    child: ListView(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+  /// 메뉴 콘텐츠 (스크롤을 위해 ListView에서 Column으로 변경)
+  Widget _buildMenuContent() => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 16),
+    child: Column(
       children: [
-        _buildMenuItem(
-          HugeIcons.strokeRoundedMegaphone01,
-          '공지사항',
-          () => _showToast('공지사항 페이지로 이동합니다!'),
+        MenuItemWidget.simple(
+          icon: HugeIcons.strokeRoundedMegaphone01,
+          title: '공지사항',
+          onTap: () => _showToast('공지사항 페이지로 이동합니다!'),
         ),
-        _buildMenuItem(
-          HugeIcons.strokeRoundedCalendar03,
-          '이벤트',
-          () => _showToast('이벤트 페이지로 이동합니다!'),
+        MenuItemWidget.simple(
+          icon: HugeIcons.strokeRoundedCalendar03,
+          title: '이벤트',
+          onTap: () => _showToast('이벤트 페이지로 이동합니다!'),
         ),
-        _buildMenuItem(
-          HugeIcons.strokeRoundedHelpCircle,
-          '자주 묻는 질문',
-          () => _showToast('FAQ 페이지로 이동합니다!'),
+        MenuItemWidget.simple(
+          icon: HugeIcons.strokeRoundedHelpCircle,
+          title: '자주 묻는 질문',
+          onTap: () => _showToast('FAQ 페이지로 이동합니다!'),
         ),
-        _buildMenuItem(
-          HugeIcons.strokeRoundedCustomerSupport,
-          '문의하기',
-          () => _showToast('고객센터로 연결됩니다!'),
+        MenuItemWidget.simple(
+          icon: HugeIcons.strokeRoundedCustomerSupport,
+          title: '문의하기',
+          onTap: () => _showToast('고객센터로 연결됩니다!'),
         ),
         const SizedBox(height: 16),
-        _buildMenuItem(HugeIcons.strokeRoundedSettings01, '설정', _openSettings),
+        MenuItemWidget.simple(
+          icon: HugeIcons.strokeRoundedSettings01,
+          title: '설정',
+          onTap: _openSettings,
+        ),
+
+        // 하단 여백 추가
+        const SizedBox(height: 40),
       ],
     ),
   );
-
-  // 메뉴 아이템
-  Widget _buildMenuItem(IconData icon, String title, VoidCallback onTap) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Container(
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          margin: const EdgeInsets.only(bottom: 1),
-          child: Row(
-            children: [
-              Icon(icon, size: 24, color: AppColors.textSecondary),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  title,
-                  style: AppTextStyles.body1.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ),
-              const Icon(
-                HugeIcons.strokeRoundedArrowRight01,
-                size: 16,
-                color: AppColors.textSecondary,
-              ),
-            ],
-          ),
-        ),
-      );
 
   // 토스트 메시지 헬퍼
   void _showToast(String message) {

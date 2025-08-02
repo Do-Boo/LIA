@@ -39,6 +39,9 @@ class AppRoutes {
   /// 가상 채팅 화면
   static const String virtualChat = '/virtual-chat';
 
+  /// 알림 화면
+  static const String notification = '/notification';
+
   /// 모든 라우팅 경로 목록
   static const List<String> all = [
     home,
@@ -51,6 +54,7 @@ class AppRoutes {
     chartDemo,
     designGuide,
     virtualChat,
+    notification,
   ];
 
   /// 라우팅 경로 유효성 검사
@@ -79,6 +83,8 @@ class AppRoutes {
         return '디자인 가이드';
       case virtualChat:
         return '가상 채팅';
+      case notification:
+        return '알림';
       default:
         return '알 수 없음';
     }

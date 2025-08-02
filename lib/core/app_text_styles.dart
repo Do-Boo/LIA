@@ -9,19 +9,19 @@ import 'app_colors.dart';
 /// 이 클래스를 통해 앱 전체의 타이포그래피를 일관되게 관리할 수 있습니다.
 /// 모든 스타일은 static const로 정의되어 메모리 효율성을 보장합니다.
 ///
-/// 폰트 계층 시스템 (2025.07.21 10:32:53 통일성 개선):
+/// 폰트 계층 시스템 (2025.07.23 17:27:25 가독성 개선):
 /// - Gaegu: 브랜드 타이틀만 사용 (친근하고 캐주얼한 브랜드 아이덴티티)
 /// - Pretendard: 섹션 제목, 중요 헤딩 (모던하고 세련된 제목용 폰트)
 /// - NotoSansKR: 본문, 설명 텍스트 (가독성 최적화된 본문용 폰트)
 ///
-/// 스타일 계층 (모바일 최적화 + 통일성 강화):
+/// 스타일 계층 (모바일 최적화 + 가독성 강화):
 /// - [mainTitle]: 앱 메인 타이틀 (36px, Gaegu) - 브랜드 전용
 /// - [sectionTitle]: 섹션 카드 제목 (20px, Pretendard) - 통일된 섹션 타이틀
-/// - [sectionDescription]: 섹션 설명 (14px, NotoSansKR) - 통일된 섹션 설명
-/// - [cardTitle]: 카드 제목 (16px, Pretendard) - 통일된 카드 타이틀
-/// - [cardDescription]: 카드 설명 (13px, NotoSansKR) - 통일된 카드 설명
+/// - [sectionDescription]: 섹션 설명 (15px, NotoSansKR) - 통일된 섹션 설명
+/// - [cardTitle]: 카드 제목 (17px, Pretendard) - 통일된 카드 타이틀
+/// - [cardDescription]: 카드 설명 (14px, NotoSansKR) - 통일된 카드 설명
 /// - [h1~h3]: 기존 헤딩 스타일 유지 (호환성)
-/// - [body, helper]: 본문 및 도움말 텍스트 (fontWeight 강화)
+/// - [body, helper]: 본문 및 도움말 텍스트 (크기 및 fontWeight 강화)
 class AppTextStyles {
   // ===== 브랜드 타이틀 =====
   /// 앱의 메인 타이틀 스타일입니다.
@@ -44,7 +44,7 @@ class AppTextStyles {
   /// Pretendard 폰트로 모던하고 세련된 느낌을 제공합니다.
   static const TextStyle sectionTitle = TextStyle(
     fontFamily: 'Pretendard',
-    fontSize: 18,
+    fontSize: 20, // 18 → 20으로 증가
     fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
     height: 1.3,
@@ -56,8 +56,8 @@ class AppTextStyles {
   /// NotoSansKR 폰트로 가독성을 최적화했습니다.
   static const TextStyle sectionDescription = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
+    fontSize: 15, // 14 → 15로 증가
+    fontWeight: FontWeight.w600, // w500 → w600으로 증가
     color: AppColors.textSecondary,
     height: 1.4,
   );
@@ -69,7 +69,7 @@ class AppTextStyles {
   /// 섹션 제목보다 작지만 충분히 강조된 스타일입니다.
   static const TextStyle cardTitle = TextStyle(
     fontFamily: 'Pretendard',
-    fontSize: 16,
+    fontSize: 17, // 16 → 17로 증가
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
     height: 1.3,
@@ -81,7 +81,7 @@ class AppTextStyles {
   /// 적절한 크기와 색상으로 가독성을 보장합니다.
   static const TextStyle cardDescription = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 13,
+    fontSize: 14, // 13 → 14로 증가
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     height: 1.4,
@@ -93,7 +93,7 @@ class AppTextStyles {
   /// DashboardHeader 컴포넌트에서 사용하는 메인 제목 스타일입니다.
   static const TextStyle dashboardTitle = TextStyle(
     fontFamily: 'Pretendard',
-    fontSize: 24,
+    fontSize: 26, // 24 → 26으로 증가
     fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
     height: 1.3,
@@ -104,7 +104,7 @@ class AppTextStyles {
   /// DashboardHeader 컴포넌트에서 사용하는 설명 스타일입니다.
   static const TextStyle dashboardSubtitle = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 15,
+    fontSize: 16, // 15 → 16으로 증가
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     height: 1.4,
@@ -114,7 +114,7 @@ class AppTextStyles {
   /// 주요 헤딩 스타일입니다.
   static const TextStyle h1 = TextStyle(
     fontFamily: 'Pretendard',
-    fontSize: 22,
+    fontSize: 24, // 22 → 24로 증가
     fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
     height: 1.3,
@@ -123,7 +123,7 @@ class AppTextStyles {
   /// 부제목 스타일입니다.
   static const TextStyle h2 = TextStyle(
     fontFamily: 'Pretendard',
-    fontSize: 18,
+    fontSize: 20, // 18 → 20으로 증가
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
     height: 1.3,
@@ -132,19 +132,19 @@ class AppTextStyles {
   /// 세 번째 수준의 헤딩 스타일입니다.
   static const TextStyle h3 = TextStyle(
     fontFamily: 'Pretendard',
-    fontSize: 16,
+    fontSize: 18, // 16 → 18로 증가
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
     height: 1.3,
   );
 
-  // ===== 본문 텍스트 스타일 (fontWeight 강화) =====
+  // ===== 본문 텍스트 스타일 (크기 및 fontWeight 강화) =====
   /// 본문 텍스트 스타일입니다.
   ///
-  /// 모바일에서의 가독성을 위해 fontWeight를 강화했습니다.
+  /// 모바일에서의 가독성을 위해 크기와 fontWeight를 강화했습니다.
   static const TextStyle body = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 14,
+    fontSize: 15, // 14 → 15로 증가
     fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
     height: 1.5,
@@ -153,7 +153,7 @@ class AppTextStyles {
   /// 큰 크기의 본문 텍스트 스타일입니다.
   static const TextStyle body1 = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 15,
+    fontSize: 16, // 15 → 16으로 증가
     fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
     height: 1.5,
@@ -162,7 +162,7 @@ class AppTextStyles {
   /// 기본 크기의 본문 텍스트 스타일입니다.
   static const TextStyle body2 = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 14,
+    fontSize: 15, // 14 → 15로 증가
     fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
     height: 1.5,
@@ -170,10 +170,10 @@ class AppTextStyles {
 
   /// 도움말과 부가 정보 텍스트 스타일입니다.
   ///
-  /// 모바일에서의 가독성을 위해 fontWeight를 강화했습니다.
+  /// 모바일에서의 가독성을 위해 크기와 fontWeight를 강화했습니다.
   static const TextStyle helper = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 12,
+    fontSize: 13, // 12 → 13으로 증가
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     height: 1.5,
@@ -182,7 +182,7 @@ class AppTextStyles {
   /// 작은 캐션 텍스트 스타일입니다.
   static const TextStyle caption = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 12,
+    fontSize: 13, // 12 → 13으로 증가
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     height: 1.4,
@@ -192,7 +192,7 @@ class AppTextStyles {
   /// 컴포넌트 제목 스타일입니다. (호환성 유지)
   static const TextStyle componentTitle = TextStyle(
     fontFamily: 'Pretendard',
-    fontSize: 22,
+    fontSize: 24, // 22 → 24로 증가
     fontWeight: FontWeight.w700,
     color: AppColors.accent,
     height: 1.3,
@@ -201,7 +201,7 @@ class AppTextStyles {
   /// 질문형 제목 스타일입니다. (호환성 유지)
   static const TextStyle questionTitle = TextStyle(
     fontFamily: 'Pretendard',
-    fontSize: 18,
+    fontSize: 20, // 18 → 20으로 증가
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
     height: 1.4,
@@ -210,7 +210,7 @@ class AppTextStyles {
   /// 설명 텍스트 스타일입니다. (호환성 유지)
   static const TextStyle subtitle = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 16,
+    fontSize: 17, // 16 → 17로 증가
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
     height: 1.4,
@@ -219,7 +219,7 @@ class AppTextStyles {
   /// 차트 제목 텍스트 스타일입니다.
   static const TextStyle chartTitle = TextStyle(
     fontFamily: 'Pretendard',
-    fontSize: 16,
+    fontSize: 17, // 16 → 17로 증가
     fontWeight: FontWeight.w600,
     color: AppColors.primary,
     height: 1.4,
@@ -229,7 +229,7 @@ class AppTextStyles {
   /// 성공 메시지 텍스트 스타일입니다.
   static const TextStyle success = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 16,
+    fontSize: 17, // 16 → 17로 증가
     fontWeight: FontWeight.w600,
     color: AppColors.success,
     height: 1.5,
@@ -238,7 +238,7 @@ class AppTextStyles {
   /// 오류 메시지 텍스트 스타일입니다.
   static const TextStyle error = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 16,
+    fontSize: 17, // 16 → 17로 증가
     fontWeight: FontWeight.w600,
     color: AppColors.error,
     height: 1.5,
@@ -247,7 +247,7 @@ class AppTextStyles {
   /// 정보 메시지 텍스트 스타일입니다.
   static const TextStyle info = TextStyle(
     fontFamily: 'NotoSansKR',
-    fontSize: 16,
+    fontSize: 17, // 16 → 17로 증가
     fontWeight: FontWeight.w600,
     color: AppColors.info,
     height: 1.5,

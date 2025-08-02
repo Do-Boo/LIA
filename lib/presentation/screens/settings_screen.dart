@@ -48,13 +48,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       centerTitle: true,
     ),
     body: SafeArea(
-      child: Column(
-        children: [
+      child: CustomScrollView(
+        slivers: [
           // 상단 설정 요약 영역
-          _buildSettingSummarySection(),
+          SliverToBoxAdapter(child: _buildSettingSummarySection()),
 
           // 메뉴 리스트 영역
-          Expanded(child: _buildSettingsMenuSection()),
+          SliverToBoxAdapter(child: _buildSettingsMenuContent()),
         ],
       ),
     ),
@@ -64,7 +64,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSettingSummarySection() => Container(
     width: double.infinity,
     padding: const EdgeInsets.all(24),
-    color: Colors.white,
+    color: Colors.transparent,
     child: Column(
       children: [
         // 설정 아이콘
@@ -102,11 +102,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ),
   );
 
-  // 설정 메뉴 섹션
-  Widget _buildSettingsMenuSection() => ColoredBox(
-    color: AppColors.background,
-    child: ListView(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+  /// 설정 메뉴 콘텐츠 (스크롤을 위해 ListView에서 Column으로 변경)
+  Widget _buildSettingsMenuContent() => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 16),
+    child: Column(
       children: [
         // 알림 설정 그룹
         _buildMenuGroup('알림 설정'),
@@ -217,16 +216,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
           HugeIcons.strokeRoundedLogout01,
           '로그아웃',
           '현재 계정에서 로그아웃합니다',
-          AppColors.orange,
+          AppColors.textPrimary,
           _logout,
         ),
         _buildDangerMenuItem(
           HugeIcons.strokeRoundedUserRemove01,
           '계정 삭제',
           '모든 데이터가 영구적으로 삭제됩니다',
-          AppColors.pink,
+          AppColors.textPrimary,
           _deleteAccount,
         ),
+
+        // 하단 여백 추가
+        const SizedBox(height: 40),
       ],
     ),
   );
@@ -266,6 +268,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title,
                 style: AppTextStyles.body1.copyWith(
                   color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
@@ -306,6 +309,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title,
                   style: AppTextStyles.body1.copyWith(
                     color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 Text(
@@ -348,7 +352,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTextStyles.body1.copyWith(color: color)),
+                Text(
+                  title,
+                  style: AppTextStyles.body1.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 Text(
                   subtitle,
                   style: AppTextStyles.caption.copyWith(

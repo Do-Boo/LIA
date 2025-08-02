@@ -230,7 +230,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
               curve: Curves.easeOut,
               child: Icon(
                 isSelected ? selectedIcon : icon,
-                color: isSelected ? AppColors.primary : AppColors.secondaryText,
+                color: isSelected ? AppColors.primary : AppColors.textPrimary,
                 size: 24,
               ),
             ),
@@ -239,9 +239,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeOut,
               style: TextStyle(
-                color: isSelected ? AppColors.primary : AppColors.secondaryText,
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                fontSize: 13, // 12 → 13으로 증가
+                fontWeight: isSelected
+                    ? FontWeight.w700
+                    : FontWeight.w600, // bold → w600, normal → w500로 조정
+                fontFamily: 'NotoSansKR', // 폰트 패밀리 명시
               ),
               child: Text(label),
             ),

@@ -47,6 +47,7 @@
 /// ### 🧩 공통 컴포넌트 (Common Components)
 /// - **ComponentCard**: 위젯 표시용 카드
 /// - **DashedDivider**: 점선 구분선
+/// - **MenuItemWidget**: 카카오톡 스타일 및 심플 스타일 메뉴 아이템
 ///
 /// ### 🚀 네비게이션 (Navigation)
 /// - **BottomNavigationBar**: 하단 네비게이션 바
@@ -121,6 +122,7 @@ export 'common/code_copy_card.dart';
 export 'common/component_card.dart';
 export 'common/dashboard_header.dart';
 export 'common/dashed_divider.dart';
+export 'common/menu_item.dart';
 export 'common/parameter_card.dart';
 // 🔘 Common Buttons
 export 'common/primary_button.dart';

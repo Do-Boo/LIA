@@ -54,12 +54,16 @@ class AppColors {
 
   // ===== 텍스트 색상 =====
   /// 기본 텍스트 색상입니다.
-  /// 진한 회색으로 가독성을 보장합니다.
-  static const Color textPrimary = Color(0xFF333333);
+  /// 진한 회색으로 가독성을 보장합니다. (2025.07.23 17:31:28 가독성을 위해 더 진하게 조정)
+  static const Color textPrimary = Color(
+    0xFF1A1A1A,
+  ); // #333333 → #1A1A1A로 더 진하게
 
   /// 보조 텍스트 색상입니다.
-  /// 설명 텍스트와 부가 정보에 사용됩니다.
-  static const Color textSecondary = Color(0xFF555555);
+  /// 설명 텍스트와 부가 정보에 사용됩니다. (2025.07.23 17:31:28 가독성을 위해 더 진하게 조정)
+  static const Color textSecondary = Color(
+    0xFF3A3A3A,
+  ); // #555555 → #3A3A3A로 더 진하게
 
   // ===== 호환성을 위한 별칭 (Deprecated) =====
   /// @deprecated textPrimary를 사용하세요
@@ -72,11 +76,13 @@ class AppColors {
 
   /// @deprecated textSecondary를 사용하세요
   @Deprecated('Use textSecondary instead')
-  static const Color secondaryText = textSecondary;
+  static const Color secondaryText = Color(0xFF3A3A3A); // textSecondary와 동일하게 조정
 
   /// 접근성을 고려한 보조 텍스트 색상입니다.
-  /// 더 진한 회색으로 색상 대비를 개선합니다.
-  static const Color accessibleSecondaryText = Color(0xFF444444);
+  /// 더 진한 회색으로 색상 대비를 개선합니다. (2025.07.23 17:31:28 가독성을 위해 더 진하게 조정)
+  static const Color accessibleSecondaryText = Color(
+    0xFF2A2A2A,
+  ); // #444444 → #2A2A2A로 더 진하게
 
   /// 카드와 테두리에 사용되는 연한 핑크 색상입니다.
   /// 부드러운 구분선과 테두리 효과에 활용됩니다.
@@ -95,20 +101,20 @@ class AppColors {
   static const Color surface = Color(0xFFFFFFFF);
 
   /// 성공 상태를 나타내는 녹색입니다.
-  /// 완료된 작업이나 성공 메시지에 사용됩니다.
-  static const Color success = Color(0xFF28a745);
+  /// 완료된 작업이나 성공 메시지에 사용됩니다. (2025.07.23 17:31:28 가독성을 위해 더 진하게 조정)
+  static const Color success = Color(0xFF1E7E34); // #28a745 → #1E7E34로 더 진하게
 
   /// 오류 상태를 나타내는 빨간색입니다.
-  /// 에러 메시지와 경고에 사용됩니다.
-  static const Color error = Color(0xFFDC3545);
+  /// 에러 메시지와 경고에 사용됩니다. (2025.07.23 17:31:28 가독성을 위해 더 진하게 조정)
+  static const Color error = Color(0xFFC82333); // #DC3545 → #C82333으로 더 진하게
 
   /// 정보 상태를 나타내는 파란색입니다.
-  /// 알림과 정보 메시지에 사용됩니다.
-  static const Color info = Color(0xFF17A2B8);
+  /// 알림과 정보 메시지에 사용됩니다. (2025.07.23 17:31:28 가독성을 위해 더 진하게 조정)
+  static const Color info = Color(0xFF117A8B); // #17A2B8 → #117A8B로 더 진하게
 
   /// 경고 상태를 나타내는 오렌지색입니다.
-  /// 주의사항과 경고 메시지에 사용됩니다.
-  static const Color warning = Color(0xFFFFC107);
+  /// 주의사항과 경고 메시지에 사용됩니다. (2025.07.23 17:31:28 가독성을 위해 더 진하게 조정)
+  static const Color warning = Color(0xFFE0A800); // #FFC107 → #E0A800으로 더 진하게
 
   /// 주요 그라데이션 효과입니다.
   /// 핑크에서 퍼플로 이어지는 브랜드 그라데이션으로

@@ -1,0 +1,705 @@
+{
+  "basicAnalysis": {
+    "someIndex": 65,
+    "someIndexReason": {
+      "score": 65,
+      "reasoning": "두 사람의 대화는 편안하고 솔직하지만, 업무 관련 내용이 주를 이루고 사적인 감정 교류는 적은 편이에요. 서로의 프로젝트를 도와주는 모습에서 협력적인 관계를 엿볼 수 있지만, 연애적인 텐션은 다소 부족해 보여요.",
+      "evidences": [
+        {
+          "type": "project_collaboration",
+          "evidence": "앱 개발 프로젝트를 함께 진행하며 서로의 기술을 공유하고 도움",
+          "impact": "+15점"
+        },
+        {
+          "type": "daily_sharing",
+          "evidence": "업무, 주식, 앱 개발 등 일상적인 주제로 대화",
+          "impact": "+10점"
+        },
+        {
+          "type": "supportive_comments",
+          "evidence": "상대방의 프로젝트 진행 상황에 대해 칭찬과 격려",
+          "impact": "+5점"
+        }
+      ],
+      "negativeFactors": [
+        {
+          "type": "lack_of_emotional_depth",
+          "evidence": "사적인 감정이나 고민을 공유하는 빈도가 낮음",
+          "impact": "-10점"
+        },
+        {
+          "type": "limited_personal_interest",
+          "evidence": "서로의 관심사에 대한 깊이 있는 질문이나 공감 부족",
+          "impact": "-5점"
+        }
+      ]
+    },
+    "developmentPossibility": 60,
+    "developmentReason": {
+      "score": 60,
+      "reasoning": "썸 지수는 중간 정도이지만, 서로를 챙겨주는 모습과 긍정적인 대화 분위기를 고려했을 때 발전 가능성은 있어요. 하지만 연애로 발전하려면 서로에 대한 더 깊은 이해와 노력이 필요해 보여요.",
+      "evidences": [
+        {
+          "type": "positive_communication",
+          "evidence": "상대방의 드립에 맞춰주는 유쾌한 대화",
+          "impact": "+10점"
+        },
+        {
+          "type": "mutual_support",
+          "evidence": "힘든 일이나 시험에 대해 서로 위로하고 격려",
+          "impact": "+5점"
+        }
+      ]
+    },
+    "aiSummary": "서로에게 좋은 동료이자 친구인 것 같아! 👍 하지만 찐친 말고 썸으로 발전하려면 서로를 더 깊이 알아가려는 노력이 필요할 것 같아~",
+    "partnerMbti": "ENTP",
+    "mbtiReason": {
+      "type": "ENTP",
+      "reasoning": "도유님은 논쟁을 즐기고 새로운 아이디어에 대한 호기심이 많아 보여. 또한, 상황을 분석하고 비판적인 시각을 제시하는 ENTP의 특징이 엿보여.",
+      "evidences": [
+        {
+          "trait": "E (외향성)",
+          "evidence": "지현님에게 먼저 연락하고, 다양한 주제로 대화를 주도함",
+          "confidence": 75
+        },
+        {
+          "trait": "N (직관)",
+          "evidence": "새로운 앱 개발 아이디어를 제시하고, 주식 투자에 대한 지식을 공유",
+          "confidence": 80
+        },
+        {
+          "trait": "T (사고)",
+          "evidence": "상황을 분석하고 논리적인 해결책을 제시 (ex. 파일명 오류 해결)",
+          "confidence": 85
+        },
+        {
+          "trait": "P (인식)",
+          "evidence": "계획보다는 즉흥적인 행동을 선호 (ex. 새벽에 치킨 구매)",
+          "confidence": 70
+        }
+      ]
+    },
+    "myMbti": "ISFJ",
+    "partnerTags": [
+      "지적 호기심이 강한",
+      "창의적인",
+      "분석적인",
+      "유머 감각이 있는"
+    ],
+    "communicationStyle": "도유님은 지적인 대화를 선호하고, 새로운 정보를 공유하는 것을 즐기는 스타일이에요. 또한, 유머 감각이 뛰어나 대화를 유쾌하게 이끌어가는 능력이 돋보여요.",
+    "communicationStyleReason": {
+      "reasoning": "대화 패턴 분석 결과, 정보 공유와 유머를 통해 소통하는 경향이 뚜렷하게 나타났어요.",
+      "evidences": [
+        {
+          "pattern": "정보 공유 빈도",
+          "evidence": "주식, 앱 개발, 게임 등 다양한 분야의 정보를 공유 (총 25회)",
+          "percentage": 80
+        },
+        {
+          "pattern": "유머 사용",
+          "evidence": "상대방의 드립에 맞춰주는 유머러스한 답변 (총 18회)",
+          "percentage": 72
+        }
+      ]
+    }
+  },
+  "personalityAnalysis": {
+    "compatibilityScore": 78,
+    "compatibilityReason": {
+      "score": 78,
+      "reasoning": "서로 다른 성격이 상호 보완적인 역할을 할 수 있고, 공통 관심사를 통해 긍정적인 시너지를 낼 수 있어요. 하지만 감정 표현 방식의 차이를 이해하고 존중하는 노력이 필요해요.",
+      "calculation": {
+        "personalityMatch": 70,
+        "communicationMatch": 80,
+        "interestMatch": 85,
+        "emotionalMatch": 75
+      },
+      "evidences": [
+        {
+          "factor": "보완적 성격",
+          "evidence": "꼼꼼한 ISFJ + 창의적인 ENTP = 서로의 강점을 활용하여 프로젝트 진행",
+          "impact": "+15점"
+        },
+        {
+          "factor": "공통 관심사",
+          "evidence": "앱 개발, 주식 투자 등 공통 관심사를 통해 대화 활성화",
+          "impact": "+20점"
+        }
+      ]
+    },
+    "myPersonality": {
+      "외향성": 5,
+      "친화성": 7,
+      "성실성": 8,
+      "정서안정성": 6,
+      "개방성": 7
+    },
+    "myPersonalityReason": {
+      "외향성": {
+        "score": 5,
+        "reasoning": "상대방의 질문에 답변하는 수동적인 모습이 많이 보임",
+        "evidences": [
+          "상대방의 질문에 답변 후 추가 질문하는 패턴 (65%)",
+          "자신의 일상 공유는 적은 편"
+        ]
+      },
+      "친화성": {
+        "score": 7,
+        "reasoning": "상대방의 어려움에 공감하고 도움을 주려는 모습이 보임",
+        "evidences": [
+          "상대방의 프로젝트 진행 상황에 대해 칭찬과 격려",
+          "상대방의 질문에 성심껏 답변"
+        ]
+      }
+    },
+    "partnerPersonality": {
+      "외향성": 8,
+      "친화성": 6,
+      "성실성": 7,
+      "정서안정성": 7,
+      "개방성": 8
+    },
+    "partnerPersonalityReason": {
+      "외향성": {
+        "score": 8,
+        "reasoning": "먼저 연락하고 대화를 주도하는 경향이 강함",
+        "evidences": [
+          "먼저 연락하여 일상적인 대화를 시작",
+          "대화 주제를 다양하게 제시"
+        ]
+      },
+      "성실성": {
+        "score": 7,
+        "reasoning": "자신의 프로젝트를 꼼꼼하게 진행하고, 목표를 달성하기 위해 노력함",
+        "evidences": [
+          "앱 개발 프로젝트를 꾸준히 진행",
+          "주식 투자에 대한 지식을 습득하고 분석"
+        ]
+      }
+    },
+    "mbtiCompatibility": {
+      "description": "ISFJ와 ENTP는 서로의 부족한 부분을 채워주는 관계가 될 수 있어요. ISFJ의 꼼꼼함과 ENTP의 창의성이 결합되면 긍정적인 시너지를 낼 수 있지만, 서로의 다름을 인정하고 존중하는 것이 중요해요.",
+      "strengths": [
+        "서로의 강점을 활용하여 프로젝트 진행",
+        "공통 관심사를 통해 대화 활성화",
+        "다양한 관점을 통해 문제 해결"
+      ],
+      "challenges": [
+        "감정 표현 방식의 차이로 오해가 생길 수 있음",
+        "계획성 vs 즉흥성에서 갈등 가능",
+        "의사 결정 방식의 차이"
+      ],
+      "improvementTips": [
+        {
+          "category": "감정 표현 방식 개선",
+          "description": "서로의 감정 표현 방식을 이해하고 존중하는 것이 중요해요.",
+          "tip": "ISFJ는 감정을 솔직하게 표현하고, ENTP는 상대방의 감정에 공감하는 노력을 기울여보세요.",
+          "color": "blue"
+        },
+        {
+          "category": "계획 및 일정 조율",
+          "description": "계획성과 즉흥성의 차이를 인정하고, 서로의 의견을 조율하는 것이 필요해요.",
+          "tip": "프로젝트 진행 시 계획을 세우고 공유하여 갈등을 예방하고, 유연성을 발휘하여 서로의 의견을 반영해보세요.",
+          "color": "warning"
+        },
+        {
+          "category": "의사 결정 방식 존중",
+          "description": "서로의 의사 결정 방식을 존중하고, 합리적인 결정을 내릴 수 있도록 노력해야 해요.",
+          "tip": "다양한 정보를 수집하고 분석하여 객관적인 근거를 바탕으로 의사 결정을 하고, 서로의 의견을 경청하고 존중하는 자세를 가지세요.",
+          "color": "accent"
+        }
+      ]
+    },
+    "bigFiveAnalysis": [
+      {
+        "trait": "외향성",
+        "myScore": 30,
+        "partnerScore": 80,
+        "description": "외향성에서 큰 차이를 보입니다.",
+        "impact": "서로의 에너지 충전 방식이 다르므로, 혼자만의 시간을 존중해야 해요."
+      },
+      {
+        "trait": "친화성",
+        "myScore": 70,
+        "partnerScore": 60,
+        "description": "당신이 상대방보다 더 배려심이 많습니다.",
+        "impact": "갈등 상황에서 당신의 이해심이 관계를 원만하게 유지하는 데 도움이 될 수 있어요."
+      },
+      {
+        "trait": "성실성",
+        "myScore": 90,
+        "partnerScore": 75,
+        "description": "당신이 상대방보다 더 계획적이고 꼼꼼합니다.",
+        "impact": "프로젝트 진행 시 당신의 계획성이 효율성을 높이는 데 기여할 수 있어요."
+      },
+      {
+        "trait": "신경성",
+        "myScore": 45,
+        "partnerScore": 65,
+        "description": "상대방이 당신보다 약간 더 예민합니다.",
+        "impact": "상대방의 감정 변화에 조금 더 세심한 관심을 보여주는 것이 좋아요."
+      },
+      {
+        "trait": "개방성",
+        "myScore": 55,
+        "partnerScore": 85,
+        "description": "상대방이 당신보다 새로운 경험에 더 개방적입니다.",
+        "impact": "새로운 아이디어나 시도를 제안할 때 상대방의 의견을 적극적으로 수용하는 것이 좋아요."
+      }
+    ]
+  },
+  "emotionAnalysis": {
+    "overallScore": 72,
+    "emotionScoreReason": {
+      "score": 72,
+      "reasoning": "두 사람의 대화는 전반적으로 긍정적인 분위기를 유지하고 있지만, 감정적인 교류보다는 정보 공유나 업무 관련 대화가 주를 이루고 있어요. 서로를 격려하고 챙겨주는 모습에서 긍정적인 감정을 확인할 수 있지만, 깊은 감정 공유는 부족해 보여요.",
+      "calculation": {
+        "positiveRatio": 68,
+        "trendBonus": 5,
+        "engagementLevel": 75,
+        "conflictPenalty": 0
+      },
+      "evidences": [
+        {
+          "timeframe": "초기",
+          "evidence": "업무 관련 질문과 답변, 정보 공유",
+          "emotionLevel": 65
+        },
+        {
+          "timeframe": "중기",
+          "evidence": "서로의 프로젝트 진행 상황에 대한 칭찬과 격려",
+          "emotionLevel": 75
+        },
+        {
+          "timeframe": "최근",
+          "evidence": "개인적인 어려움에 대한 위로와 공감",
+          "emotionLevel": 70
+        }
+      ]
+    },
+    "overallTrend": "안정적",
+    "trendReason": {
+      "trend": "안정적",
+      "reasoning": "대화의 감정 변화는 크지 않으며, 긍정적인 분위기를 꾸준히 유지하고 있어요. 하지만 감정적인 깊이가 부족하여 썸으로 발전하기에는 다소 아쉬운 부분이 있어요.",
+      "evidences": [
+        {
+          "period": "초기",
+          "evidence": "간단한 질문과 답변, 정보 공유",
+          "score": 65
+        },
+        {
+          "period": "중기",
+          "evidence": "칭찬과 격려, 유머",
+          "score": 75
+        },
+        {
+          "period": "최근",
+          "evidence": "위로와 공감, 조언",
+          "score": 70
+        }
+      ]
+    },
+    "emotionSummary": "전체적으로 긍정적인 감정이 72%를 차지하며 안정적인 분위기를 유지하고 있지만, 감정적인 깊이가 부족하여 썸으로 발전하기에는 다소 아쉬운 부분이 있어요.",
+    "emotionData": [
+      {
+        "time": "초기",
+        "myEmotion": 70,
+        "partnerEmotion": 60,
+        "description": "서로 알아가는 단계로, 업무 관련 질문과 답변이 주를 이루고 있어요."
+      },
+      {
+        "time": "중기",
+        "myEmotion": 80,
+        "partnerEmotion": 70,
+        "description": "칭찬과 격려를 통해 긍정적인 분위기가 형성되고 있어요."
+      },
+      {
+        "time": "최근",
+        "myEmotion": 75,
+        "partnerEmotion": 65,
+        "description": "개인적인 어려움에 대한 위로와 공감이 이루어지고 있지만, 감정적인 깊이는 부족해요."
+      }
+    ],
+    "emotionPatterns": [
+      {
+        "pattern": "정보 공유 패턴",
+        "description": "새로운 정보를 공유할 때 긍정적인 감정이 상승하는 패턴",
+        "tip": "서로의 관심사에 대한 정보를 공유하고, 함께 이야기 나누는 시간을 가져보세요.",
+        "color": "green"
+      },
+      {
+        "pattern": "유머 사용 패턴",
+        "description": "유머를 통해 대화 분위기를 부드럽게 만드는 패턴",
+        "tip": "유머를 적절히 활용하여 대화를 더욱 즐겁게 만들어보세요.",
+        "color": "blue"
+      },
+      {
+        "pattern": "격려와 위로 패턴",
+        "description": "어려움에 처했을 때 서로를 격려하고 위로하는 패턴",
+        "tip": "상대방의 어려움에 공감하고, 진심으로 위로하는 모습을 보여주세요.",
+        "color": "accent"
+      }
+    ],
+    "keyEvents": [
+      {
+        "time": "06/02",
+        "event": "공모전 수상 축하",
+        "type": "positive",
+        "description": "지현님의 공모전 수상을 축하하며 긍정적인 분위기 형성",
+        "score": "+10%",
+        "color": "green"
+      },
+      {
+        "time": "06/09",
+        "event": "목요일 점심 약속",
+        "type": "positive",
+        "description": "점심 약속을 통해 오프라인 만남 성사",
+        "score": "+15%",
+        "color": "accent"
+      },
+      {
+        "time": "06/18",
+        "event": "유학 계획 언급",
+        "type": "neutral",
+        "description": "지현님의 유학 계획 언급으로 인해 아쉬움을 표현",
+        "score": "-5%",
+        "color": "blue"
+      }
+    ]
+  },
+  "messagePatternAnalysis": {
+    "activityTimeAnalysis": {
+      "mostActiveTime": "오전 9-12시",
+      "insight": "업무 시간 중 활발한 소통을 보여요.",
+      "timeSlots": [
+        {
+          "period": "오전",
+          "time": "9-12시",
+          "activity": 80,
+          "color": "primary"
+        },
+        {
+          "period": "오후",
+          "time": "2-6시",
+          "activity": 60,
+          "color": "warning"
+        },
+        {
+          "period": "저녁",
+          "time": "7-10시",
+          "activity": 40,
+          "color": "accent"
+        }
+      ]
+    },
+    "responseSpeedAnalysis": {
+      "myAverage": "2분 30초",
+      "partnerAverage": "2분 00초",
+      "insight": "두 사람 모두 빠른 응답 속도를 보여요!",
+      "comparison": "partner_faster",
+      "speedAnalysisReason": {
+        "reasoning": "두 사람 모두 빠른 응답 속도를 유지하며, 서로에게 관심을 보이고 있어요.",
+        "evidences": [
+          {
+            "messageType": "일반 대화",
+            "mySpeed": "평균 2-3분",
+            "partnerSpeed": "평균 1-2분",
+            "interpretation": "두 사람 모두 즉각적으로 반응"
+          },
+          {
+            "messageType": "약속 제안",
+            "mySpeed": "2분 내 긍정 응답",
+            "partnerSpeed": "1분 내 긍정 응답",
+            "interpretation": "만남에 대한 긍정적인 태도"
+          }
+        ],
+        "overallInterpretation": "두 사람 모두 빠른 응답 속도를 유지하며, 서로에게 긍정적인 관심을 보이고 있어요."
+      }
+    },
+    "messageLengthAnalysis": {
+      "myAverage": 55,
+      "partnerAverage": 45,
+      "myPercentage": 60,
+      "partnerPercentage": 40,
+      "insight": "당신이 상대방보다 더 긴 메시지를 보내는 편이에요."
+    },
+    "communicationStyleAnalysis": [
+      {
+        "style": "정보 공유",
+        "score": 80,
+        "description": "서로에게 유용한 정보를 공유하는 것을 즐김",
+        "color": "primary"
+      },
+      {
+        "style": "유머 사용",
+        "score": 70,
+        "description": "유머를 통해 대화 분위기를 부드럽게 만듦",
+        "color": "accent"
+      },
+      {
+        "style": "칭찬과 격려",
+        "score": 65,
+        "description": "서로의 성과를 칭찬하고 격려함",
+        "color": "green"
+      }
+    ]
+  },
+  "topicAnalysis": {
+    "keywordCloud": [
+      {
+        "word": "앱",
+        "frequency": 50,
+        "sentiment": "positive",
+        "color": "primary"
+      },
+      {
+        "word": "주식",
+        "frequency": 40,
+        "sentiment": "neutral",
+        "color": "accent"
+      },
+      {
+        "word": "게임",
+        "frequency": 30,
+        "sentiment": "positive",
+        "color": "green"
+      },
+      {
+        "word": "코드",
+        "frequency": 25,
+        "sentiment": "neutral",
+        "color": "blue"
+      },
+      {
+        "word": "유학",
+        "frequency": 15,
+        "sentiment": "negative",
+        "color": "warning"
+      }
+    ],
+    "topicFrequency": [
+      {
+        "category": "앱 개발",
+        "percentage": 45,
+        "examples": [
+          "앱 아이디어",
+          "UI 디자인",
+          "코드 공유"
+        ],
+        "color": "primary"
+      },
+      {
+        "category": "주식 투자",
+        "percentage": 30,
+        "examples": [
+          "주식 정보",
+          "배당",
+          "투자 전략"
+        ],
+        "color": "accent"
+      },
+      {
+        "category": "일상 공유",
+        "percentage": 20,
+        "examples": [
+          "날씨",
+          "회식",
+          "시험"
+        ],
+        "color": "green"
+      },
+      {
+        "category": "유학 계획",
+        "percentage": 5,
+        "examples": [
+          "유학 고민",
+          "영어 공부",
+          "미래 계획"
+        ],
+        "color": "blue"
+      }
+    ],
+    "interestMatching": {
+      "score": 82,
+      "level": "매우 좋음",
+      "commonInterests": [
+        "앱 개발",
+        "주식 투자",
+        "게임"
+      ],
+      "insight": "앱 개발, 주식 투자, 게임에 대한 공통 관심사가 높아 대화가 끊이지 않고 있어요!",
+      "color": "green",
+      "interestMatchingReason": {
+        "score": 82,
+        "reasoning": "3개의 주요 관심사에서 높은 일치도를 보이고 있으며, 서로의 지식을 공유하고 도움을 주고받는 모습이 인상적이에요.",
+        "evidences": [
+          {
+            "topic": "앱 개발",
+            "myMentions": 20,
+            "partnerMentions": 25,
+            "engagementLevel": "높음",
+            "evidence": "앱 아이디어를 공유하고, UI 디자인에 대한 조언을 구하는 등 적극적인 참여"
+          },
+          {
+            "topic": "주식 투자",
+            "myMentions": 15,
+            "partnerMentions": 20,
+            "engagementLevel": "높음",
+            "evidence": "주식 정보를 공유하고, 투자 전략에 대한 의견을 나누는 등 높은 관심"
+          },
+          {
+            "topic": "게임",
+            "myMentions": 10,
+            "partnerMentions": 10,
+            "engagementLevel": "중간",
+            "evidence": "새로운 게임을 개발하고, 테스트를 요청하는 등 꾸준한 관심"
+          }
+        ]
+      }
+    }
+  },
+  "aiRecommendations": {
+    "immediateActions": [
+      {
+        "title": "개인적인 이야기 나누기",
+        "description": "서로의 생각이나 감정에 대해 더 깊이 있는 대화를 시도해보세요.",
+        "priority": "높음",
+        "expectedOutcome": "서로에 대한 이해도를 높이고, 감정적인 친밀감을 형성할 수 있어요.",
+        "sampleMessage": "요즘 어떤 고민이 있어? 힘들거나 어려운 일 있으면 언제든지 나에게 이야기해줘.",
+        "color": "primary"
+      },
+      {
+        "title": "취미 공유하기",
+        "description": "함께 즐길 수 있는 취미 활동을 찾아보세요.",
+        "priority": "중간",
+        "expectedOutcome": "함께 시간을 보내면서 즐거움을 느끼고, 더욱 가까워질 수 있어요.",
+        "sampleMessage": "주말에 같이 영화 보러 갈래? 아니면 맛있는 거 먹으러 갈까?",
+        "color": "accent"
+      }
+    ],
+    "relationshipStageAnalysis": {
+      "currentStage": "친한 동료",
+      "nextStage": "썸",
+      "progressPercentage": 50,
+      "isCompleted": false,
+      "stageAnalysisReason": {
+        "currentStageEvidence": [
+          {
+            "indicator": "업무 관련 대화",
+            "evidence": "앱 개발, 주식 투자 등 업무 관련 대화가 주를 이룸",
+            "weight": "높음"
+          },
+          {
+            "indicator": "정보 공유",
+            "evidence": "서로에게 유용한 정보를 공유하고 도움을 주고받음",
+            "weight": "높음"
+          },
+          {
+            "indicator": "개인적인 이야기 부족",
+            "evidence": "개인적인 감정이나 고민을 공유하는 빈도가 낮음",
+            "weight": "중간"
+          }
+        ],
+        "nextStageSignals": [
+          {
+            "signal": "감정적인 교류 늘리기",
+            "currentLevel": "업무 관련 대화 (70%)",
+            "targetLevel": "개인적인 감정 공유 (40% 이상)"
+          },
+          {
+            "signal": "데이트 분위기 조성",
+            "currentLevel": "함께 점심 식사",
+            "targetLevel": "영화, 공연, 여행 등 데이트"
+          }
+        ]
+      },
+      "developmentTips": [
+        "개인적인 이야기 나누기",
+        "함께 취미 활동 즐기기",
+        "데이트 분위기 조성하기"
+      ],
+      "nextStepAdvice": "서로에 대해 더 깊이 알아가고, 데이트를 통해 썸으로 발전시켜보세요."
+    },
+    "conversationStarters": [
+      {
+        "category": "개인적인 이야기",
+        "title": "최근 고민이나 관심사",
+        "suggestion": "최근에 어떤 고민이 있어? 아니면 요즘 관심 있는 건 뭐야?",
+        "color": "accent"
+      },
+      {
+        "category": "취미",
+        "title": "함께 즐길 수 있는 취미",
+        "suggestion": "우리 같이 영화 보러 갈래? 아니면 맛있는 거 먹으러 갈까?",
+        "color": "blue"
+      },
+      {
+        "category": "미래 계획",
+        "title": "유학 계획에 대한 생각",
+        "suggestion": "유학 계획은 어떻게 되어가? 혹시 내가 도울 일은 없을까?",
+        "color": "green"
+      }
+    ],
+    "improvementTips": [
+      "상대방의 관심사에 대해 질문하고 공감하는 모습을 보여주는 게 중요해! 😉",
+      "가끔은 진지한 이야기도 나누면서 서로를 더 깊이 알아가는 시간을 가져보는 건 어때? 🤔",
+      "데이트를 통해 썸 분위기를 조성해보는 것도 좋은 방법일 것 같아! 🥰"
+    ]
+  },
+  "analysisMetadata": {
+    "totalMessages": 500,
+    "analysisDate": "2025-07-28",
+    "conversationPeriod": "20일",
+    "responseRate": 95.0,
+    "averageResponseTime": "2분 15초",
+    "emojiUsage": {
+      "my": 30,
+      "partner": 25
+    },
+    "topKeywords": [
+      "앱",
+      "주식",
+      "게임",
+      "코드",
+      "유학"
+    ],
+    "sentimentScore": {
+      "positive": 72,
+      "neutral": 20,
+      "negative": 8
+    },
+    "conversationQuality": {
+      "depth": 60,
+      "engagement": 75,
+      "consistency": 80
+    },
+    "analysisConfidence": {
+      "overall": 80,
+      "personalityAnalysis": 75,
+      "emotionAnalysis": 85,
+      "relationshipStage": 70,
+      "confidenceFactors": [
+        {
+          "factor": "메시지 양",
+          "score": 85,
+          "reason": "500개의 메시지로 충분한 분석 데이터 확보"
+        },
+        {
+          "factor": "대화 기간",
+          "score": 80,
+          "reason": "20일 동안 꾸준한 대화로 패턴 파악 용이"
+        },
+        {
+          "factor": "대화 다양성",
+          "score": 70,
+          "reason": "다양한 주제에 대한 대화로 폭넓은 분석 가능"
+        }
+      ]
+    },
+    "limitationsAndCautions": [
+      "텍스트 기반 분석의 한계로 비언어적 소통은 반영되지 않음",
+      "대화 내용이 업무 관련 주제에 치중되어 있어 개인적인 성향 파악에 어려움이 있을 수 있음",
+      "상황적 요인(스트레스, 컨디션 등)이 대화 패턴에 영향을 줄 수 있음"
+    ]
+  }
+}

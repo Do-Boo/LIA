@@ -1,0 +1,470 @@
+{
+  "basicAnalysis": {
+    "someIndex": 50,
+    "someIndexReason": {
+      "score": 50,
+      "reasoning": "메시지 빈도(900개)와 이모티콘 사용(파트너 99회)이 높지만, 파트너 평균 응답 시간(95.37분)이 길어 호감 지수는 평균 수준으로 판단했어요",
+      "evidences": [
+        {
+          "type": "message_frequency",
+          "evidence": "총 900개 메시지 중 파트너가 461개를 보냄",
+          "impact": "+20점"
+        },
+        {
+          "type": "emoji_usage",
+          "evidence": "파트너가 99회 이모티콘(ㅎㅎ, ㅋㅋ) 사용",
+          "impact": "+15점"
+        }
+      ],
+      "negativeFactors": [
+        {
+          "type": "response_speed",
+          "evidence": "파트너 평균 응답 시간 95.37분",
+          "impact": "-35점"
+        }
+      ]
+    },
+    "developmentPossibility": 65,
+    "developmentReason": {
+      "score": 65,
+      "reasoning": "썸 지수(50점)에 대화량(하루 평균 약 41개 메시지)을 반영해 발전 가능성은 중간 이상으로 봤어요",
+      "evidences": [
+        {
+          "type": "conversation_volume",
+          "evidence": "22일간 총 900개 메시지 주고받음",
+          "impact": "+15점"
+        },
+        {
+          "type": "future_planning",
+          "evidence": "여행·영화 등 만남 제안 주제가 다수 등장",
+          "impact": "+0점"
+        }
+      ]
+    },
+    "aiSummary": "메시지량은 많지만 응답이 느려서 여유를 갖고 천천히 다가가 보세요",
+    "partnerMbti": "ENFP",
+    "mbtiReason": {
+      "type": "ENFP",
+      "reasoning": "높은 메시지 빈도(461개)와 이모티콘 사용(99회)에서 외향적(E)·인식형(P) 특성이 드러나요",
+      "evidences": [
+        {
+          "trait": "E (외향성)",
+          "evidence": "461개 메시지, 99회 이모티콘 사용",
+          "confidence": 85
+        },
+        {
+          "trait": "P (인식)",
+          "evidence": "\"언제든지\", \"그때 보자\" 같은 즉흥 제안 다수",
+          "confidence": 75
+        }
+      ]
+    },
+    "myMbti": "ISFJ",
+    "partnerTags": [
+      "활발한",
+      "감정표현 풍부",
+      "즉흥적",
+      "응답 느림"
+    ],
+    "communicationStyle": "파트너는 짧고 간결하지만 이모티콘으로 감정을 풍부히 표현하는 스타일이에요",
+    "communicationStyleReason": {
+      "reasoning": "평균 메시지 길이 6.86자지만, 99회 이모티콘으로 감정 전달",
+      "evidences": [
+        {
+          "pattern": "메시지 길이",
+          "evidence": "평균 6.86자",
+          "percentage": 50
+        },
+        {
+          "pattern": "이모티콘 사용 빈도",
+          "evidence": "99회",
+          "percentage": 70
+        }
+      ]
+    }
+  },
+  "personalityAnalysis": {
+    "compatibilityScore": 70,
+    "compatibilityReason": {
+      "score": 70,
+      "reasoning": "내향·외향 성향이 보완적으로 작용하지만 응답 속도 차이가 아쉬워요",
+      "calculation": {
+        "personalityMatch": 75,
+        "communicationMatch": 65,
+        "interestMatch": 80,
+        "emotionalMatch": 60
+      },
+      "evidences": [
+        {
+          "factor": "보완적 성격",
+          "evidence": "ISFJ의 안정성과 ENFP의 활발함이 균형을 이뤄요",
+          "impact": "+20점"
+        },
+        {
+          "factor": "응답 속도 차이",
+          "evidence": "나 평균 14.8분 vs 파트너 평균 95.4분",
+          "impact": "-10점"
+        }
+      ]
+    },
+    "myPersonality": {
+      "외향성": 4,
+      "친화성": 8,
+      "성실성": 7,
+      "정서안정성": 6,
+      "개방성": 7
+    },
+    "myPersonalityReason": {
+      "외향성": {
+        "score": 4,
+        "reasoning": "질문보다 답변 위주, 직접 제안 비율 낮음",
+        "evidences": [
+          "총 439개 메시지 중 제안형 메시지는 20% 미만"
+        ]
+      },
+      "친화성": {
+        "score": 8,
+        "reasoning": "파트너 제안(카페·영화)을 90% 이상 수락",
+        "evidences": [
+          "제안 수락률 90%"
+        ]
+      }
+    },
+    "partnerPersonality": {
+      "외향성": 9,
+      "친화성": 7,
+      "성실성": 5,
+      "정서안정성": 6,
+      "개방성": 8
+    },
+    "partnerPersonalityReason": {
+      "외향성": {
+        "score": 9,
+        "reasoning": "높은 메시지 빈도와 즉흥 제안",
+        "evidences": [
+          "461개 메시지 중 30% 이상이 질문형"
+        ]
+      },
+      "성실성": {
+        "score": 5,
+        "reasoning": "즉흥적 만남 선호",
+        "evidences": [
+          "구체적 일정보다 즉흥 응답 다수"
+        ]
+      }
+    },
+    "mbtiCompatibility": {
+      "description": "ENFP와 ISFJ는 에너지와 안정성의 균형을 통해 서로를 보완해 줘요",
+      "strengths": [
+        "감정적 공감대 형성 용이",
+        "ENFP의 활력과 ISFJ의 안정성 균형"
+      ],
+      "challenges": [
+        "응답 속도 차이로 오해 가능",
+        "즉흥성 vs 계획성에서 갈등 우려"
+      ],
+      "improvementTips": [
+        {
+          "category": "응답 속도 조율",
+          "description": "파트너의 느린 답변에 여유를 주세요",
+          "tip": "답장 후 바로 확인하지 않아도 괜찮다고 스스로 다짐해 보세요",
+          "color": "warning"
+        },
+        {
+          "category": "계획성 강화",
+          "description": "즉흥 제안 시 구체적 일정 제시",
+          "tip": "예: ‘이번 주 토요일 오후 3시’처럼 시간까지 명확히 제안하기",
+          "color": "accent"
+        }
+      ]
+    },
+    "bigFiveAnalysis": [
+      {
+        "trait": "외향성",
+        "myScore": 40,
+        "partnerScore": 90,
+        "description": "에너지 충전 방식 차이 있음",
+        "impact": "서로 방전·충전 주기를 이해해야 해요"
+      },
+      {
+        "trait": "친화성",
+        "myScore": 80,
+        "partnerScore": 70,
+        "description": "비슷한 수준으로 협조적",
+        "impact": "갈등 시 중재 역할 기대"
+      },
+      {
+        "trait": "성실성",
+        "myScore": 70,
+        "partnerScore": 50,
+        "description": "내 계획 vs 파트너 즉흥성 차이",
+        "impact": "일정 조율 시 차이 고려"
+      },
+      {
+        "trait": "정서안정성",
+        "myScore": 60,
+        "partnerScore": 60,
+        "description": "비슷한 수준으로 감정 기복 적음",
+        "impact": "안정적인 관계 유지 가능"
+      },
+      {
+        "trait": "개방성",
+        "myScore": 70,
+        "partnerScore": 80,
+        "description": "새로운 경험 수용에 적극적",
+        "impact": "함께 시도해볼 활동 추천 가능"
+      }
+    ]
+  },
+  "emotionAnalysis": {
+    "overallScore": 75,
+    "emotionScoreReason": {
+      "score": 75,
+      "reasoning": "긍정 표현이 약 70%로 안정적 호감이 유지되고 있어요",
+      "calculation": {
+        "positiveRatio": 70,
+        "engagementLevel": 80,
+        "conflictPenalty": 5
+      },
+      "evidences": [
+        {
+          "timeframe": "전체",
+          "evidence": "‘좋아’, ‘ㅎㅎ’, ‘ㅋㅋ’ 등 긍정 표현 다수",
+          "emotionLevel": 70
+        }
+      ]
+    },
+    "overallTrend": "안정적",
+    "trendReason": {
+      "trend": "안정적",
+      "reasoning": "긍정과 중립이 균형을 이루며 일정하게 유지",
+      "evidences": [
+        {
+          "period": "전반",
+          "evidence": "부정적 표현은 10% 이하로 낮음",
+          "score": 75
+        }
+      ]
+    },
+    "emotionSummary": "긍정적 감정이 꾸준히 유지되어 관계가 안정적으로 발전 중이에요",
+    "emotionData": [
+      {
+        "time": "1~7일차",
+        "myEmotion": 70,
+        "partnerEmotion": 65,
+        "description": "초반 탐색 단계"
+      },
+      {
+        "time": "8~14일차",
+        "myEmotion": 75,
+        "partnerEmotion": 70,
+        "description": "감정 표현이 조금 더 활발해짐"
+      },
+      {
+        "time": "15~22일차",
+        "myEmotion": 80,
+        "partnerEmotion": 75,
+        "description": "호감도가 안정적으로 유지됨"
+      }
+    ],
+    "emotionPatterns": [
+      {
+        "pattern": "감정 유지 패턴",
+        "description": "긍정과 중립이 균형을 이룸",
+        "tip": "현재의 편안한 분위기를 유지해 보세요",
+        "color": "blue"
+      }
+    ],
+    "keyEvents": [
+      {
+        "time": "데이터 전체",
+        "event": "전반적 안정",
+        "type": "neutral",
+        "description": "큰 변곡점 없이 꾸준히 호감 유지",
+        "score": "75%",
+        "color": "primary"
+      }
+    ]
+  },
+  "messagePatternAnalysis": {
+    "activityTimeAnalysis": {
+      "mostActiveTime": "오후 18-22시",
+      "insight": "저녁 시간대에 대화가 가장 활발해요",
+      "timeSlots": [
+        {
+          "period": "오전 (9-12시)",
+          "activity": 150,
+          "color": "warning"
+        },
+        {
+          "period": "저녁 (18-22시)",
+          "activity": 126,
+          "color": "primary"
+        }
+      ]
+    },
+    "responseSpeedAnalysis": {
+      "myAverage": "14.8분",
+      "partnerAverage": "95.4분",
+      "insight": "내가 훨씬 빠르게 답장하는 편이에요",
+      "comparison": "me_faster",
+      "speedAnalysisReason": {
+        "reasoning": "나의 빠른 답장은 관심 표현이지만, 파트너의 여유로운 응답 속도는 다소 객관적인 거리감을 의미할 수 있어요",
+        "evidences": [
+          {
+            "messageType": "일반 대화",
+            "mySpeed": "평균 14.8분",
+            "partnerSpeed": "평균 95.4분",
+            "interpretation": "나의 즉각적 반응 vs 파트너의 여유로운 반응"
+          }
+        ]
+      }
+    },
+    "messageLengthAnalysis": {
+      "myAverage": 22.19,
+      "partnerAverage": 6.86,
+      "insight": "나는 비교적 길게, 파트너는 짧게 메시지 작성해요"
+    },
+    "communicationStyleAnalysis": [
+      {
+        "style": "감정 표현",
+        "score": 70,
+        "description": "파트너는 간결하지만 이모티콘으로 감정을 전달해요",
+        "color": "accent"
+      }
+    ]
+  },
+  "topicAnalysis": {
+    "keywordCloud": [
+      {
+        "word": "영화",
+        "frequency": 0,
+        "sentiment": "neutral",
+        "color": "primary"
+      },
+      {
+        "word": "카페",
+        "frequency": 0,
+        "sentiment": "neutral",
+        "color": "accent"
+      }
+    ],
+    "topicFrequency": [
+      {
+        "category": "일상/취미",
+        "percentage": 100,
+        "examples": [],
+        "color": "primary"
+      }
+    ],
+    "interestMatching": {
+      "score": 0,
+      "level": "정보 부족",
+      "commonInterests": [],
+      "insight": "키워드 언급이 없어 관심사 매칭을 확인하기 어려워요",
+      "interestMatchingReason": {
+        "score": 0,
+        "reasoning": "‘영화’, ‘카페’ 언급이 없음",
+        "evidences": []
+      }
+    }
+  },
+  "aiRecommendations": {
+    "immediateActions": [
+      {
+        "title": "저녁 데이트 제안",
+        "description": "파트너가 저녁에 활발히 대화하니 그때 데이트를 제안해 보세요",
+        "priority": "높음",
+        "expectedOutcome": "호감도 상승",
+        "sampleMessage": "이번 주말 저녁에 영화 보러 갈래?",
+        "color": "primary"
+      }
+    ],
+    "relationshipStageAnalysis": {
+      "currentStage": "친밀한 친구",
+      "nextStage": "연인 전 단계",
+      "progressPercentage": 65,
+      "isCompleted": false,
+      "stageAnalysisReason": {
+        "currentStageEvidence": [
+          {
+            "indicator": "만남 제안 수락",
+            "evidence": "제안 수락률 90%",
+            "weight": "높음"
+          }
+        ],
+        "nextStageSignals": [
+          {
+            "signal": "더 감정적인 대화 필요",
+            "currentLevel": "일상 중심",
+            "targetLevel": "감정 공유"
+          }
+        ]
+      },
+      "developmentTips": [
+        "감정 공유 질문 늘리기",
+        "구체적 일정 제안"
+      ],
+      "nextStepAdvice": "영화 제안 외에도 ‘요즘 기분은 어때?’ 같은 감정 질문을 시도해 보세요"
+    },
+    "conversationStarters": [
+      {
+        "category": "감정 공유",
+        "title": "최근 행복했던 순간",
+        "suggestion": "요즘 가장 기뻤던 일을 물어보세요",
+        "color": "green"
+      }
+    ],
+    "improvementTips": [
+      "파트너의 느린 답변에 조급해하지 않기",
+      "만남 제안 시 날짜·시간을 구체적으로 제시하기"
+    ]
+  },
+  "analysisMetadata": {
+    "totalMessages": 900,
+    "analysisDate": "2025-07-28",
+    "conversationPeriod": "22일",
+    "responseRate": 37.81,
+    "averageResponseTime": "95.37분",
+    "emojiUsage": {
+      "my": 33,
+      "partner": 99
+    },
+    "topKeywords": [
+      "영화",
+      "카페"
+    ],
+    "sentimentScore": {
+      "positive": 70,
+      "neutral": 20,
+      "negative": 10
+    },
+    "conversationQuality": {
+      "depth": 70,
+      "engagement": 80,
+      "consistency": 75
+    },
+    "analysisConfidence": {
+      "overall": 80,
+      "personalityAnalysis": 75,
+      "emotionAnalysis": 80,
+      "relationshipStage": 70,
+      "confidenceFactors": [
+        {
+          "factor": "메시지 양",
+          "score": 85,
+          "reason": "900개 메시지"
+        },
+        {
+          "factor": "대화 기간",
+          "score": 80,
+          "reason": "22일간 지속"
+        }
+      ]
+    },
+    "limitationsAndCautions": [
+      "감정·주제 분석은 키워드 기반으로 단순화됨",
+      "텍스트만 분석해 비언어적 요소는 반영되지 않음"
+    ]
+  }
+}
